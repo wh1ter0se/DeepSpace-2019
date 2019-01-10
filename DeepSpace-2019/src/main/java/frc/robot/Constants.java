@@ -12,4 +12,11 @@ package frc.robot;
  */
 public class Constants {
 
+    /**
+     * Vision Values
+     */
+    public static final int
+        CAM_HEIGHT = 1080,
+        CAM_WIDTH  = 1920,
+        CAM_ID     = 0;
 }
