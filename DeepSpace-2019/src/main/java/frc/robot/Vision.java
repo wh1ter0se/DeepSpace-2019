@@ -23,39 +23,61 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class Vision extends IterativeRobot {
 
-    private UsbCamera cameraFrame;
+    private UsbCamera ACam;
+    private UsbCamera BCam;
+
+    private int camID;
 
     private Mat failImage;
 
     public Vision(){
         Size camSize = new Size(Constants.CAM_WIDTH, Constants.CAM_HEIGHT);
         failImage = Mat.zeros(camSize, 0);
+        camID = 0;
     }
 
     public void startFrameCameraThread(){
-    	new Thread(this::frameCameraStream).start();
+    	new Thread(this::cameraStream).start();
     }
     
-    private void frameCameraStream(){
-        cameraFrame = CameraServer.getInstance().startAutomaticCapture("Frame", Constants.CAM_ID);
-        // cameraFrame = new UsbCamera("frame", 0);
-        // cameraFrame.setFPS(30);
-        // cameraFrame.setResolution(480,270);
-    	CvSink cvsinkFrame = new CvSink("frameSink");
-    	cvsinkFrame.setSource(cameraFrame);
-    	cvsinkFrame.setEnabled(true);
+    private void cameraStream(){
+        ACam = CameraServer.getInstance().startAutomaticCapture("A-Cam", Constants.ACAM_ID);
+        BCam = CameraServer.getInstance().startAutomaticCapture("B-Cam", Constants.BCAM_ID);
+        // ACam = new UsbCamera("frame", 0);
+        // ACam.setFPS(30);
+        // ACam.setResolution(480,270);
+    	CvSink cvsinkA = new CvSink("A-Sink");
+    	cvsinkA.setSource(ACam);
+        cvsinkA.setEnabled(true);
+
+        CvSink cvsinkB = new CvSink("B-Sink");
+    	cvsinkB.setSource(BCam);
+    	cvsinkB.setEnabled(true);
     	
     	Mat streamImages = new Mat();
 
-    	CvSource outputFrame = CameraServer.getInstance().putVideo("Frame", Constants.CAM_WIDTH, Constants.CAM_HEIGHT);
+        CvSource outputFrame;
+        if (camID == 0) {
+            outputFrame = CameraServer.getInstance().putVideo("A-Cam", Constants.CAM_WIDTH, Constants.CAM_HEIGHT);
+        } else {
+            outputFrame = CameraServer.getInstance().putVideo("B-Cam", Constants.CAM_WIDTH, Constants.CAM_HEIGHT);
+        }
     	 while (!Thread.interrupted()){
              try {
-                 cvsinkFrame.grabFrame(streamImages);
+                 if (camID == 0) {
+                    cvsinkA.grabFrame(streamImages);
+                 } else {
+                    cvsinkB.grabFrame(streamImages);
+                 }
                  outputFrame.putFrame(streamImages);
              } catch (CvException cameraFail){
-                 DriverStation.reportWarning("Frame Camera: " + cameraFail.toString(), false);
+                 DriverStation.reportWarning("Camera: " + cameraFail.toString(), false);
                  outputFrame.putFrame(failImage);
              }
     	 }
+    }
+
+    public void setCamID(int ID) {
+        camID = ID;
     }
 }

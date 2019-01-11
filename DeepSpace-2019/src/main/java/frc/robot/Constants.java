@@ -18,5 +18,6 @@ public class Constants {
     public static final int
         CAM_HEIGHT = 1080,
         CAM_WIDTH  = 1920,
-        CAM_ID     = 0;
+        ACAM_ID    = 0,
+        BCAM_ID    = 1;
 }
