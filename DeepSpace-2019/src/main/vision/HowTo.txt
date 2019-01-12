@@ -21,9 +21,9 @@ A list of what is covered in this file:
 
 
 
-------------------------
+---------
   I. GIT
-------------------------
+---------
 
 So since the Raspbian is Linux based and Tortoisegit is made for Windows, we have to use the command-line version of git (git bash) to do anything with the repository. So here's how to do some basic Git functions using the terminal.
 	While reading this, take note that on the Pi I should have 3 repositories cloned: The Vision repository from the preseason (in the Pi's file system it is under "Vision"), The current Deep Space repository (under "DeepSpace-2019"), and my clone of the repo (under "DeepSpace-2020", although might change to "DeepSpace-2019-clone"). If pushing vision code for any reason, push to "DeepSpace-2019", because it is the original. Currently I do not have rights, though, so if it yells at you for not having rights, push to "DeepSpace-2020" (or "DeepSpace-2019-clone"). If for any reason any of the repositories are not cloned onto the Pi, refer to the section about cloning.
