@@ -33,17 +33,25 @@ class Postprocessor: # main postprocessor class that does all the work
     endProgram = False # when true the program breaks
 
     def __init__(self):
-        Stream = cv2.VideoCapture(0) # create and initialize our video streamer
+        self.Stream = cv2.VideoCapture(0) # create and initialize our video streamer
+        self.Stream.set(cv2.CV_CAP_PROP_FRAME_WIDTH, 176);
+        self.Stream.set(cv2.CV_CAP_PROP_FRAME_HEIGHT,144);
 
 
-    def Loop(): #constantly loops and processes data from the camera
+    def Loop(self): #constantly loops and processes data from the camera
         #vars to be used
         img = None #the image we are processing (returned as a binary image from the streamer)
 
 
-        while !endProgram: # keep looping as long as the program is not ending...
-            img = Stream.read()
-            Util.DisplayImg("Output", img)
+        while not self.endProgram: # keep looping as long as the program is not ending...
+            ret, img = self.Stream.read()
+            if ret:   
+                img = cv2.flip(img, 1)
+                Util.DisplayImg("Output", img)
+
+            else:
+                print("CAMERA GRAB FAILED!")
+                break;
             
         
     

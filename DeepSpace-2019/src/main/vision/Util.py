@@ -7,6 +7,11 @@
 import cv2
 
 
+#Values used by the UI renderer. just values sent by the processor to be displayed on screen
+Message = ""
+
+
+
 def DisplayImg(window, img):
     cv2.imshow(window, img)
     cv2.waitKey(5) #for some reason this is requied for imshow() to work???
