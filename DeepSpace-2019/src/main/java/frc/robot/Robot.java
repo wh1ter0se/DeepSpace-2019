@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.SubsystemDrive;
 
@@ -33,6 +34,7 @@ public class Robot extends TimedRobot {
    * Create Subsystems
    */
   public static SubsystemDrive SUB_DRIVE;
+  public static OI             OI;
   public static Vision         VISION;
 
   /**
@@ -49,8 +51,8 @@ public class Robot extends TimedRobot {
      * Instantiate Subsystems
      */
     SUB_DRIVE = new SubsystemDrive();
+    OI        = new OI();
     VISION    = new Vision();
-      VISION.startFrameCameraThread();
 
 
 
@@ -67,6 +69,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("SD-LM Speed", Robot.SUB_DRIVE.getMotorValues()[0]); // Left Master speed
+    SmartDashboard.putNumber("SD-LS Speed", Robot.SUB_DRIVE.getMotorValues()[1]); // Left Slave speed
+    SmartDashboard.putNumber("SD-RM Speed", Robot.SUB_DRIVE.getMotorValues()[2]); // Right Master speed
+    SmartDashboard.putNumber("SD-RS Speed", Robot.SUB_DRIVE.getMotorValues()[3]); // Right Slave speed
   }
 
   /**
@@ -97,6 +103,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Scheduler.getInstance().run();
   }
 
   /**

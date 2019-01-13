@@ -11,6 +11,21 @@ package frc.robot;
  * A place to store magic numbers
  */
 public class Constants {
+    
+    /**
+     * Inverts
+     */
+    public static final Boolean
+        LEFT_DRIVE_INVERT  = false,
+        RIGHT_DRIVE_INVERT = true;
+    /**
+     * Spark IDs
+     */
+    public static final int
+        LEFT_MASTER_ID  = 0,
+        LEFT_SLAVE_ID   = 1,
+        RIGHT_MASTER_ID = 3,
+        RIGHT_SLAVE_ID  = 2;
 
     /**
      * Vision Values
