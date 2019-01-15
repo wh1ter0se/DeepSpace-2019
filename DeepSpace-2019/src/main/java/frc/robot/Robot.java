@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.SubsystemDrive;
+import frc.robot.Util.Util;
 
 //        _____   _____   ____     ______
 //       |__  /  / ___/  / __ \   / ____/
@@ -73,6 +74,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("SD-LS Speed", Robot.SUB_DRIVE.getMotorValues()[1]); // Left Slave speed
     SmartDashboard.putNumber("SD-RM Speed", Robot.SUB_DRIVE.getMotorValues()[2]); // Right Master speed
     SmartDashboard.putNumber("SD-RS Speed", Robot.SUB_DRIVE.getMotorValues()[3]); // Right Slave speed
+    // SmartDashboard.putNumber("Bandwidth", Robot.VISION.getTotalBandwidth());
   }
 
   /**

@@ -7,9 +7,11 @@
 
 package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.Util.Util;
 
 public class ButtonCommandFlipCamera extends Command {
   public ButtonCommandFlipCamera() {
@@ -21,6 +23,7 @@ public class ButtonCommandFlipCamera extends Command {
   @Override
   protected void initialize() {
     Robot.VISION.setCamID(Constants.BCAM_ID);
+    DriverStation.reportWarning("Flipping to camera B", false);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -37,12 +40,13 @@ public class ButtonCommandFlipCamera extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.VISION.setCamID(Constants.BCAM_ID);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.VISION.setCamID(Constants.ACAM_ID);
+    DriverStation.reportWarning("Flipping to camera A", false);
   }
 }

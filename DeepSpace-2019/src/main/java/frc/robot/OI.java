@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.Commands.ButtonCommandCalibrateCamera;
 import frc.robot.Commands.ButtonCommandFlipCamera;
 import frc.robot.Util.Xbox;
 
@@ -26,5 +27,8 @@ public class OI {
 	public OI() {
         Button flipCamera = new JoystickButton(DRIVER, Xbox.A);
             flipCamera.toggleWhenPressed(new ButtonCommandFlipCamera());
+
+        Button updateCameraConfig = new JoystickButton(DRIVER, Xbox.B);
+            updateCameraConfig.whenPressed(new ButtonCommandCalibrateCamera());
     }
 }

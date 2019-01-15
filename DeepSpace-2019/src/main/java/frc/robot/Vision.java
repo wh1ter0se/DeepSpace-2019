@@ -14,12 +14,14 @@ import org.opencv.core.Size;
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoException;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.Util.Util;
 
 /**
  * Add your docs here.
@@ -35,6 +37,8 @@ public class Vision extends TimedRobot {
 
     private Mat failImage;
 
+    private long initTime;
+
     public Vision(){
         Size camSize = new Size(Constants.CAM_WIDTH, Constants.CAM_HEIGHT);
         failImage = Mat.zeros(camSize, 0);
@@ -45,6 +49,8 @@ public class Vision extends TimedRobot {
         BCam.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
         
         server.setSource(ACam);
+
+        updateAllSettings((int) (Util.getAndSetDouble("Cam Exposure", Constants.BACKUP_EXPOSURE)));
     }
 
     /**
@@ -56,6 +62,25 @@ public class Vision extends TimedRobot {
         } else if (ID == 1) {
             server.setSource(BCam);
         }
+    }
+
+    // public double getTotalBandwidth() {
+    //     double total = 0;
+    //     try { total += ACam.getActualDataRate(); } 
+    //         catch (VideoException e) {  DriverStation.reportWarning("Video Exception on ACam", false); }
+    //     try { total += BCam.getActualDataRate(); } 
+    //         catch (VideoException e) {  DriverStation.reportWarning("Video Exception on BCam", false); }
+    //     return (total / 1048576);
+    // }
+
+    public void updateAllSettings(int exposure) {
+        updateExposure(exposure);
+        // add settings here as needed
+    }
+
+    public void updateExposure(int exposure) {
+        ACam.setExposureManual(exposure);
+        BCam.setExposureManual(exposure);
     }
 
     // public void startFrameCameraThread(){
