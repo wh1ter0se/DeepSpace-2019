@@ -70,26 +70,36 @@ public class SubsystemDrive extends Subsystem {
   }
 
   public void driveByPosition(double inches, double[] PID) {
-    inches *= Constants.ENCODER_TICKS_PER_ROTATION;
+    double rotations = Constants.ROTATIONS_PER_INCH * inches;
 
-    leftPID = new CANPIDController(leftMaster);
-    rightPID = new CANPIDController(rightMaster);
+    leftMaster.getPIDController().setP(PID[0], 0);
+      leftMaster.getPIDController().setI(PID[1], 0);
+      leftMaster.getPIDController().setD(PID[2], 0);
+      leftMaster.burnFlash();
+    rightMaster.getPIDController().setP(PID[0], 1);
+      rightMaster.getPIDController().setI(PID[1], 1);
+      rightMaster.getPIDController().setD(PID[2], 1);
+      rightMaster.burnFlash();
 
-    leftPID.setP(PID[0]);
-      leftPID.setI(PID[1]);
-      leftPID.setD(PID[2]);
-    rightPID.setP(PID[0]);
-      rightPID.setI(PID[1]);
-      rightPID.setD(PID[2]);
+    leftMaster.setMotorType(MotorType.kBrushless);
+    rightMaster.setMotorType(MotorType.kBrushless);
 
-    leftPID.setReference(inches, ControlType.kPosition);
-    rightPID.setReference(inches, ControlType.kPosition);
+    leftMaster.getPIDController().setOutputRange(-100, 100);
+    rightMaster.getPIDController().setOutputRange(-100, 100);
+
+    leftMaster.getPIDController().setReference(rotations * Constants.ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 0);
+    rightMaster.getPIDController().setReference(rotations * Constants.ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 1);
   }
 
-  public double[] getError(double[] initEncoderPositions) {
+  public double[] getError(double[] initEncoderPositions, double inches) {
+    double ticks = inches * Constants.ENCODER_TICKS_PER_ROTATION * Constants.ROTATIONS_PER_INCH;
     double[] output = new double[2];
-    output[0] = initEncoderPositions[0] - leftMaster.getEncoder().getPosition();
-    output[1] = initEncoderPositions[1] - rightMaster.getEncoder().getPosition();
+    output[0] = initEncoderPositions[0] 
+                + (ticks *= leftMaster.getInverted() ? -1 : 1) 
+                - leftMaster.getEncoder().getPosition();
+    output[1] = initEncoderPositions[1] 
+                + (ticks *= rightMaster.getInverted() ? -1 : 1) 
+                - rightMaster.getEncoder().getPosition();
     return output;
   }
 

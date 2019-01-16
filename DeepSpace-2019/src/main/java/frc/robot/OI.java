@@ -10,8 +10,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.ButtonCommandCalibrateCamera;
 import frc.robot.Commands.ButtonCommandFlipCamera;
+import frc.robot.Commands.CyborgCommandDriveByPosition;
+import frc.robot.Util.Util;
 import frc.robot.Util.Xbox;
 
 /**
@@ -30,5 +33,7 @@ public class OI {
 
         Button updateCameraConfig = new JoystickButton(DRIVER, Xbox.B);
             updateCameraConfig.whenPressed(new ButtonCommandCalibrateCamera());
+
+        SmartDashboard.putData("Drive by Distance", new CyborgCommandDriveByPosition());
     }
 }

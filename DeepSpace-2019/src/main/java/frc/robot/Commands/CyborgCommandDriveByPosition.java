@@ -7,6 +7,7 @@
 
 package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -19,6 +20,8 @@ public class CyborgCommandDriveByPosition extends Command {
 
   private double[] initPositions;
 
+  private double distance;
+
   public CyborgCommandDriveByPosition() {
     requires(Robot.SUB_DRIVE);
   }
@@ -28,9 +31,11 @@ public class CyborgCommandDriveByPosition extends Command {
   protected void initialize() {
     inRange = false;
 
+    distance = Util.getAndSetDouble("Auto Test Distance", 12);
+
     initPositions = Robot.SUB_DRIVE.getEncoderPositions();
 
-    Robot.SUB_DRIVE.driveByPosition(10, new double[]{
+    Robot.SUB_DRIVE.driveByPosition(distance, new double[]{
       Util.getAndSetDouble("Position kP", Constants.BACKUP_POSITION_kP),
       Util.getAndSetDouble("Position kI", Constants.BACKUP_POSITION_kI),
       Util.getAndSetDouble("Position kD", Constants.BACKUP_POSITION_kD)});
@@ -39,8 +44,9 @@ public class CyborgCommandDriveByPosition extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    inRange = Robot.SUB_DRIVE.getError(initPositions)[0] < Constants.MAX_ALLOWABLE_ERROR
-           && Robot.SUB_DRIVE.getError(initPositions)[1] < Constants.MAX_ALLOWABLE_ERROR;
+    DriverStation.reportWarning(Robot.SUB_DRIVE.getError(initPositions, distance)[0] + "," + Robot.SUB_DRIVE.getError(initPositions, distance)[1], false);
+    inRange = Robot.SUB_DRIVE.getError(initPositions, distance)[0] < Constants.MAX_ALLOWABLE_ERROR
+           && Robot.SUB_DRIVE.getError(initPositions, distance)[1] < Constants.MAX_ALLOWABLE_ERROR;
     lowSpeed = Robot.SUB_DRIVE.getAppliedOutputs()[0] < Constants.MAX_ALLOWABLE_AO 
             && Robot.SUB_DRIVE.getAppliedOutputs()[1] < Constants.MAX_ALLOWABLE_AO;
   }

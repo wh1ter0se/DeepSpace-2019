@@ -17,14 +17,15 @@ public class Constants {
      */
     public static final double
         BACKUP_RAMP         = 0,
-        MAX_ALLOWABLE_AO    = .2;
+        MAX_ALLOWABLE_AO    = .2, // percent output
+        MAX_ALLOWABLE_ERROR = .25; // inches
 
     /**
-     * Encoder values
+     * Per values
      */
-    public static final int
+    public static final double
         ENCODER_TICKS_PER_ROTATION = 42,
-        MAX_ALLOWABLE_ERROR        = 42;
+        ROTATIONS_PER_INCH = 1 / (4.67 * 6 *  Math.PI); // calculated with a cimple box and 42 TPR
 
     /**
      * PID backup values

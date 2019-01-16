@@ -5,6 +5,9 @@ import edu.wpi.first.wpilibj.Preferences;
 /** if our code is colonial America, this class is Rhode Island */
 public class Util {
 	
+	public static double celsiusToFahrenheit(double celsius) {
+		return (celsius * (9/5)) + 32;
+	}
 	/**
 	 *	kind of self explanatory, but with some spice
 	 *	use this mainly as a get method to retrieve values the user types into the smart dash

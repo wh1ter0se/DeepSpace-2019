@@ -74,6 +74,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("SD-LS Speed", Robot.SUB_DRIVE.getMotorValues()[1]); // Left Slave speed
     SmartDashboard.putNumber("SD-RM Speed", Robot.SUB_DRIVE.getMotorValues()[2]); // Right Master speed
     SmartDashboard.putNumber("SD-RS Speed", Robot.SUB_DRIVE.getMotorValues()[3]); // Right Slave speed
+
+    SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getAppliedOutputs()[0]);
+    SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getAppliedOutputs()[1]);
+
+    SmartDashboard.putData("Sub_Drive", SUB_DRIVE);
     // SmartDashboard.putNumber("Bandwidth", Robot.VISION.getTotalBandwidth());
   }
 
