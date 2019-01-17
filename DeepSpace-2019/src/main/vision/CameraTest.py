@@ -5,8 +5,8 @@ import cv2
 import numpy
 
 Stream = cv2.VideoCapture(0)
-Stream.set(3, 640)
-Stream.set(4, 252)
+Stream.set(3, 320) #the camera resolution x
+Stream.set(4, 200) #the camera resolution y
 
 
 def Loop():

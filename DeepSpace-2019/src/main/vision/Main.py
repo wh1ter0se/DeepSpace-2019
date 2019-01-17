@@ -3,6 +3,8 @@ import numpy
 import Settings
 import Util
 
+if Settings.DEBUG: import UI
+
 Stream = None
 
 def Capture():
@@ -50,6 +52,8 @@ def CompareForPairing(Data1, Data2):
 def Setup():
     global Stream
     Stream = cv2.VideoCapture(0)
+    Stream.set(3, Settings.IMAGE_RESOLUTION_X) #sets the width of the camera resolution
+    Stream.set(4, Settings.IMAGE_RESOLUTION_Y) #sets the height of the cam resolution
     print("Video stream instantiated")
     
 
@@ -62,14 +66,13 @@ def Loop():
         paired = [] # PairData representing pairs of contours
         unpaired = [] # ContourData representing contours that have not been paired yet
 
+        if Settings.DEBUG: UI.UpdateSettings()
+        
         img = Capture()
         ConImage= img.copy()
-
-        upper = numpy.array( [255,255,255] )
-        lower = numpy.array( [240,240,240] )
-        img = cv2.inRange(img, lower, upper)
-        _, Contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #pull all contours out of image
-        cv2.drawContours(ConImage, Contours, -1, [0,255,0], 3) # draws the contours into the image
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        Contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #pull all contours out of image
+        #cv2.drawContours(ConImage, Contours, -1, [0,255,0], 3) # draws the contours into the image
 
         #now process  the contours
         for contour in Contours:

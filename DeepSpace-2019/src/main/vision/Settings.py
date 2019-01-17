@@ -3,14 +3,11 @@ import numpy
 
 #Settings file for the vision program. Constants put here
 
-DEVMODE = False
+DEBUG = True
 
 #imaging
-IMAGE_RESOLUTION_X = 640
-IMAGE_RESOLUTION_Y = 252
-
-SUBIMAGE = cv2.rectangle(320,0,320,240) #the subimage we will pull from the camera (x,y,w,h)
-
+IMAGE_RESOLUTION_X = 320
+IMAGE_RESOLUTION_Y = 200
 
 IMAGE_CAPTURE_STREAM = True #when true uses the camera to get images. When false uses image in folder.
 
