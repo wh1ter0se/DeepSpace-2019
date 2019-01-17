@@ -9,7 +9,7 @@ DEBUG = True
 IMAGE_RESOLUTION_X = 320
 IMAGE_RESOLUTION_Y = 200
 
-IMAGE_CAPTURE_STREAM = True #when true uses the camera to get images. When false uses image in folder.
+IMAGE_CAPTURE_STREAM = False #when true uses the camera to get images. When false uses image in folder.
 
 #angling 
 TARGET_ANGLE_1 = -14 #the target angle of one contour

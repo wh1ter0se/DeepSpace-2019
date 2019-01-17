@@ -146,8 +146,19 @@ V. Program Settings
 
 Settings found in "Settings.py" are as follows:
 
-DEBUG_MODE: When True, program uses a GUI to give you information about how it is running. No graphical output is displayed when False.
+DEBUG: When True, program uses a GUI to give you information about how it is running. No graphical output is displayed when False.
 
-TARGET_NONZERO: When the program recieves an image, it will be tested to see how many pixels are nonzero (so not black). If the number of nonzero pixels is above the number defined in this setting, the program will process the image. Otherwise, it will wait for the next image.
+IMAGE_RESOLUTION_X: the x value of the resolution we pull from the camera. With the JeVois, the camera resolution determines what camera configuration is used.
+IMAGE_RESOLUTION_Y: the y value of the resolution we pull from the camera.
 
+IMAGE_CAPTURE_STREAM: simply for debugging purposes. When True, program uses any connected camera to grab images. When false, program uses image set in Main.Capture() method
 
+TARGET_ANGLE_1: The angle of the box on the left of the target.
+TARGET_ANGLE_2: The angle of the box on the right of the target.
+ANGLE_ERROR: the number used to determine the "range" that the angle can be in
+
+TARGET_ASPECT_RATIO: the aspect ratio (w/h) that one side of the target is
+ASPECT_RATIO_ERROR: the number used to determine the range the aspect ratio can be in
+
+TARGET_CONTOUR_DISTANCE: the distance in inches that separates the two boxes
+CONTOUR_DISTANCE_ERROR: number to determine the range distance can be
