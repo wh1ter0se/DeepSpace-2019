@@ -3,7 +3,7 @@ import numpy
 import Settings
 import Util
 
-if Settings.DEBUG: import UI
+if Settings.DEBUG: import UI # we only want to see UI if we are debugging
 
 Stream = None
 
@@ -34,19 +34,15 @@ def CompareForPairing(Data1, Data2):
         pixelsPerInch /= 2
 
         distance = Data1.x - Data2.x
-        distance = abs(distance) #grab absolute value
-        distance *= pixelsPerInch
+        distance = abs(distance) #grab absolute value of distance (in pixels)
+        distance *= pixelsPerInch #use our scalar to convert to inches
                 
         dstHigh, dstLow = Settings.ReturnDistance() #get the max and min range we can have distance in
         if(distance > dstLow) and (distance < dstHigh):
-            # distance is correct, we got a pair
+            # distance is correct, we got a pair cheif
             return True
         
     return False
-
-
-
-
 
 
 def Setup():
