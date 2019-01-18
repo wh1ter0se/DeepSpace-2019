@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Subsystems.SubsystemCompressor;
 import frc.robot.Subsystems.SubsystemDrive;
+import frc.robot.Subsystems.SubsystemShifter;
 import frc.robot.Util.Util;
 
 //        _____   _____   ____     ______
@@ -34,9 +36,11 @@ public class Robot extends TimedRobot {
   /**
    * Create Subsystems
    */
-  public static SubsystemDrive SUB_DRIVE;
-  public static OI             OI;
-  public static Vision         VISION;
+  public static SubsystemCompressor SUB_COMPRESSOR;
+  public static SubsystemDrive      SUB_DRIVE;
+  public static SubsystemShifter    SUB_SHIFTER;
+  public static OI                  OI;
+  public static Vision              VISION;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -51,9 +55,11 @@ public class Robot extends TimedRobot {
     /**
      * Instantiate Subsystems
      */
-    SUB_DRIVE = new SubsystemDrive();
-    OI        = new OI();
-    VISION    = new Vision();
+    SUB_COMPRESSOR = new SubsystemCompressor();
+    SUB_DRIVE      = new SubsystemDrive();
+    SUB_SHIFTER    = new SubsystemShifter();
+    OI             = new OI();
+    VISION         = new Vision();
 
 
 
@@ -77,6 +83,9 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getAppliedOutputs()[0]);
     SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getAppliedOutputs()[1]);
+
+    SmartDashboard.putNumber("Highest Left RPM", Robot.SUB_DRIVE.getHighestVelocities()[0]);
+    SmartDashboard.putNumber("Highest Right RPM", Robot.SUB_DRIVE.getHighestVelocities()[1]);
 
     SmartDashboard.putData("Sub_Drive", SUB_DRIVE);
     // SmartDashboard.putNumber("Bandwidth", Robot.VISION.getTotalBandwidth());

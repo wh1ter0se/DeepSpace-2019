@@ -33,6 +33,8 @@ public class SubsystemDrive extends Subsystem {
   private static CANPIDController leftPID;
   private static CANPIDController rightPID;
 
+  private static double[] highestRPM;
+
   @Override
   public void initDefaultCommand() {
     setDefaultCommand(new ManualCommandDrive());
@@ -45,6 +47,8 @@ public class SubsystemDrive extends Subsystem {
 
     rightMaster = new CANSparkMax(Constants.RIGHT_MASTER_ID, MotorType.kBrushless);
     rightSlave  = new CANSparkMax(Constants.RIGHT_SLAVE_ID, MotorType.kBrushless);
+
+    highestRPM = new double[]{0,0};
   }
 
   /**
@@ -110,10 +114,18 @@ public class SubsystemDrive extends Subsystem {
     return output;
   }
 
+  /**
+   * Gets the applied outputs/percent outputs of each motor
+   * @return [0] = leftMaster % output
+   *         [1] = rightMaster % output
+   */
   public double[] getAppliedOutputs() {
     return new double[]{ leftMaster.getAppliedOutput(), rightMaster.getAppliedOutput() };
   }
 
+  /**
+   * Sets all motor controller values to zero
+   */
   public void stopMotors() {
     leftMaster.stopMotor();
       leftSlave.stopMotor();
@@ -168,6 +180,14 @@ public class SubsystemDrive extends Subsystem {
     output[2] = rightMaster.get();
     output[3] = rightSlave.get();
     return output;
+  }
+
+  public double[] getHighestVelocities() {
+    if (leftMaster.getEncoder().getVelocity() > highestRPM[0]) {
+      highestRPM[0] = leftMaster.getEncoder().getVelocity(); }
+    if (rightMaster.getEncoder().getVelocity() > highestRPM[1]) {
+      highestRPM[0] = rightMaster.getEncoder().getVelocity(); }
+    return highestRPM;
   }
 
   

@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.ButtonCommandCalibrateCamera;
 import frc.robot.Commands.ButtonCommandFlipCamera;
+import frc.robot.Commands.ButtonCommandSetGear;
+import frc.robot.Commands.ButtonCommandToggleShift;
 import frc.robot.Commands.CyborgCommandDriveByPosition;
 import frc.robot.Util.Util;
 import frc.robot.Util.Xbox;
@@ -28,12 +30,22 @@ public class OI {
      * Assigns what every SmartDash and controller button does 
      */
 	public OI() {
-        Button flipCamera = new JoystickButton(DRIVER, Xbox.A);
+        Button flipCamera = new JoystickButton(DRIVER, Xbox.Y);
             flipCamera.toggleWhenPressed(new ButtonCommandFlipCamera());
 
-        Button updateCameraConfig = new JoystickButton(DRIVER, Xbox.B);
+        Button updateCameraConfig = new JoystickButton(DRIVER, Xbox.RSTICK);
             updateCameraConfig.whenPressed(new ButtonCommandCalibrateCamera());
 
+        Button toggleShift = new JoystickButton(DRIVER, Xbox.X);
+            toggleShift.whenPressed(new ButtonCommandToggleShift());
+
+        Button downShift = new JoystickButton(DRIVER, Xbox.A);
+            downShift.whenPressed(new ButtonCommandSetGear(1));
+
+        Button upShift = new JoystickButton(DRIVER, Xbox.B);
+            upShift.whenPressed(new ButtonCommandSetGear(2));
+
+        
         SmartDashboard.putData("Drive by Distance", new CyborgCommandDriveByPosition());
     }
 }

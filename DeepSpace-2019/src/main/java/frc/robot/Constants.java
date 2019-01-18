@@ -43,6 +43,15 @@ public class Constants {
         RIGHT_DRIVE_INVERT = true;
 
     /**
+     * Solenoid IDS
+     */
+    public static final int
+        LEFT_DOWNSHIFT_ID  = 0,
+        LEFT_UPSHIFT_ID    = 0,
+        RIGHT_DOWNSHIFT_ID = 0,
+        RIGHT_UPSHIFT_ID   = 0;
+        
+    /**
      * Spark IDs
      */
     public static final int
@@ -59,5 +68,6 @@ public class Constants {
         CAM_WIDTH       = 1920,
         ACAM_ID         = 0,
         BCAM_ID         = 1,
+        CCAM_ID         = 2,
         BACKUP_EXPOSURE = 35;
 }

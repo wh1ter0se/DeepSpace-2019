@@ -30,6 +30,7 @@ public class Vision extends TimedRobot {
 
     private UsbCamera ACam;
     private UsbCamera BCam;
+    private UsbCamera CCam;
 
     private VideoSink server;
 
@@ -44,9 +45,11 @@ public class Vision extends TimedRobot {
         failImage = Mat.zeros(camSize, 0);
         ACam = CameraServer.getInstance().startAutomaticCapture(Constants.ACAM_ID);
         BCam = CameraServer.getInstance().startAutomaticCapture(Constants.BCAM_ID);
+        CCam = CameraServer.getInstance().startAutomaticCapture(Constants.CCAM_ID);
         server = CameraServer.getInstance().getServer();
         ACam.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
         BCam.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+        CCam.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
         
         server.setSource(ACam);
 
@@ -61,6 +64,8 @@ public class Vision extends TimedRobot {
             server.setSource(ACam);
         } else if (ID == 1) {
             server.setSource(BCam);
+        } else if (ID == 2) {
+            server.setSource(CCam);
         }
     }
 
@@ -81,6 +86,7 @@ public class Vision extends TimedRobot {
     public void updateExposure(int exposure) {
         ACam.setExposureManual(exposure);
         BCam.setExposureManual(exposure);
+        CCam.setExposureManual(exposure);
     }
 
     // public void startFrameCameraThread(){
