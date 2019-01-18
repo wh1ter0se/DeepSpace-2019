@@ -3,6 +3,15 @@
 import cv2
 import Settings
 
+#variables the UI uses to display data about any passing contours
+ContourData_1 = None
+ContourData_2 = None
+TargetFound = False
+
+#program pause and quit booleans
+ProgramPause = False
+ProgramQuit = False
+
 class ContourData:
     x = 0
     y = 0

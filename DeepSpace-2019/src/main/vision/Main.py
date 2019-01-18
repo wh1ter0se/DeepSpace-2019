@@ -56,45 +56,46 @@ def Setup():
 def Loop():
 
         
-    while True:
-        #loopey boi
+    while not Util.ProgramQuit:
+        if not Util.ProgramPause:
+            #loopey boi
 
-        paired = [] # PairData representing pairs of contours
-        unpaired = [] # ContourData representing contours that have not been paired yet
+            paired = [] # PairData representing pairs of contours
+            unpaired = [] # ContourData representing contours that have not been paired yet
 
-        if Settings.DEBUG: UI.UpdateSettings()
-        
-        img = Capture()
-        ConImage= img.copy()
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        Contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #pull all contours out of image
-        #cv2.drawContours(ConImage, Contours, -1, [0,255,0], 3) # draws the contours into the image
+            if Settings.DEBUG: UI.UpdateSettings()
+            
+            img = Capture()
+            ConImage= img.copy()
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            Contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #pull all contours out of image
+            #cv2.drawContours(ConImage, Contours, -1, [0,255,0], 3) # draws the contours into the image
 
-        #now process  the contours
-        for contour in Contours:
-            box = cv2.minAreaRect(contour) #get our bounding box, can be rotated.
-            data = Util.ContourData(box) #create a data wrapper using the box
+            #now process  the contours
+            for contour in Contours:
+                box = cv2.minAreaRect(contour) #get our bounding box, can be rotated.
+                data = Util.ContourData(box) #create a data wrapper using the box
 
-            if data.IsEligible():
-                #find any possible pairs
-                PixelScale = data.GetScale()
-                PairFound = False
-                for otherContour in unpaired:
-                    if(CompareForPairing(data, otherContour)):
-                        pair = Util.PairData(data, otherContour)
-                        paired.append(pair)
-                        pairFound = True
-                                        
+                if data.IsEligible():
+                    #find any possible pairs
+                    PixelScale = data.GetScale()
+                    PairFound = False
+                    for otherContour in unpaired:
+                        if(CompareForPairing(data, otherContour)):
+                            pair = Util.PairData(data, otherContour)
+                            paired.append(pair)
+                            pairFound = True
+                                            
 
-                if not PairFound:
-                    unpaired.append(data)
+                    if not PairFound:
+                        unpaired.append(data)
 
-        for pair in paired:
-            centerX, centerY = pair.returnCenter()
-            cv2.circle(ConImage, (centerX, centerY), 3, (255,255,0), 5) #draw a point at the center of the target
+            for pair in paired:
+                centerX, centerY = pair.returnCenter()
+                cv2.circle(ConImage, (centerX, centerY), 3, (255,255,0), 5) #draw a point at the center of the target
 
-        cv2.imshow("Contours", ConImage) #displays the contour image 
-        cv2.waitKey(5)
+            cv2.imshow("Contours", ConImage) #displays the contour image 
+            cv2.waitKey(5)
     
 
 

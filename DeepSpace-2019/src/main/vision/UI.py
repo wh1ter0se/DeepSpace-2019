@@ -2,9 +2,13 @@
 
 from __future__ import division #forces float divisions each time
 import Tkinter as tk #the UI module
+
 import Settings
+import Util
 
 def KillProgram(): Quit()
+
+def PauseProgram(): Util.ProgramPause = not Util.ProgramPause #toggle program paused
 
 MasterWindow = tk.Tk() #new main window
 
@@ -32,6 +36,7 @@ SettingsLabel = tk.Label(MasterWindow, textvariable=SettingsLabelText, anchor=tk
 
 #Buttons
 QuitButton = tk.Button(MasterWindow, text="Kill Program", command=KillProgram)
+PauseButton = tk.Button(MasterWindow, text="Pause Program", command=PauseProgram)
 
 
 #Grid all UI elems onto the master
@@ -50,6 +55,9 @@ Slider_Contour_Distance.grid(row=8, column=0)
 Slider_Distance_Error.grid(row=9, column=0)
 
 SettingsLabel.grid(row=1, column=1)
+
+PauseButton.grid(row=10, column=0)
+QuitButton.grid(row=10, column=1)
 
 
 #set init values of the UI elements
@@ -86,6 +94,18 @@ def UpdateSettings():
     #distance
     Settings.TARGET_CONTOUR_DISTANCE = Slider_Contour_Distance.get()
     Settings.CONTOUR_DISTANCE_ERROR = Slider_Distance_Error.get()
+
+    #format all settings into a string to display onto the UI
+    SettingsString = "SETTINGS:"
+    SettingsString += "\nAngle 1         : " + str(Settings.TARGET_ANGLE_1)
+    SettingsString += "\nAngle 2         : " + str(Settings.TARGET_ANGLE_2)
+    SettingsString += "\nAngle Error     : " + str(Settings.ANGLE_ERROR)
+    SettingsString += "\nAspect Ratio    : " + str(Settings.TARGET_ASPECT_RATIO)
+    SettingsString += "\nAR error        : " + str(Settings.ASPECT_RATIO_ERROR)
+    SettingsString += "\nContour Distance: " + str(Settings.TARGET_CONTOUR_DISTANCE)
+    SettingsString += "\nDistance Error  : " + str(Settings.CONTOUR_DISTANCE_ERROR)
+
+    SettingsLabelText.set(SettingsString)
     
     
     
