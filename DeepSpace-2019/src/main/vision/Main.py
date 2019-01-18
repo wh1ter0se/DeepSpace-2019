@@ -40,7 +40,15 @@ def CompareForPairing(Data1, Data2):
         dstHigh, dstLow = Settings.ReturnDistance() #get the max and min range we can have distance in
         if(distance > dstLow) and (distance < dstHigh):
             # distance is correct, we got a pair cheif
+            if Settings.DEBUG: #update the UI with some information
+                Util.TargetFound = True
+                Util.ContourData_1 = Data1
+                Util.ContourData_2 = Data2
+
             return True
+
+    if Settings.DEBUG:
+        Util.TargetFound = False
         
     return False
 
@@ -57,13 +65,13 @@ def Loop():
 
         
     while not Util.ProgramQuit:
+        if Settings.DEBUG: UI.UpdateSettings()
         if not Util.ProgramPause:
             #loopey boi
 
             paired = [] # PairData representing pairs of contours
             unpaired = [] # ContourData representing contours that have not been paired yet
 
-            if Settings.DEBUG: UI.UpdateSettings()
             
             img = Capture()
             ConImage= img.copy()
@@ -90,6 +98,10 @@ def Loop():
                     if not PairFound:
                         unpaired.append(data)
 
+            if len(paired) == 0:
+                Util.TargetFound = False
+
+                
             for pair in paired:
                 centerX, centerY = pair.returnCenter()
                 cv2.circle(ConImage, (centerX, centerY), 3, (255,255,0), 5) #draw a point at the center of the target

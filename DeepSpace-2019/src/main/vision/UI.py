@@ -6,7 +6,7 @@ import Tkinter as tk #the UI module
 import Settings
 import Util
 
-def KillProgram(): Quit()
+def KillProgram(): Util.ProgramQuit = True
 
 def PauseProgram(): Util.ProgramPause = not Util.ProgramPause #toggle program paused
 
@@ -28,11 +28,13 @@ Slider_Distance_Error = tk.Scale(MasterWindow, from_=0, to=40, orient=tk.HORIZON
 
 #Label text vars
 SettingsLabelText = tk.StringVar(MasterWindow)
+ContourDataText = tk.StringVar(MasterWindow)
 
 #Some Random Labels
 ModeLabel = tk.Label(MasterWindow, text="Mode: Debug", anchor=tk.W)
 HeaderLabel = tk.Label(MasterWindow, text="Settings", anchor=tk.W)
 SettingsLabel = tk.Label(MasterWindow, textvariable=SettingsLabelText, anchor=tk.W)
+ContourDataLabel = tk.Label(MasterWindow, textvariable=ContourDataText, anchor=tk.W)
 
 #Buttons
 QuitButton = tk.Button(MasterWindow, text="Kill Program", command=KillProgram)
@@ -55,15 +57,16 @@ Slider_Contour_Distance.grid(row=8, column=0)
 Slider_Distance_Error.grid(row=9, column=0)
 
 SettingsLabel.grid(row=1, column=1)
+ContourDataLabel.grid(row=2, column=1)
 
 PauseButton.grid(row=10, column=0)
 QuitButton.grid(row=10, column=1)
 
 
 #set init values of the UI elements
-Slider_Aspect_X.set(6)
-Slider_Aspect_Y.set(2)
-Slider_Aspect_Error.set(Settings.ASPECT_RATIO_ERROR)
+Slider_Aspect_X.set(2)
+Slider_Aspect_Y.set(6)
+Slider_Aspect_Error.set(Settings.ASPECT_RATIO_ERROR * 100)
 
 Slider_Angle_1.set(Settings.TARGET_ANGLE_1)
 Slider_Angle_2.set(Settings.TARGET_ANGLE_2)
@@ -106,6 +109,24 @@ def UpdateSettings():
     SettingsString += "\nDistance Error  : " + str(Settings.CONTOUR_DISTANCE_ERROR)
 
     SettingsLabelText.set(SettingsString)
+
+    #update the contour data label
+    TargetString = "No target data could be displayed becuase no target was found."
+    if Util.TargetFound:
+        TargetString = "Target Data:"
+        TargetString += "\nContour 1:"
+        TargetString += "\nAngle  : " + str(Util.ContourData_1.angle)
+
+        contour_1_AR = Util.ContourData_1.w / Util.ContourData_1.h
+        TargetString += "\nAR     : " + str(contour_1_AR)
+
+        TargetString += "\n\nContour 2:"
+        TargetString += "\nAngle    : " + str(Util.ContourData_2.angle)
+
+        contour_2_AR = Util.ContourData_2.w / Util.ContourData_2.h
+        TargetString += "\nAR     : " + str(contour_2_AR)
+
+    ContourDataText.set(TargetString)
     
     
     
