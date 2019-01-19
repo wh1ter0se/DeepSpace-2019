@@ -182,11 +182,28 @@ public class SubsystemDrive extends Subsystem {
     return output;
   }
 
+  /**
+   * Retrieves an array with the absolute RPM of each motor controller
+   * @return [0] = Current absolute RPM from left side
+   *         [1] = Current absolute RPM from right side
+   */
+  public double[] getVelocities() {
+    double[] output = new double[2];
+    output[0] = Math.abs(leftMaster.getEncoder().getVelocity());
+    output[1] = Math.abs(rightMaster.getEncoder().getVelocity());
+    return output;
+  }
+
+  /**
+   * Returns the highest recorded RPM of each motor controller
+   * @return [0] = Highest absolute RPM from left side
+   *         [1] = Highest absolute RPM from right side
+   */
   public double[] getHighestVelocities() {
     if (leftMaster.getEncoder().getVelocity() > highestRPM[0]) {
-      highestRPM[0] = leftMaster.getEncoder().getVelocity(); }
+      highestRPM[0] = Math.abs(leftMaster.getEncoder().getVelocity()); }
     if (rightMaster.getEncoder().getVelocity() > highestRPM[1]) {
-      highestRPM[0] = rightMaster.getEncoder().getVelocity(); }
+      highestRPM[0] = Math.abs(rightMaster.getEncoder().getVelocity()); }
     return highestRPM;
   }
 

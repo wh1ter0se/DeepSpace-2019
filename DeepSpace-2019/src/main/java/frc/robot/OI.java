@@ -15,6 +15,7 @@ import frc.robot.Commands.ButtonCommandCalibrateCamera;
 import frc.robot.Commands.ButtonCommandFlipCamera;
 import frc.robot.Commands.ButtonCommandSetGear;
 import frc.robot.Commands.ButtonCommandToggleShift;
+import frc.robot.Commands.CyborgCommandAutoShift;
 import frc.robot.Commands.CyborgCommandDriveByPosition;
 import frc.robot.Util.Util;
 import frc.robot.Util.Xbox;
@@ -45,6 +46,8 @@ public class OI {
         Button upShift = new JoystickButton(DRIVER, Xbox.B);
             upShift.whenPressed(new ButtonCommandSetGear(2));
 
+        Button toggleAutoShifting = new JoystickButton(DRIVER, Xbox.START);
+            toggleAutoShifting.toggleWhenPressed(new CyborgCommandAutoShift());
         
         SmartDashboard.putData("Drive by Distance", new CyborgCommandDriveByPosition());
     }

@@ -18,7 +18,9 @@ public class Constants {
     public static final double
         BACKUP_RAMP         = 0,
         MAX_ALLOWABLE_AO    = .2, // percent output
-        MAX_ALLOWABLE_ERROR = .25; // inches
+        MAX_ALLOWABLE_ERROR = .25, // inches
+        DOWNSHIFT_RPM       = 900,
+        UPSHIFT_RPM         = 1000;
 
     /**
      * Per values
