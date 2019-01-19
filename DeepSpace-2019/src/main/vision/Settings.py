@@ -12,13 +12,16 @@ IMAGE_RESOLUTION_Y = 200
 IMAGE_CAPTURE_STREAM = True #when true uses the camera to get images. When false uses image in folder.
 
 #angling 
-TARGET_ANGLE_1 = -14 #the target angle of one contour
-TARGET_ANGLE_2 = -84 #the target angle of the other contour
-ANGLE_ERROR = 10
+TARGET_ANGLE_1 = -19 #the target angle of the right contour
+TARGET_ANGLE_2 =  -74 #the target angle of the left contour
+ANGLE_ERROR = 15
 
 #targeting
-TARGET_ASPECT_RATIO = 0.34 #aspect ratio of any given contour to move on to further testing
-ASPECT_RATIO_ERROR = 0.15 #maximum error in the aspect ratio test
+TARGET_ASPECT_RATIO = 0.45 #aspect ratio of any given contour to move on to further testing
+ASPECT_RATIO_ERROR = 0.1 #maximum error in the aspect ratio test
+
+TARGET_CONTOUR_AREA = 30000
+TARGET_AREA_ERROR = 15000
 
 TARGET_CONTOUR_DISTANCE = 9 #distance between contours in inches
 CONTOUR_DISTANCE_ERROR = 6 #amount of error 
@@ -31,6 +34,10 @@ def ReturnDistance():
 #returns highRange, lowRange
 def ReturnAspectRatio():
     return TARGET_ASPECT_RATIO + ASPECT_RATIO_ERROR, TARGET_ASPECT_RATIO - ASPECT_RATIO_ERROR
+
+#returns higharea, lowarea
+def ReturnArea():
+    return TARGET_CONTOUR_AREA + TARGET_AREA_ERROR, TARGET_CONTOUR_AREA - TARGET_AREA_ERROR
 
 #returns highangle, lowangle
 def ReturnAngle_1():

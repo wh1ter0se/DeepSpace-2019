@@ -1,5 +1,7 @@
 import cv2
 import numpy
+import time
+
 import Settings
 import Util
 
@@ -22,10 +24,25 @@ def Capture():
 #@param Data1 the contourData to be compared with
 #@param Data2 the contourData to compare with Data1
 def CompareForPairing(Data1, Data2):
-    targetAngle = Util.GetOppositeAngle(Data1.angle) #whats the angle we are looking for?
-    angleHigh = targetAngle + Settings.ANGLE_ERROR #get our range for angles
-    angleLow = targetAngle  - Settings.ANGLE_ERROR 
-    if(Data2.angle > angleLow) and (Data2.angle < angleHigh): # it's in range, let's go to distance testing
+    #confirm that the angles are correct, fist find the leftmost contour
+    LeftmostContour = None
+    RightmostContour = None
+    if Data1.x < Data2.x:
+        LeftmostContour = Data1
+        RightmostContour = Data2
+    else:
+        LeftmostContour = Data2
+        RightmostContour = Data1
+
+    LeftAngleHigh, LeftAngleLow = Settings.ReturnAngle_2() #get the left angle range
+    RightAngleHigh, RightAngleLow = Settings.ReturnAngle_1() #get the right angle range
+        
+    angleTest1 = (LeftmostContour.angle < LeftAngleHigh) and (LeftmostContour.angle > LeftAngleLow)
+    angleTest2 = (RightmostContour.angle < RightAngleHigh) and (RightmostContour.angle > RightAngleLow)
+    Util.UIOutputMessage = "Angle 1:  " + str(angleTest1) + ", Angle 2: " + str(angleTest2)
+
+    if angleTest1 and angleTest2:
+        Util.UIOutputMessage = "Angle test passed."
         #get a pixel to inch scalar so we can measure true distance
         pixToInch_1 = Data1.GetScale()
         pixToInch_2 = Data2.GetScale()
@@ -39,6 +56,7 @@ def CompareForPairing(Data1, Data2):
                 
         dstHigh, dstLow = Settings.ReturnDistance() #get the max and min range we can have distance in
         if(distance > dstLow) and (distance < dstHigh):
+            Util.UIOutputMessage = "All tests passed. (Angle and distance)"
             # distance is correct, we got a pair cheif
             if Settings.DEBUG: #update the UI with some information
                 Util.TargetFound = True
@@ -65,7 +83,13 @@ def Loop():
 
         
     while not Util.ProgramQuit:
-        if Settings.DEBUG: UI.UpdateSettings()
+        StartTime = 0 #default loop start time is 0, just so the var is declared. Will only be used in debugging mode.
+        
+        if Settings.DEBUG:
+            StartTime = time.clock() #keep record of when the loop started so we can calculate time
+            UI.UpdateSettings()
+            Util.UIOutputMessage = "No tests passed."
+            
         if not Util.ProgramPause:
             #loopey boi
 
@@ -86,10 +110,16 @@ def Loop():
 
                 if data.IsEligible():
                     #find any possible pairs
+                    if Settings.DEBUG: #display bounding box around possible contour
+                        points = cv2.cv.BoxPoints(box)
+                        points = numpy.int0(points)
+                        cv2.drawContours(ConImage, [points], -1, (0,0,255), 1)
+                    
                     PixelScale = data.GetScale()
                     PairFound = False
                     for otherContour in unpaired:
-                        if(CompareForPairing(data, otherContour)):
+                        Util.UIOutputMessage = "Testing contours for pairs"
+                        if(CompareForPairing(data, otherContour)): #if the contours are pairs of each other, then add them to the array
                             pair = Util.PairData(data, otherContour)
                             paired.append(pair)
                             pairFound = True
@@ -106,8 +136,15 @@ def Loop():
                 centerX, centerY = pair.returnCenter()
                 cv2.circle(ConImage, (centerX, centerY), 3, (255,255,0), 5) #draw a point at the center of the target
 
-            cv2.imshow("Contours", ConImage) #displays the contour image 
-            cv2.waitKey(5)
+
+            if Settings.DEBUG: #Update the UI if we are in debugging mode.
+                cv2.imshow("Contours", ConImage) #displays the contour image 
+                cv2.waitKey(5)
+            
+                FinishTime = time.clock()
+                Util.ProgramLoopTime = FinishTime - StartTime #record the loop time by subtracting finish from start
+                Util.ProgramLoopTime *= 1000 #convert to ms
+                Util.ProgramLoopTime = int(Util.ProgramLoopTime) #get rid of the decimal points so that the number doesn't bounce around on screen
     
 
 

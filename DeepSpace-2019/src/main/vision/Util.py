@@ -6,11 +6,16 @@ import Settings
 #variables the UI uses to display data about any passing contours
 ContourData_1 = None
 ContourData_2 = None
+
 TargetFound = False
 
 #program pause and quit booleans
 ProgramPause = False
 ProgramQuit = False
+
+UIOutputMessage = ""
+
+ProgramLoopTime = 0.0 #the loop time in milliseconds to be displayed in the UI
 
 class ContourData:
     x = 0
@@ -58,7 +63,12 @@ class ContourData:
         angleTest2 = (self.angle < AngleUpperRange) and (self.angle > AngleLowerRange)
         test2 = angleTest1 or angleTest2 #if one of the angle tests are true, the test is passing
 
-        return test1 and test2 #returns if both are true. false if nah, true if yah
+        #AREA TEST
+        AreaHigh, AreaLow = Settings.ReturnArea() #get our allowed area range
+        Area = self.x * self.y #get our area for testing
+        test3 = (Area < AreaHigh) and (Area > AreaLow) #now test the area
+
+        return test1 and test2 and test3 #returns if both are true. false if nah, true if yah
 
     
     def GetScale(self):

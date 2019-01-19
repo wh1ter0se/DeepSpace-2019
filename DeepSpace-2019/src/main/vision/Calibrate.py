@@ -94,6 +94,12 @@ def PostProcess():
         #average the aspect ratio
         aspect_ratio = contour_1_AR + contour_2_AR
         aspect_ratio = aspect_ratio / 2
+
+        #average area of each contour
+        area_1 = ValidContours[0].x * ValidContours[0].y
+        area_2 = ValidContours[1].x * ValidContours[1].y
+        area = (area_1 + area_2) / 2 #add and average the areas
+        
         #distance
         distance = ValidContours[0].x - ValidContours[1].x # gets the distance between both contours
         distance = abs(distance) # just in case the distance turns up negative...
@@ -109,6 +115,7 @@ def PostProcess():
         TargetInfo += "\nLEFT ANGLE(angle 1) : " + str(angle_1)
         TargetInfo += "\nRIGHT ANGLE(angle 2): " + str(angle_2)
         TargetInfo += "\nASPECT RATIO        : " + str(aspect_ratio)
+        TargetInfo += "\nAREA                : " + str(area)
         TargetInfo += "\nDISTANCE            : " + str(distance)
         TargetInfo += "\nSCALE               : " + str(scale)
         TargetInfo += "\n\nPress \"Continue\" to continue."
