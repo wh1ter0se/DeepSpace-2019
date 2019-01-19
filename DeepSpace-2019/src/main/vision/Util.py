@@ -13,9 +13,12 @@ TargetFound = False
 ProgramPause = False
 ProgramQuit = False
 
+#Message for UI to display
 UIOutputMessage = ""
 
 ProgramLoopTime = 0.0 #the loop time in milliseconds to be displayed in the UI
+
+Targets = []
 
 class ContourData:
     x = 0
@@ -81,6 +84,7 @@ class ContourData:
 class PairData:
     x = 0
     y = 0
+    area = 0
 
     #constructs new PairData using the two boxes provided
     #@param box1 the first box to use for coordinates
@@ -96,6 +100,10 @@ class PairData:
         
         self.y = y
         self.x = x
+
+        area1 = data1.w * data1.y
+        area2 = data2.w * data2.y
+        self.area = area1 + area2
     
     def returnCenter(self):
         return self.x, self.y

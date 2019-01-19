@@ -1,6 +1,9 @@
+from __future__ import division
+
 import cv2
 import numpy
 import time
+import socket #for UDP
 
 import Settings
 import Util
@@ -8,6 +11,8 @@ import Util
 if Settings.DEBUG: import UI # we only want to see UI if we are debugging
 
 Stream = None
+sock = socket.socket(socket.AF_INET, # Internet
+                     socket.SOCK_DGRAM) # UDP
 
 def Capture():
     #gets image using method in settings
@@ -56,10 +61,10 @@ def CompareForPairing(Data1, Data2):
                 
         dstHigh, dstLow = Settings.ReturnDistance() #get the max and min range we can have distance in
         if(distance > dstLow) and (distance < dstHigh):
-            Util.UIOutputMessage = "All tests passed. (Angle and distance)"
             # distance is correct, we got a pair cheif
             if Settings.DEBUG: #update the UI with some information
                 Util.TargetFound = True
+                Util.UIOutputMessage = "All tests passed. (Angle and distance)"
                 Util.ContourData_1 = Data1
                 Util.ContourData_2 = Data2
 
@@ -128,14 +133,35 @@ def Loop():
                     if not PairFound:
                         unpaired.append(data)
 
+            #update the util targets
+            Util.Targets = paired
+
+            #send the coords to the RIO
+            #scale the image to 720p before sending
+            UDPMessage = ""
+
             if len(paired) == 0:
                 Util.TargetFound = False
-
                 
-            for pair in paired:
-                centerX, centerY = pair.returnCenter()
-                cv2.circle(ConImage, (centerX, centerY), 3, (255,255,0), 5) #draw a point at the center of the target
-
+            else: #the are more than 0 pairs
+                LargestTarget = paired[0]
+                for pair in paired:
+                    centerX, centerY = pair.returnCenter()
+                    if pair.area > LargestTarget.area: LargestTarget = pair
+                    
+                    if Settings.DEBUG:
+                        cv2.circle(ConImage, (centerX, centerY), 3, (255,255,0), 5) #draw a point at the center of the target
+                    
+                scaledX = (LargestTarget.x / Settings.IMAGE_RESOLUTION_X) * 1280
+                scaledY = (LargestTarget.y / Settings.IMAGE_RESOLUTION_Y) * 720
+                scaledX = int(scaledX)
+                scaledY = int(scaledY)
+                
+                UDPMessage = str(scaledX) + "," + str(scaledY)
+                Util.UIOutputMessage = "Sending to RIO: " + UDPMessage
+                UDPMessage = "-1,-1"
+                
+            sock.sendto(UDPMessage, (Settings.UDP_IP, Settings.UDP_PORT))
 
             if Settings.DEBUG: #Update the UI if we are in debugging mode.
                 cv2.imshow("Contours", ConImage) #displays the contour image 
@@ -145,7 +171,6 @@ def Loop():
                 Util.ProgramLoopTime = FinishTime - StartTime #record the loop time by subtracting finish from start
                 Util.ProgramLoopTime *= 1000 #convert to ms
                 Util.ProgramLoopTime = int(Util.ProgramLoopTime) #get rid of the decimal points so that the number doesn't bounce around on screen
-    
 
 
 if __name__ == '__main__': #START HERE:

@@ -2,6 +2,7 @@
 
 from __future__ import division #forces float divisions each time
 import Tkinter as tk #the UI module
+import time
 
 import Settings
 import Util
@@ -35,6 +36,7 @@ SettingsLabelText = tk.StringVar(MasterWindow)
 ContourDataText = tk.StringVar(MasterWindow)
 ProgramMessageText= tk.StringVar(MasterWindow)
 TimeLabelText = tk.StringVar(MasterWindow)
+TargetLabelText = tk.StringVar(MasterWindow)
 
 #Some Random Labels
 ModeLabel = tk.Label(MasterWindow, text="Mode: Debug", anchor=tk.W)
@@ -43,6 +45,7 @@ SettingsLabel = tk.Label(MasterWindow, textvariable=SettingsLabelText, anchor=tk
 ContourDataLabel = tk.Label(MasterWindow, textvariable=ContourDataText, anchor=tk.W)
 ProgramMessageLabel = tk.Label(MasterWindow, textvariable=ProgramMessageText, anchor=tk.W)
 TimeLabel = tk.Label(MasterWindow, textvariable=TimeLabelText, anchor=tk.W)
+TargetLabel = tk.Label(MasterWindow, textvariable=TargetLabelText, anchor=tk.W)
 
 #Buttons
 QuitButton = tk.Button(MasterWindow, text="Kill Program", command=KillProgram)
@@ -71,6 +74,7 @@ SettingsLabel.grid(row=1, column=1)
 ContourDataLabel.grid(row=2, column=1)
 ProgramMessageLabel.grid(row=3, column=1)
 TimeLabel.grid(row=4, column=1)
+TargetLabel.grid(row=5, column=1)
 
 PauseButton.place(x=510, y=500)
 QuitButton.place(x=710, y=500)
@@ -154,6 +158,7 @@ def UpdateSettings():
 
     #show the loop time string
     TimeString = "Time Information:"
+    TimeString += "\nSystem clock: " + str(time.clock())
     TimeString += "\nProgram looping at: " + str(Util.ProgramLoopTime) + "ms / loop"
 
     ProgramFPS = 0
@@ -162,6 +167,12 @@ def UpdateSettings():
         
     TimeString += " (" + str(ProgramFPS) + " FPS)"
     TimeLabelText.set(TimeString)
-    
+
+    #update the target label with targeting data
+    TargetingString = "Recognized Targets: \n"
+    for target in Util.Targets:
+        TargetingString += "(" + str(target.x) + ", " + str(target.y) + "), "
+
+    TargetLabelText.set(TargetingString)
     
     

@@ -20,11 +20,14 @@ ANGLE_ERROR = 15
 TARGET_ASPECT_RATIO = 0.45 #aspect ratio of any given contour to move on to further testing
 ASPECT_RATIO_ERROR = 0.1 #maximum error in the aspect ratio test
 
-TARGET_CONTOUR_AREA = 30000
+TARGET_CONTOUR_AREA = 25000
 TARGET_AREA_ERROR = 15000
 
 TARGET_CONTOUR_DISTANCE = 9 #distance between contours in inches
-CONTOUR_DISTANCE_ERROR = 6 #amount of error 
+CONTOUR_DISTANCE_ERROR = 6 #amount of error
+
+UDP_IP = "10.36.95.18" # IP address of the RoboRIO
+UDP_PORT = 22 # IP port of the RIO
 
 
 #returns highDistance, lowDistance

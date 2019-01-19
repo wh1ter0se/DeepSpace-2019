@@ -90,6 +90,8 @@ Sometimes you might start up the program and it might not work. If it does not, 
 		b. The angle to look for
 		c. The "nonzero pixels" setting. If in doubt, reduce the value.
 
+	-Make sure that the LEDs are powered sufficiently. If you are powering the LEDs from a battery with low charge, they will be dimmer. If you are having trouble getting the target to show up on screen, try switching out the battery.
+
 
 
 
@@ -160,5 +162,12 @@ ANGLE_ERROR: the number used to determine the "range" that the angle can be in
 TARGET_ASPECT_RATIO: the aspect ratio (w/h) that one side of the target is
 ASPECT_RATIO_ERROR: the number used to determine the range the aspect ratio can be in
 
+TARGET_CONTOUR_AREA: the area of the contour we area looking for
+TARGET_AREA_ERROR: determines the range of error for the area 
+
 TARGET_CONTOUR_DISTANCE: the distance in inches that separates the two boxes
 CONTOUR_DISTANCE_ERROR: number to determine the range distance can be
+
+
+UDP_IP: the IP address of the RoboRIO.
+UDP_PORT: the port that the RIO is on.
