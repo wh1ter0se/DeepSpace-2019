@@ -26,9 +26,9 @@ import frc.robot.Util.Xbox;
 public class SubsystemDrive extends Subsystem {
 
   private static CANSparkMax leftMaster;
-  private static CANSparkMax leftSlave;
+  // private static CANSparkMax leftSlave;
   private static CANSparkMax rightMaster;
-  private static CANSparkMax rightSlave;
+  // private static CANSparkMax rightSlave;
 
   private static CANPIDController leftPID;
   private static CANPIDController rightPID;
@@ -43,10 +43,10 @@ public class SubsystemDrive extends Subsystem {
   public SubsystemDrive() {
     DriverStation.reportWarning("SUB_DRIVE CREATED", false);
     leftMaster  = new CANSparkMax(Constants.LEFT_MASTER_ID, MotorType.kBrushless);
-    leftSlave   = new CANSparkMax(Constants.LEFT_SLAVE_ID, MotorType.kBrushless);
+    // leftSlave   = new CANSparkMax(Constants.LEFT_SLAVE_ID, MotorType.kBrushless);
 
     rightMaster = new CANSparkMax(Constants.RIGHT_MASTER_ID, MotorType.kBrushless);
-    rightSlave  = new CANSparkMax(Constants.RIGHT_SLAVE_ID, MotorType.kBrushless);
+    // rightSlave  = new CANSparkMax(Constants.RIGHT_SLAVE_ID, MotorType.kBrushless);
 
     highestRPM = new double[]{0,0};
   }
@@ -68,9 +68,9 @@ public class SubsystemDrive extends Subsystem {
     right = (right > 1.0 ? 1.0 : (right < -1.0 ? -1.0 : right));
     
     leftMaster.set(left);
-      leftSlave.set(left);
+      // leftSlave.set(left);
     rightMaster.set(right);
-      rightSlave.set(right);
+      // rightSlave.set(right);
   }
 
   public void driveByPosition(double inches, double[] PID) {
@@ -128,9 +128,9 @@ public class SubsystemDrive extends Subsystem {
    */
   public void stopMotors() {
     leftMaster.stopMotor();
-      leftSlave.stopMotor();
+      // leftSlave.stopMotor();
     rightMaster.stopMotor();
-      rightSlave.stopMotor();
+      // rightSlave.stopMotor();
   }
 
   /**
@@ -138,9 +138,9 @@ public class SubsystemDrive extends Subsystem {
    */
   private void setInverts() {
     leftMaster.setInverted(Constants.LEFT_DRIVE_INVERT);
-      leftSlave.setInverted(Constants.LEFT_DRIVE_INVERT);
+      // leftSlave.setInverted(Constants.LEFT_DRIVE_INVERT);
     rightMaster.setInverted(Constants.RIGHT_DRIVE_INVERT);
-      rightSlave.setInverted(Constants.RIGHT_DRIVE_INVERT);
+      // rightSlave.setInverted(Constants.RIGHT_DRIVE_INVERT);
   }
 
   /**
@@ -149,9 +149,9 @@ public class SubsystemDrive extends Subsystem {
    */
   private void setBraking(Boolean braking) {
     leftMaster.setIdleMode(braking ? IdleMode.kBrake : IdleMode.kCoast);
-      leftSlave.setIdleMode(braking ? IdleMode.kBrake : IdleMode.kCoast);
+      // leftSlave.setIdleMode(braking ? IdleMode.kBrake : IdleMode.kCoast);
     rightMaster.setIdleMode(braking ? IdleMode.kBrake : IdleMode.kCoast);
-      rightSlave.setIdleMode(braking ? IdleMode.kBrake : IdleMode.kCoast);
+      // rightSlave.setIdleMode(braking ? IdleMode.kBrake : IdleMode.kCoast);
   }
 
   /**
@@ -160,9 +160,9 @@ public class SubsystemDrive extends Subsystem {
    */
   private void setRamps(double ramp) {
     leftMaster.setRampRate(ramp);
-      leftSlave.setRampRate(ramp);
+      // leftSlave.setRampRate(ramp);
     rightMaster.setRampRate(ramp);
-      rightSlave.setRampRate(ramp);
+      // rightSlave.setRampRate(ramp);
   }
 
   /**
@@ -176,9 +176,9 @@ public class SubsystemDrive extends Subsystem {
   public double[] getMotorValues() {
     double[] output = new double[4];
     output[0] = leftMaster.get();
-    output[1] = leftSlave.get();
+    // output[1] = leftSlave.get();
     output[2] = rightMaster.get();
-    output[3] = rightSlave.get();
+    // output[3] = rightSlave.get();
     return output;
   }
 

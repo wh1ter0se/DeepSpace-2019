@@ -12,11 +12,14 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.ButtonCommandCalibrateCamera;
+import frc.robot.Commands.ButtonCommandEat;
 import frc.robot.Commands.ButtonCommandFlipCamera;
 import frc.robot.Commands.ButtonCommandSetGear;
+import frc.robot.Commands.ButtonCommandSpit;
 import frc.robot.Commands.ButtonCommandToggleShift;
 import frc.robot.Commands.CyborgCommandAutoShift;
-import frc.robot.Commands.CyborgCommandDriveByPosition;
+import frc.robot.Commands.CyborgCommandFlip;
+import frc.robot.Commands.SubmanualCommandAscend;
 import frc.robot.Util.Util;
 import frc.robot.Util.Xbox;
 
@@ -31,24 +34,41 @@ public class OI {
      * Assigns what every SmartDash and controller button does 
      */
 	public OI() {
-        Button flipCamera = new JoystickButton(DRIVER, Xbox.Y);
-            flipCamera.toggleWhenPressed(new ButtonCommandFlipCamera());
 
-        Button updateCameraConfig = new JoystickButton(DRIVER, Xbox.RSTICK);
-            updateCameraConfig.whenPressed(new ButtonCommandCalibrateCamera());
+        /**
+         * Driver
+         */
+            Button flipCamera = new JoystickButton(DRIVER, Xbox.Y);
+                flipCamera.toggleWhenPressed(new ButtonCommandFlipCamera());
 
-        Button toggleShift = new JoystickButton(DRIVER, Xbox.X);
-            toggleShift.whenPressed(new ButtonCommandToggleShift());
+            Button updateCameraConfig = new JoystickButton(DRIVER, Xbox.RSTICK);
+                updateCameraConfig.whenPressed(new ButtonCommandCalibrateCamera());
 
-        Button downShift = new JoystickButton(DRIVER, Xbox.A);
-            downShift.whenPressed(new ButtonCommandSetGear(1));
+            Button toggleShift = new JoystickButton(DRIVER, Xbox.X);
+                toggleShift.whenPressed(new ButtonCommandToggleShift());
 
-        Button upShift = new JoystickButton(DRIVER, Xbox.B);
-            upShift.whenPressed(new ButtonCommandSetGear(2));
+            Button downShift = new JoystickButton(DRIVER, Xbox.A);
+                downShift.whenPressed(new ButtonCommandSetGear(1));
 
-        Button toggleAutoShifting = new JoystickButton(DRIVER, Xbox.START);
-            toggleAutoShifting.toggleWhenPressed(new CyborgCommandAutoShift());
-        
-        SmartDashboard.putData("Drive by Distance", new CyborgCommandDriveByPosition());
+            Button upShift = new JoystickButton(DRIVER, Xbox.B);
+                upShift.whenPressed(new ButtonCommandSetGear(2));
+
+            Button toggleAutoShifting = new JoystickButton(DRIVER, Xbox.START);
+                toggleAutoShifting.toggleWhenPressed(new CyborgCommandAutoShift());
+
+        /**
+         * Operator
+         */
+            Button ascend = new JoystickButton(OPERATOR, Xbox.RB);
+                ascend.toggleWhenPressed(new SubmanualCommandAscend());
+
+            Button eat = new JoystickButton(OPERATOR, Xbox.X);
+                eat.whenPressed(new ButtonCommandEat());
+
+            Button spit = new JoystickButton(OPERATOR, Xbox.A);
+                spit.whenPressed(new ButtonCommandSpit());
+
+            Button flipArm = new JoystickButton(OPERATOR, Xbox.Y);
+                flipArm.toggleWhenPressed(new CyborgCommandFlip());
     }
 }

@@ -7,31 +7,41 @@
 
 package frc.robot.Subsystems;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Add your docs here.
  */
-public class SubsystemCompressor extends Subsystem {
-  
-  Compressor comp = new Compressor();
+public class SubsystemClamp extends Subsystem {
+
+  private boolean isOpen;
 
   @Override
   public void initDefaultCommand() {
   }
 
-  public boolean isEnabled() {
-    return comp.enabled();
+  public SubsystemClamp() {
+    isOpen = false;
+    // instantiate pneumatic stuff
   }
 
-  public void setState(Boolean state) {
-    if (state) {  comp.start(); }
-    else { comp.stop(); }
+  public void closeClamp() {
+    isOpen = false;
+    // close pneumatics
+  }
+  
+  public void openClamp() {
+    isOpen = true;
+    // open pneumatics
   }
 
-  public void toggle() {
-    setState(!isEnabled());
+  public void toggleClamp() {
+    if (isOpen) {
+      isOpen = false;
+      // close pneumatics
+    } else {
+      isOpen = true;
+      // open pneumatics
+    }
   }
-
 }

@@ -10,14 +10,12 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class ButtonCommandSetGear extends Command {
+public class ButtonCommandToggleClamp extends Command {
 
-  private Boolean isFinished;
-  private int gear;
+  Boolean isFinished;
 
-  public ButtonCommandSetGear(int gear) {
-    requires(Robot.SUB_SHIFTER);
-    this.gear = gear;
+  public ButtonCommandToggleClamp() {
+    requires(Robot.SUB_CLAMP);
   }
 
   // Called just before this Command runs the first time
@@ -29,10 +27,7 @@ public class ButtonCommandSetGear extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (gear == 1) {
-      Robot.SUB_SHIFTER.downShift(); } 
-    else if (gear == 2) {
-      Robot.SUB_SHIFTER.upShift(); }
+    Robot.SUB_CLAMP.toggleClamp();
     isFinished = true;
   }
 

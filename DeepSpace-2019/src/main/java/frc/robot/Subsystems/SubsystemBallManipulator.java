@@ -7,31 +7,18 @@
 
 package frc.robot.Subsystems;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Add your docs here.
  */
-public class SubsystemCompressor extends Subsystem {
-  
-  Compressor comp = new Compressor();
+public class SubsystemBallManipulator extends Subsystem {
+  // Put methods for controlling this subsystem
+  // here. Call these from Commands.
 
   @Override
   public void initDefaultCommand() {
+    // Set the default command for a subsystem here.
+    // setDefaultCommand(new MySpecialCommand());
   }
-
-  public boolean isEnabled() {
-    return comp.enabled();
-  }
-
-  public void setState(Boolean state) {
-    if (state) {  comp.start(); }
-    else { comp.stop(); }
-  }
-
-  public void toggle() {
-    setState(!isEnabled());
-  }
-
 }

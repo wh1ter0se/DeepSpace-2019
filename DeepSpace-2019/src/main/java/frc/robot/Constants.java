@@ -45,13 +45,17 @@ public class Constants {
         RIGHT_DRIVE_INVERT = true;
 
     /**
+     * Safety Values
+     */
+    public static final int
+        DANGER_AMPERAGE = 55;
+        
+    /**
      * Solenoid IDS
      */
     public static final int
-        LEFT_DOWNSHIFT_ID  = 0,
-        LEFT_UPSHIFT_ID    = 0,
-        RIGHT_DOWNSHIFT_ID = 0,
-        RIGHT_UPSHIFT_ID   = 0;
+        DOWNSHIFT_ID  = 7,
+        UPSHIFT_ID = 6;
         
     /**
      * Spark IDs
@@ -61,6 +65,12 @@ public class Constants {
         LEFT_SLAVE_ID   = 1,
         RIGHT_MASTER_ID = 2,
         RIGHT_SLAVE_ID  = 3;
+
+    /**
+     * Talon IDS
+     */
+    public static final int
+        CLIMBER_ID = 4;
 
     /**
      * Vision Values

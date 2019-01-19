@@ -7,31 +7,41 @@
 
 package frc.robot.Subsystems;
 
-import edu.wpi.first.wpilibj.Compressor;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.Commands.ManualCommandGrow;
 
 /**
  * Add your docs here.
  */
-public class SubsystemCompressor extends Subsystem {
-  
-  Compressor comp = new Compressor();
+public class SubsystemMast extends Subsystem {
+
+  private int storedPosition;
+
+  private static TalonSRX firstStage;
+  private static TalonSRX secondStage;
 
   @Override
   public void initDefaultCommand() {
+    setDefaultCommand(new ManualCommandGrow());
   }
 
-  public boolean isEnabled() {
-    return comp.enabled();
-  }
+  public void updatePosition(int position) {
+    switch(position) {
+      case 1:
 
-  public void setState(Boolean state) {
-    if (state) {  comp.start(); }
-    else { comp.stop(); }
-  }
+        storedPosition = position;
+        break;
+      case 2:
 
-  public void toggle() {
-    setState(!isEnabled());
+        storedPosition = position;
+        break;
+      case 3:
+        
+        storedPosition = position;
+        break;
+    }
   }
 
 }

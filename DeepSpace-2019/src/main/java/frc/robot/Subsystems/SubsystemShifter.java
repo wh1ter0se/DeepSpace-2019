@@ -16,10 +16,8 @@ import frc.robot.Constants;
  */
 public class SubsystemShifter extends Subsystem {
 
-  private Solenoid downShiftLeft;
-  private Solenoid downShiftRight;
-  private Solenoid upShiftLeft;
-  private Solenoid upShiftRight;
+  private Solenoid downShift;
+  private Solenoid upShift;
 
   private boolean firstGear;
 
@@ -28,11 +26,8 @@ public class SubsystemShifter extends Subsystem {
   }
 
   public SubsystemShifter() {
-    firstGear = true;
-    // downShiftLeft  = new Solenoid(Constants.LEFT_DOWNSHIFT_ID);
-    // downShiftRight = new Solenoid(Constants.RIGHT_DOWNSHIFT_ID);
-    // upShiftLeft    = new Solenoid(Constants.LEFT_UPSHIFT_ID);
-    // upShiftRight   = new Solenoid(Constants.RIGHT_UPSHIFT_ID);
+    downShift = new Solenoid(Constants.DOWNSHIFT_ID);
+    upShift   = new Solenoid(Constants.UPSHIFT_ID);
   }
 
   /**
@@ -40,10 +35,8 @@ public class SubsystemShifter extends Subsystem {
    */
   public void downShift() {
     firstGear = true;
-    // downShiftLeft.set(true);
-    // downShiftRight.set(true);
-    // upShiftLeft.set(false);
-    // upShiftRight.set(false);
+    downShift.set(true);
+    upShift.set(false);
   }
 
   /**
@@ -51,10 +44,8 @@ public class SubsystemShifter extends Subsystem {
    */
   public void upShift() {
     firstGear = false;
-    // downShiftLeft.set(false);
-    // downShiftRight.set(false);
-    // upShiftLeft.set(true);
-    // upShiftRight.set(true);
+    downShift.set(false);
+    upShift.set(true);
   }
 
   /**
@@ -63,16 +54,12 @@ public class SubsystemShifter extends Subsystem {
   public void toggleShift() {
     if (firstGear) {
       firstGear = false;
-      // downShiftLeft.set(false);
-      // downShiftRight.set(false);
-      // upShiftLeft.set(true);
-      // upShiftRight.set(true);
+      downShift.set(false);
+      upShift.set(true);
     } else {
       firstGear = true;
-      // downShiftLeft.set(true);
-      // downShiftRight.set(true);
-      // upShiftLeft.set(false);
-      // upShiftRight.set(false);
+      downShift.set(true);
+      upShift.set(false);
     }
   }
 

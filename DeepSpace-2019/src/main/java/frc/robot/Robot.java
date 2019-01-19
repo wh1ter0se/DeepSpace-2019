@@ -11,8 +11,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Subsystems.SubsystemBallManipulator;
+import frc.robot.Subsystems.SubsystemClamp;
+import frc.robot.Subsystems.SubsystemClimb;
 import frc.robot.Subsystems.SubsystemCompressor;
 import frc.robot.Subsystems.SubsystemDrive;
+import frc.robot.Subsystems.SubsystemFlipper;
+import frc.robot.Subsystems.SubsystemMast;
 import frc.robot.Subsystems.SubsystemShifter;
 import frc.robot.Util.Util;
 
@@ -36,11 +41,16 @@ public class Robot extends TimedRobot {
   /**
    * Create Subsystems
    */
-  public static SubsystemCompressor SUB_COMPRESSOR;
-  public static SubsystemDrive      SUB_DRIVE;
-  public static SubsystemShifter    SUB_SHIFTER;
-  public static OI                  OI;
-  public static Vision              VISION;
+  public static SubsystemBallManipulator SUB_BALL_MANIPULATOR;
+  public static SubsystemClamp           SUB_CLAMP;
+  public static SubsystemClimb           SUB_CLIMB;
+  public static SubsystemCompressor      SUB_COMPRESSOR;
+  public static SubsystemDrive           SUB_DRIVE;
+  public static SubsystemFlipper         SUB_FLIPPER;
+  public static SubsystemMast            SUB_MAST;
+  public static SubsystemShifter         SUB_SHIFTER;
+  public static OI                       OI;
+  public static Vision                   VISION;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -55,11 +65,16 @@ public class Robot extends TimedRobot {
     /**
      * Instantiate Subsystems
      */
-    SUB_COMPRESSOR = new SubsystemCompressor();
-    SUB_DRIVE      = new SubsystemDrive();
-    SUB_SHIFTER    = new SubsystemShifter();
-    OI             = new OI();
-    VISION         = new Vision();
+    SUB_BALL_MANIPULATOR = new SubsystemBallManipulator();
+    SUB_CLAMP            = new SubsystemClamp();
+    SUB_CLIMB            = new SubsystemClimb();
+    SUB_COMPRESSOR       = new SubsystemCompressor();
+    SUB_DRIVE            = new SubsystemDrive();
+    SUB_FLIPPER          = new SubsystemFlipper();
+    SUB_MAST             = new SubsystemMast();
+    SUB_SHIFTER          = new SubsystemShifter();
+    OI                   = new OI();
+    VISION               = new Vision();
 
 
 
@@ -77,17 +92,24 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("SD-LM Speed", Robot.SUB_DRIVE.getMotorValues()[0]); // Left Master speed
-    SmartDashboard.putNumber("SD-LS Speed", Robot.SUB_DRIVE.getMotorValues()[1]); // Left Slave speed
     SmartDashboard.putNumber("SD-RM Speed", Robot.SUB_DRIVE.getMotorValues()[2]); // Right Master speed
-    SmartDashboard.putNumber("SD-RS Speed", Robot.SUB_DRIVE.getMotorValues()[3]); // Right Slave speed
 
     SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getAppliedOutputs()[0]);
     SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getAppliedOutputs()[1]);
 
+    SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
+    SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
+
     SmartDashboard.putNumber("Highest Left RPM", Robot.SUB_DRIVE.getHighestVelocities()[0]);
     SmartDashboard.putNumber("Highest Right RPM", Robot.SUB_DRIVE.getHighestVelocities()[1]);
 
+    SmartDashboard.putData("Sub_Ball_Manipulator", SUB_BALL_MANIPULATOR);
+    SmartDashboard.putData("Sub_Clamp", SUB_CLAMP);
+    SmartDashboard.putData("Sub_Climb", SUB_CLIMB);
+    SmartDashboard.putData("Sub_Compressor", SUB_COMPRESSOR);
     SmartDashboard.putData("Sub_Drive", SUB_DRIVE);
+    SmartDashboard.putData("Sub_Flipper", SUB_FLIPPER);
+    SmartDashboard.putData("Sub_Shifter", SUB_SHIFTER);
     // SmartDashboard.putNumber("Bandwidth", Robot.VISION.getTotalBandwidth());
   }
 

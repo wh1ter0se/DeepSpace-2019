@@ -8,38 +8,36 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
+import frc.robot.OI;
 import frc.robot.Robot;
 
-public class ButtonCommandSetGear extends Command {
+public class SubmanualCommandAscend extends Command {
 
-  private Boolean isFinished;
-  private int gear;
+  double amperage;
 
-  public ButtonCommandSetGear(int gear) {
-    requires(Robot.SUB_SHIFTER);
-    this.gear = gear;
+  public SubmanualCommandAscend() {
+    requires(Robot.SUB_CLIMB);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    isFinished = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (gear == 1) {
-      Robot.SUB_SHIFTER.downShift(); } 
-    else if (gear == 2) {
-      Robot.SUB_SHIFTER.upShift(); }
-    isFinished = true;
+    amperage = Robot.SUB_CLIMB.ascendByJoystick(OI.OPERATOR);
+    SmartDashboard.putNumber("Climb Amperage", amperage);
+    SmartDashboard.putBoolean("Climb Danger Zone", amperage >= Constants.DANGER_AMPERAGE);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isFinished;
+    return false;
   }
 
   // Called once after isFinished returns true

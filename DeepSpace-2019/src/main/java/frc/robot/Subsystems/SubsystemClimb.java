@@ -7,31 +7,37 @@
 
 package frc.robot.Subsystems;
 
-import edu.wpi.first.wpilibj.Compressor;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.Constants;
+import frc.robot.Util.Xbox;
 
 /**
  * Add your docs here.
  */
-public class SubsystemCompressor extends Subsystem {
-  
-  Compressor comp = new Compressor();
+public class SubsystemClimb extends Subsystem {
+
+  private static TalonSRX climber;
 
   @Override
   public void initDefaultCommand() {
   }
 
-  public boolean isEnabled() {
-    return comp.enabled();
+  public SubsystemClimb() {
+    climber = new TalonSRX(Constants.CLIMBER_ID);
+    setAmpLimit(60);
   }
 
-  public void setState(Boolean state) {
-    if (state) {  comp.start(); }
-    else { comp.stop(); }
+  public double ascendByJoystick(Joystick joy) {
+    double percentOutput = Xbox.RT(joy) - Xbox.LT(joy);
+    climber.set(ControlMode.PercentOutput, percentOutput);
+    return climber.getOutputCurrent();
   }
 
-  public void toggle() {
-    setState(!isEnabled());
+  public void setAmpLimit(int amps) {
+    climber.configPeakCurrentLimit(amps);
   }
-
 }
