@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.ButtonCommandCalibrateCamera;
+import frc.robot.Commands.ButtonCommandChangeMastPosition;
 import frc.robot.Commands.ButtonCommandEat;
 import frc.robot.Commands.ButtonCommandFlipCamera;
 import frc.robot.Commands.ButtonCommandSetGear;
@@ -70,5 +71,11 @@ public class OI {
 
             Button flipArm = new JoystickButton(OPERATOR, Xbox.Y);
                 flipArm.toggleWhenPressed(new CyborgCommandFlip());
+
+            Button mastUp = new JoystickButton(OPERATOR, Xbox.START);
+                mastUp.toggleWhenPressed(new ButtonCommandChangeMastPosition(1));
+
+            Button mastDown = new JoystickButton(OPERATOR, Xbox.BACK);
+                mastDown.toggleWhenPressed(new ButtonCommandChangeMastPosition(-1));
     }
 }

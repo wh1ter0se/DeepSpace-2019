@@ -41,8 +41,17 @@ public class Constants {
      * Inverts
      */
     public static final Boolean
-        LEFT_DRIVE_INVERT  = false,
-        RIGHT_DRIVE_INVERT = true;
+        LEFT_DRIVE_INVERT   = false,
+        RIGHT_DRIVE_INVERT  = true,
+        FIRST_STAGE_INVERT  = false,
+        SECOND_STAGE_INVERT = false;
+
+    /**
+     * Mast Speed Backup Values
+     */
+    public static final double
+        FIRST_STAGE_SPEED  = .5,
+        SECOND_STAGE_SPEED = .5;
 
     /**
      * Safety Values

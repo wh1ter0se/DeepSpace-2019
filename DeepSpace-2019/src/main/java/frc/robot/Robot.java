@@ -19,7 +19,6 @@ import frc.robot.Subsystems.SubsystemDrive;
 import frc.robot.Subsystems.SubsystemFlipper;
 import frc.robot.Subsystems.SubsystemMast;
 import frc.robot.Subsystems.SubsystemShifter;
-import frc.robot.Util.Util;
 
 //        _____   _____   ____     ______
 //       |__  /  / ___/  / __ \   / ____/
@@ -102,6 +101,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Highest Left RPM", Robot.SUB_DRIVE.getHighestVelocities()[0]);
     SmartDashboard.putNumber("Highest Right RPM", Robot.SUB_DRIVE.getHighestVelocities()[1]);
+
+    SmartDashboard.putString("Mast Position", Robot.SUB_MAST.getStoredPosition().toString());
 
     SmartDashboard.putData("Sub_Ball_Manipulator", SUB_BALL_MANIPULATOR);
     SmartDashboard.putData("Sub_Clamp", SUB_CLAMP);

@@ -7,7 +7,6 @@
 
 package frc.robot.Subsystems;
 
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -29,9 +28,6 @@ public class SubsystemDrive extends Subsystem {
   // private static CANSparkMax leftSlave;
   private static CANSparkMax rightMaster;
   // private static CANSparkMax rightSlave;
-
-  private static CANPIDController leftPID;
-  private static CANPIDController rightPID;
 
   private static double[] highestRPM;
 

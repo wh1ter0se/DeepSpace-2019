@@ -9,26 +9,55 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.Enumeration.MastPosition;
+import frc.robot.Util.Util;
 
-public class ManualCommandGrow extends Command {
-  public ManualCommandGrow() {
-    requires(Robot.SUB_MAST);;
+public class ButtonCommandChangeMastPosition extends Command {
+
+  Boolean isFinished;
+
+  int displacement;
+  int intPosition;
+
+  public ButtonCommandChangeMastPosition(int displacement) {
+    requires(Robot.SUB_MAST);
+    this.displacement = displacement;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    isFinished = false;
+    intPosition = Robot.SUB_MAST.getStoredPosition().toInt() + displacement;
+    intPosition = Util.truncateInt(intPosition, 1, 3);
+    if (intPosition == Robot.SUB_MAST.getStoredPosition().toInt()) { isFinished = true; }
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if (!isFinished) {
+      MastPosition position = MastPosition.SOMEWHERE;
+      switch (intPosition) {
+        case 1:
+          position = MastPosition.LOW;
+          break;
+        case 2:
+          position = MastPosition.MID;
+          break;
+        case 3:
+          position = MastPosition.HIGH;
+          break;
+      }
+      Robot.SUB_MAST.setStoredPosition(position);
+      isFinished = true;
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return isFinished;
   }
 
   // Called once after isFinished returns true

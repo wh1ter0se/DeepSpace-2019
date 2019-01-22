@@ -4,10 +4,29 @@ import edu.wpi.first.wpilibj.Preferences;
 
 /** if our code is colonial America, this class is Rhode Island */
 public class Util {
-	
+
+	/**
+	 * Trims int within a range
+	 * @param input int before truncation
+	 * @param lowLimit lowest allowable int
+	 * @param highLimit highest allowable int
+	 * @return truncated int
+	 */
+	public static int truncateInt(int input, int lowLimit, int highLimit) {
+		if (input < lowLimit) { input = lowLimit; }
+		if (input > highLimit) { input = highLimit; }
+		return input;
+	}
+
+	/**
+	 * Converts celsius temperature to fahrenheit temperature
+	 * @param celsius temperature in celsius degrees
+	 * @return temperature in fahrenheit degrees
+	 */
 	public static double celsiusToFahrenheit(double celsius) {
 		return (celsius * (9/5)) + 32;
 	}
+
 	/**
 	 *	kind of self explanatory, but with some spice
 	 *	use this mainly as a get method to retrieve values the user types into the smart dash

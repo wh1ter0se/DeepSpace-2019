@@ -24,19 +24,10 @@ public class Vision extends TimedRobot {
 
     private UsbCamera ACam;
     private UsbCamera BCam;
-    private UsbCamera CCam;
-
     private VideoSink server;
-
-    private int camID;
-
-    private Mat failImage;
-
-    private long initTime;
 
     public Vision(){
         Size camSize = new Size(Constants.CAM_WIDTH, Constants.CAM_HEIGHT);
-        failImage = Mat.zeros(camSize, 0);
         ACam = CameraServer.getInstance().startAutomaticCapture(Constants.ACAM_ID);
         BCam = CameraServer.getInstance().startAutomaticCapture(Constants.BCAM_ID);
         // CCam = CameraServer.getInstance().startAutomaticCapture(Constants.CCAM_ID);
