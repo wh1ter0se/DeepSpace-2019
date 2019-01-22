@@ -13,6 +13,19 @@ package frc.robot;
 public class Constants {
     
     /**
+     * Advanced Shifting Values
+     */
+    public static final double
+        QUARTER_UPSHIFT_RPM              = 6000,
+            QUARTER_DOWNSHIFT_RPM        = 4000,
+        HALF_UPSHIFT_RPM                 = 5000,
+            HALF_DOWNSHIFT_RPM           = 3000,
+        THREE_QUARTERS_UPSHIFT_RPM       = 4000,
+            THREE_QUARTERS_DOWNSHIFT_RPM = 2000,
+        FULL_UPSHIFT_RPM                 = 3000,
+            FULL_DOWNSHIFT_RPM           = 1000;
+
+    /**
      * Drive values
      */
     public static final double
@@ -91,4 +104,5 @@ public class Constants {
         BCAM_ID         = 1,
         CCAM_ID         = 2,
         BACKUP_EXPOSURE = 35;
+
 }

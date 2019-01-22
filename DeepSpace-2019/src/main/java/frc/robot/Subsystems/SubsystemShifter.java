@@ -71,4 +71,11 @@ public class SubsystemShifter extends Subsystem {
     return firstGear;
   }
 
+  public class ShiftingData {
+    // throttles, upshift RPMs, downshift RPMs
+    double[][] shiftingPoints = new double[][]{
+      {.25, 6000, 4000},
+      { .5, 5000, 3000},
+      {.75, 4000, 2000}};
+  }
 }

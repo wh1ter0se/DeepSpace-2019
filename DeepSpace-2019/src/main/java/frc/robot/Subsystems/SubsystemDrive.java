@@ -203,5 +203,13 @@ public class SubsystemDrive extends Subsystem {
     return highestRPM;
   }
 
+  /**
+   * Checks if the robot is pushing by checking if both sides are pulling high amperage
+   * @return left and right motor are both pulling over 55A
+   */
+  public Boolean isPushing() {
+    return leftMaster.getOutputCurrent() >= Constants.DANGER_AMPERAGE && rightMaster.getOutputCurrent() >= Constants.DANGER_AMPERAGE;
+  }
+
   
 }
