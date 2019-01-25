@@ -90,9 +90,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("SD-LM Speed", Robot.SUB_DRIVE.getMotorValues()[0]); // Left Master speed
-    SmartDashboard.putNumber("SD-RM Speed", Robot.SUB_DRIVE.getMotorValues()[2]); // Right Master speed
-
     SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getAppliedOutputs()[0]);
     SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getAppliedOutputs()[1]);
 
@@ -101,6 +98,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Highest Left RPM", Robot.SUB_DRIVE.getHighestVelocities()[0]);
     SmartDashboard.putNumber("Highest Right RPM", Robot.SUB_DRIVE.getHighestVelocities()[1]);
+
+    SmartDashboard.putBoolean("Pushing", Robot.SUB_DRIVE.isPushing());
 
     SmartDashboard.putString("Mast Position", Robot.SUB_MAST.getStoredPosition().toString());
 

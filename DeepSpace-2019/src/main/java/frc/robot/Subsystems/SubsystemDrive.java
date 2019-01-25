@@ -208,7 +208,7 @@ public class SubsystemDrive extends Subsystem {
    * @return left and right motor are both pulling over 55A
    */
   public Boolean isPushing() {
-    return leftMaster.getOutputCurrent() >= Constants.DANGER_AMPERAGE && rightMaster.getOutputCurrent() >= Constants.DANGER_AMPERAGE;
+    return leftMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE && rightMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE;
   }
 
   

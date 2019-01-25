@@ -70,7 +70,8 @@ public class Constants {
      * Safety Values
      */
     public static final int
-        DANGER_AMPERAGE = 55;
+        DANGER_AMPERAGE  = 55,
+        PUSHING_AMPERAGE = 55;
         
     /**
      * Solenoid IDS

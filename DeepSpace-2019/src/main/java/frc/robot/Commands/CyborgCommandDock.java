@@ -8,11 +8,11 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
 
 public class CyborgCommandDock extends Command {
   public CyborgCommandDock() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    requires(Robot.SUB_DRIVE);
   }
 
   // Called just before this Command runs the first time
