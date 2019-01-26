@@ -23,11 +23,20 @@ public class CyborgCommandDock extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    // if (canSee)
+      // left wheel = constant speed + bang-bang turning
+      // right wheel = constant speed + bang-bang turning
+    // else if (within range)
+      // left wheel = constant speed
+      // right wheel = constant speed
+    // else
+      // rotate toward the side it was on last
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
+    // return drivetrain amps > pushing for x time
     return false;
   }
 

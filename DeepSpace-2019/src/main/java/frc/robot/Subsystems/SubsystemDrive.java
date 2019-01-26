@@ -111,15 +111,6 @@ public class SubsystemDrive extends Subsystem {
   }
 
   /**
-   * Gets the applied outputs/percent outputs of each motor
-   * @return [0] = leftMaster % output
-   *         [1] = rightMaster % output
-   */
-  public double[] getAppliedOutputs() {
-    return new double[]{ leftMaster.getAppliedOutput(), rightMaster.getAppliedOutput() };
-  }
-
-  /**
    * Sets all motor controller values to zero
    */
   public void stopMotors() {
@@ -199,7 +190,7 @@ public class SubsystemDrive extends Subsystem {
     if (leftMaster.getEncoder().getVelocity() > highestRPM[0]) {
       highestRPM[0] = Math.abs(leftMaster.getEncoder().getVelocity()); }
     if (rightMaster.getEncoder().getVelocity() > highestRPM[1]) {
-      highestRPM[0] = Math.abs(rightMaster.getEncoder().getVelocity()); }
+      highestRPM[1] = Math.abs(rightMaster.getEncoder().getVelocity()); }
     return highestRPM;
   }
 

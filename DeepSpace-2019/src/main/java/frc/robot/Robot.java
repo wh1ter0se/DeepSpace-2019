@@ -18,6 +18,7 @@ import frc.robot.Subsystems.SubsystemCompressor;
 import frc.robot.Subsystems.SubsystemDrive;
 import frc.robot.Subsystems.SubsystemFlipper;
 import frc.robot.Subsystems.SubsystemMast;
+import frc.robot.Subsystems.SubsystemReceiver;
 import frc.robot.Subsystems.SubsystemShifter;
 
 //        _____   _____   ____     ______
@@ -38,7 +39,7 @@ import frc.robot.Subsystems.SubsystemShifter;
 public class Robot extends TimedRobot {
 
   /**
-   * Create Subsystems
+   * Initialize Subsystems
    */
   public static SubsystemBallManipulator SUB_BALL_MANIPULATOR;
   public static SubsystemClamp           SUB_CLAMP;
@@ -47,6 +48,7 @@ public class Robot extends TimedRobot {
   public static SubsystemDrive           SUB_DRIVE;
   public static SubsystemFlipper         SUB_FLIPPER;
   public static SubsystemMast            SUB_MAST;
+  public static SubsystemReceiver        SUB_RECEIVER;
   public static SubsystemShifter         SUB_SHIFTER;
   public static OI                       OI;
   public static Vision                   VISION;
@@ -71,6 +73,7 @@ public class Robot extends TimedRobot {
     SUB_DRIVE            = new SubsystemDrive();
     SUB_FLIPPER          = new SubsystemFlipper();
     SUB_MAST             = new SubsystemMast();
+    SUB_RECEIVER         = new SubsystemReceiver();
     SUB_SHIFTER          = new SubsystemShifter();
     OI                   = new OI();
     VISION               = new Vision();
@@ -90,8 +93,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getAppliedOutputs()[0]);
-    SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getAppliedOutputs()[1]);
+    SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getMotorValues()[0]);
+    SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getMotorValues()[1]);
 
     SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
     SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
@@ -101,6 +104,9 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putBoolean("Pushing", Robot.SUB_DRIVE.isPushing());
 
+    SmartDashboard.putBoolean("First Gear", Robot.SUB_SHIFTER.isFirstGear());
+    SmartDashboard.putBoolean("Second Gear", !Robot.SUB_SHIFTER.isFirstGear());
+
     SmartDashboard.putString("Mast Position", Robot.SUB_MAST.getStoredPosition().toString());
 
     SmartDashboard.putData("Sub_Ball_Manipulator", SUB_BALL_MANIPULATOR);
@@ -109,6 +115,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Sub_Compressor", SUB_COMPRESSOR);
     SmartDashboard.putData("Sub_Drive", SUB_DRIVE);
     SmartDashboard.putData("Sub_Flipper", SUB_FLIPPER);
+    SmartDashboard.putData("Sub_Mast", SUB_MAST);
+    SmartDashboard.putData("Sub_Receiver", SUB_RECEIVER);
     SmartDashboard.putData("Sub_Shifter", SUB_SHIFTER);
     // SmartDashboard.putNumber("Bandwidth", Robot.VISION.getTotalBandwidth());
   }
