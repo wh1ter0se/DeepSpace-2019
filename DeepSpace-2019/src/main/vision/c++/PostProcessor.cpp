@@ -8,6 +8,9 @@
 using namespace cv;
 using namespace std;
 
+/**
+ * Constructs a new postprocessor.
+ */
 PostProcessor::PostProcessor() {
     this->cap = cv::VideoCapture(0); //creates a new video streaming utility
 
@@ -17,6 +20,11 @@ PostProcessor::PostProcessor() {
         cout << "Postprocessor starting in running mode.";
 }
 
+/**
+ * The main loop for the postprocessor. This takes the images and looks for the targets
+ * within them. NOTE: this method loops infinitely and will only stop when PostProcessor::stop
+ * is set to true.
+ */
 void PostProcessor::Loop() {
     while(!stop) {
         cv::Mat img; //image we will be processing
@@ -49,8 +57,8 @@ void PostProcessor::Loop() {
 
                     //try to find any pairs that might be there
                     bool pairFound = false;
-                    for(int i=0; i<unpairedRects.size(); i++) {
-                        cv::RotatedRect otherRect = unpairedRects[i];
+                    for(int a=0; a<unpairedRects.size(); a++) {
+                        cv::RotatedRect otherRect = unpairedRects[a];
                         if(Util::IsPair(minRect, otherRect)) { //ladies and gentlemen, we got em
                             PairData pair = PairData(otherRect, minRect);
                             pairedRects.push_back(pair); //adds our new pair to the array of pairs
@@ -78,6 +86,10 @@ void PostProcessor::Loop() {
     }
 }
 
+/**
+ * Cleans up all resources used by the PostProcessor instance. This method should be called
+ * before the instance is disposed.
+ */
 void PostProcessor::CleanUp() {
     stop = true;
     cap.release();

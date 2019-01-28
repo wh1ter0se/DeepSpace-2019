@@ -6,6 +6,9 @@ class Settings {
     //size settings (inches)
     static constexpr double ASPECT_RATIO = 0.34,
                         ASPECT_RATIO_ERROR = 0.2;
+
+    static const int AREA = 30000;
+    static const int AREA_ERROR = 20000;
     
     //angle settings (degrees)
     static const int LEFT_ANGLE = -14,
@@ -19,6 +22,9 @@ class Settings {
 
     static double Aspect_Ratio_Max();
     static double Aspect_Ratio_Min();
+
+    static int Area_Max();
+    static int Area_Min();
 
     static int Opposite_Angle(int angle);
     static int Closest_Angle(int angle);

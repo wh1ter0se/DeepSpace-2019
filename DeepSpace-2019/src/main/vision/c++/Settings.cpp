@@ -4,12 +4,21 @@
  * Settings source file. Simply defines methods for returning maxes and mins
  */
 
+
 double Settings::Aspect_Ratio_Max() {
     return Settings::ASPECT_RATIO + Settings::ASPECT_RATIO_ERROR;
 }
 
 double Settings::Aspect_Ratio_Min() {
     return Settings::ASPECT_RATIO - Settings::ASPECT_RATIO_ERROR;
+}
+
+int Settings::Area_Max() {
+    return Settings::AREA + Settings::AREA_ERROR;
+}
+
+int Settings::Area_Min() {
+    return Settings::AREA - Settings::AREA_ERROR;
 }
 
 /**

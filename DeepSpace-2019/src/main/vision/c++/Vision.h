@@ -14,12 +14,16 @@ class PostProcessor {
     PostProcessor();
     void Loop(); //main loop that processes images and gives outputs
     void CleanUp(); //cleans up the postprocessor before disposal.
+    bool Stop() { return stop; }
 
     private:
     bool stop = false;
     cv::VideoCapture cap;
 };
 
+/**
+ * A collection of methods that simply makes PostProcessor code easier to read. 
+ */
 class Util {
     public:
     static bool IsElgible(cv::RotatedRect rect); //tests rotated rect to see if it is good for the target
@@ -27,6 +31,9 @@ class Util {
     static double returnTrueDistanceScalar(cv::RotatedRect rectangle);
 };
 
+/**
+ * Represents a recognized target as a pair of rotated rectangles.
+ */
 class PairData {
     public:
     PairData(cv::RotatedRect rect1, cv::RotatedRect rect2);

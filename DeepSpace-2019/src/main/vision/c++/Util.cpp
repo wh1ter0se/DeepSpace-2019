@@ -12,11 +12,13 @@
 using namespace std;
 bool Util::IsElgible(cv::RotatedRect rect) {
     bool ratioTest;
+    bool areaTest;
     bool angleTest;
 
     double width = (double) rect.size.width;
     double height = (double) rect.size.height;
 
+    //the aspect ratio test
     double aspect_ratio = 0.0;
     
     if(width > height) {
@@ -24,22 +26,29 @@ bool Util::IsElgible(cv::RotatedRect rect) {
     } else {
         aspect_ratio = width/height; //make sure aspect ratio is consistent so we don't have to have two different settings
     }
-    int angle = rect.angle;
-
     double ARMax = Settings::Aspect_Ratio_Max();
     double ARMin = Settings::Aspect_Ratio_Min();
+    ratioTest = (aspect_ratio < ARMax && aspect_ratio > ARMin);
+
+    //the area test
+    int areaMax = Settings::Area_Max();
+    int areaMin = Settings::Area_Min();
+    int area = (int) (width * height);
     
+    areaTest = (area < areaMax && area > areaMin);
+    
+
+    //the angle test
     int left_angle_max = Settings::LEFT_ANGLE + Settings::ANGLE_ERROR;
     int left_angle_min = Settings::LEFT_ANGLE - Settings::ANGLE_ERROR;
     int right_angle_max = Settings::RIGHT_ANGLE + Settings::ANGLE_ERROR;
     int right_angle_min = Settings::RIGHT_ANGLE - Settings::ANGLE_ERROR;
-
-    ratioTest = (aspect_ratio < ARMax && aspect_ratio > ARMin);
+    int angle = rect.angle;
 
     angleTest = (angle < left_angle_max && angle > left_angle_min)
               || (angle < right_angle_max && angle > right_angle_min); //true is angle is cool, false if no.
     
-    return ratioTest && angleTest; //returns true if both tests are true, otherwise returns false
+    return ratioTest && areaTest && angleTest; //returns true if both tests are true, otherwise returns false
 }
 
 /**
