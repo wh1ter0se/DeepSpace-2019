@@ -21,8 +21,8 @@ public class SubsystemMast extends Subsystem {
 
   private static MastPosition storedPosition;
 
-  private static TalonSRX firstStage;
-  private static TalonSRX secondStage;
+  // private static TalonSRX firstStage;
+  // private static TalonSRX secondStage;
 
   @Override
   public void initDefaultCommand() {}
@@ -41,16 +41,16 @@ public class SubsystemMast extends Subsystem {
   }
 
   public void moveFirstStage(double percentOutput) {
-    firstStage.set(ControlMode.PercentOutput, percentOutput);
+    // firstStage.set(ControlMode.PercentOutput, percentOutput);
   }
 
   public void moveSecondStage(double percentOutput) {
-    secondStage.set(ControlMode.PercentOutput, percentOutput);
+    // secondStage.set(ControlMode.PercentOutput, percentOutput);
   }
 
   public void setAmpLimit(int amps) {
-    firstStage.configPeakCurrentLimit(amps);
-    secondStage.configPeakCurrentLimit(amps);
+    // firstStage.configPeakCurrentLimit(amps);
+    // secondStage.configPeakCurrentLimit(amps);
   }
 
   public Boolean[] getLimitSwitches() {
@@ -63,8 +63,8 @@ public class SubsystemMast extends Subsystem {
   }
 
   public void setInverts() {
-    firstStage.setInverted(Constants.FIRST_STAGE_INVERT); // TODO positive should move it up
-    secondStage.setInverted(Constants.SECOND_STAGE_INVERT); // TODO positive should move it up
+    // firstStage.setInverted(Constants.FIRST_STAGE_INVERT); // TODO positive should move it up
+    // secondStage.setInverted(Constants.SECOND_STAGE_INVERT); // TODO positive should move it up
   }
 
 }

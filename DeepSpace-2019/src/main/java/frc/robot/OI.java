@@ -17,6 +17,7 @@ import frc.robot.Commands.ButtonCommandEat;
 import frc.robot.Commands.ButtonCommandFlipCamera;
 import frc.robot.Commands.ButtonCommandSetGear;
 import frc.robot.Commands.ButtonCommandSpit;
+import frc.robot.Commands.ButtonCommandToggleClamp;
 import frc.robot.Commands.ButtonCommandToggleShift;
 import frc.robot.Commands.CyborgCommandAutoShift;
 import frc.robot.Commands.CyborgCommandFlip;
@@ -71,6 +72,9 @@ public class OI {
 
             Button flipArm = new JoystickButton(OPERATOR, Xbox.Y);
                 flipArm.toggleWhenPressed(new CyborgCommandFlip());
+
+            Button toggleClamp = new JoystickButton(OPERATOR, Xbox.B);
+                toggleClamp.toggleWhenPressed(new ButtonCommandToggleClamp());
 
             Button mastUp = new JoystickButton(OPERATOR, Xbox.START);
                 mastUp.toggleWhenPressed(new ButtonCommandChangeMastPosition(1));

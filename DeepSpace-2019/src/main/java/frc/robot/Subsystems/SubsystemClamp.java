@@ -7,7 +7,10 @@
 
 package frc.robot.Subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.Constants;
 
 /**
  * Add your docs here.
@@ -15,6 +18,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class SubsystemClamp extends Subsystem {
 
   private boolean isOpen;
+  
+  private Solenoid close;
+  private Solenoid open;
 
   @Override
   public void initDefaultCommand() {
@@ -22,26 +28,29 @@ public class SubsystemClamp extends Subsystem {
 
   public SubsystemClamp() {
     isOpen = false;
-    // instantiate pneumatic stuff
+    close = new Solenoid(Constants.CLOSE_CLAMP_ID);
+    open = new Solenoid(Constants.OPEN_CLAMP_ID);
   }
 
   public void closeClamp() {
+    DriverStation.reportWarning("closing", false);
     isOpen = false;
-    // close pneumatics
+    close.set(true);
+    open.set(false);
   }
   
   public void openClamp() {
+    DriverStation.reportWarning("opening", false);
     isOpen = true;
-    // open pneumatics
+    close.set(false);
+    open.set(true);
   }
 
   public void toggleClamp() {
     if (isOpen) {
-      isOpen = false;
-      // close pneumatics
+      closeClamp();
     } else {
-      isOpen = true;
-      // open pneumatics
+      openClamp();
     }
   }
 }

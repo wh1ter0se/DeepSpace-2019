@@ -54,7 +54,7 @@ public class Constants {
      * Inverts
      */
     public static final Boolean
-        LEFT_DRIVE_INVERT   = false,
+        LEFT_DRIVE_INVERT   = true,
         RIGHT_DRIVE_INVERT  = true,
         FIRST_STAGE_INVERT  = false,
         SECOND_STAGE_INVERT = false;
@@ -77,17 +77,19 @@ public class Constants {
      * Solenoid IDS
      */
     public static final int
-        DOWNSHIFT_ID  = 7,
-        UPSHIFT_ID = 6;
+        CLOSE_CLAMP_ID = 0,
+        OPEN_CLAMP_ID  = 1,
+        DOWNSHIFT_ID   = 7,
+        UPSHIFT_ID     = 6;
         
     /**
      * Spark IDs
      */
     public static final int
         LEFT_MASTER_ID  = 0,
-        LEFT_SLAVE_ID   = 1,
-        RIGHT_MASTER_ID = 2,
-        RIGHT_SLAVE_ID  = 3;
+        LEFT_SLAVE_ID   = 3,
+        RIGHT_MASTER_ID = 1,
+        RIGHT_SLAVE_ID  = 2;
 
     /**
      * Talon IDS
