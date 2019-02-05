@@ -36,9 +36,11 @@ void PostProcessor::Loop() {
         img.copyTo(out);
         //bool readSuccess=true;
 
+        PairData biggestTarget; //the biggest target we find, which is what we will return to the RIO.
+
         vector<PairData> pairedRects; //rectangles that have found a pair in target
         vector<RotatedRect> unpairedRects; //rectangles that are invalid or have not found buddy
-
+        
         if(readSuccess) { //only continue processing if we could actually read the image
             cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
             cv::inRange(img, cv::Scalar(254, 254 ,254), cv::Scalar(255,255,255), img);
@@ -64,6 +66,8 @@ void PostProcessor::Loop() {
                         if(Util::IsPair(minRect, otherRect)) { //ladies and gentlemen, we got em
                             PairData pair = PairData(otherRect, minRect);
                             pairedRects.push_back(pair); //adds our new pair to the array of pairs
+                            if(pair.area() > biggestTarget.area())
+                                biggestTarget = pair;
                         }
                     }
                     
@@ -72,12 +76,40 @@ void PostProcessor::Loop() {
 
                 }
             }
+            
+            //now send to the RIO
+            string sendToRIO = "";
+            int target_x = -1;
+            int target_y = -1;
+            int target_height = -1;
+            int target_dist = -1;
+            if(pairedRects.size() > 0) {
+                cv::Point target_center = biggestTarget.center();
+                target_x = target_center.x;
+                target_y = target_center.y;
+                target_height = biggestTarget.height();
+            } //else {
+                //if(pairedRects.size() == 1) {
+                    //get the area of the only contour in there
+                //}
+            //}
+            
+            //x, y, h, d : the string values for the values to send to the RIO
+            string x = std::to_string(target_x);
+            string y = std::to_string(target_y);
+            string h = std::to_string(target_height);
+            string d = std::to_string(target_dist);
+            sendToRIO = ":" + x + "," + y + "," + h + "," + d + ";";
+            
+            cout << sendToRIO << "\n";
+            cout.flush();
+            //UDP send to RIO here.
+            
 
             if(Settings::DEBUG) {
                 for(int a=0; a<pairedRects.size(); a++) {
                     cv::circle(out, pairedRects[a].center(), 3 , cv::Scalar(255,255,0), 5);
                 }
-
                 cv::imshow("Output", out);
                 cv::waitKey(5);
             }

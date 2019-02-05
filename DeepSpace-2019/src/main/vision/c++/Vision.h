@@ -36,8 +36,11 @@ class Util {
  */
 class PairData {
     public:
+    PairData () {};
     PairData(cv::RotatedRect rect1, cv::RotatedRect rect2);
     cv::Point center();
+    int area();
+    int height();
 
     private:
     cv::RotatedRect rect1;
