@@ -1,0 +1,173 @@
+
+--------------------------------------------------------------------------------
+
+    3695 FRC 2019 VISION SYSTEM  
+
+--------------------------------------------------------------------------------
+
+(you might want to make sure WordWrap is on (in Notepad: Format > Word Wrap) )
+
+This text file goes through the gist of how to make Vision work on the Pi. The Vision is merely a postprocessor for images sent by the JeVois camera, so Vision won't work with any generic webcam. This file will also cover some basic housekeeping things that should be done while using the Pi.
+
+
+A list of what is covered in this file:
+ I. Git, and the basic functions of Git Bash
+ II. Some conditions that need to be met to make the program work
+ III. The postprocessor, and what the files do
+ IV. Starting the program
+ V. Program settings
+
+
+
+
+
+---------
+  I. GIT
+---------
+
+So since the Raspbian is Linux based and Tortoisegit is made for Windows, we have to use the command-line version of git (git bash) to do anything with the repository. So here's how to do some basic Git functions using the terminal.
+	While reading this, take note that on the Pi I should have 3 repositories cloned: The Vision repository from the preseason (in the Pi's file system it is under "Vision"), The current Deep Space repository (under "DeepSpace-2019"), and my clone of the repo (under "DeepSpace-2020", although might change to "DeepSpace-2019-clone"). If pushing vision code for any reason, push to "DeepSpace-2019", because it is the original. Currently I do not have rights, though, so if it yells at you for not having rights, push to "DeepSpace-2020" (or "DeepSpace-2019-clone"). If for any reason any of the repositories are not cloned onto the Pi, refer to the section about cloning.
+	Also, when pushing code, MAKE SURE you are on the DEVELOP branch, not the MASTER.
+
+The things covered in this section:
+ A. downloading updates
+ B. pushing code
+ C. cloning repositories
+ D. changing branches
+
+
+
+
+
+A. downloading updates:
+----
+To update a repository, change into it ("cd <folder name>"). Enter "git pull". If it doesn't yell at you, good job. If it does, most likely you are in the wrong folder. If you are in the right folder, and it still yells at you, delete it and re-clone the repo. It might have been a naming issue.
+
+
+B. pushing code
+----
+	1. To push code, change into the folder with the files in it (again, "cd <folder name>") enter "git stage *". This will "stage" the files to be uploaded. If this doesn't work, go up a level (to the folder with the folder with the files in it), and stage that folder ("git stage <folder name>"). 
+
+	2. After staging enter your commit message. Enter "git commit -m '<your commit message>' ". 
+
+	2a. This might give you an output that says "please tell me who you are." If it does, enter the following:
+		"git config --global user.name 'BTK203'"
+		"git config --global user.email '<my email>'"
+'"
+	This makes sure you have rights for the repositories I create, and the current repo if I get rights for it.
+
+	3. Now you can enter "git push". It will prompt you with your Git/Github username and password. Enter those, and it will upload the updates to the repo.
+
+
+C. cloning repositories
+	You might need to clone a repo if it is not set up on the Pi you are using. 
+	Simply enter "git clone <repo URL>" and it should clone the repo without complaints.
+	Here are the links to the 3 repos that need to be on the Pi:
+		current Deep Space repo: https://github.com/wh1ter0se/DeepSpace-2019
+		original Vision repo:    https://github.com/BTK203/Vision
+		my clone of DS repo:     https://github.com/BTK203/DeepSpace-2019
+
+
+D. Changing branches
+	-To check which branch you are on change into the repo folder and enter "git status". One of the first things it will tell you is "on branch <branch>".
+	-to change the branch you are on change into the repo folder and enter "git checkout <branch name>".
+
+
+
+
+------------------------------------------------------------------
+II. Conditions that might need to be met to make the program work
+------------------------------------------------------------------
+
+Sometimes you might start up the program and it might not work. If it does not, ensure the following conditions are met:
+	-Make sure the camera settings are right. Settings that may need to be played with:
+		a. The camera exposure is low. 
+		b. The resolution is correct (or you will not get same image.)
+		c. The target color is correct
+	
+	-Make sure vision program settings are correct. Settings are found in "Settings.py" and include:
+		a. The resolution 
+		b. The angle to look for
+		c. The "nonzero pixels" setting. If in doubt, reduce the value.
+
+	-Make sure that the LEDs are powered sufficiently. If you are powering the LEDs from a battery with low charge, they will be dimmer. If you are having trouble getting the target to show up on screen, try switching out the battery.
+
+
+
+
+-----------------------
+III. The postprocessor
+-----------------------
+
+The program is found in both Deep Space repos under "DeepSpace-2019/src/main/vision". The main executable Python file is "Main.py". Do not use "Start.sh", because it is empty and will remain that way until I make progress on the program. 
+	This section will go over what the files do.
+
+The files I will go over:
+Main.py
+Settings.py
+Util.py
+
+
+
+Main.py
+----
+This is the file that contains the bulk of the postprocessor code and is the main entry point for the program. This is to be used if "Start.sh" does not work. Right now the "postprocessor" class is located in this file, so start here if looking to debug.
+
+
+Settings.py
+----
+All constant settings used in the program are pulled from this file. Values set in this file are to remain constant, so they SHOULD NOT BE CHANGED AT RUNTIME.
+
+
+Util.py
+----
+Some different utility classes that would clutter up Main.py so I put them into a different file. These are usually data storage classes and some random methods that make the program look cleaner.
+
+
+
+
+-------------------------
+IV. Starting the program
+-------------------------
+
+Assuming you just booted up the pi, and you are sitting on the Desktop, do the following to start the program.
+
+1. Open terminal
+2. change into the Vision folder.
+	a. enter "cd DeepSpace-2020/DeepSpace-2019/src/main/vision"
+3. Start the executable.
+	a. enter "sudo python Main.py"
+
+
+
+
+
+--------------------
+V. Program Settings
+--------------------
+
+Settings found in "Settings.py" are as follows:
+
+DEBUG: When True, program uses a GUI to give you information about how it is running. No graphical output is displayed when False.
+
+IMAGE_RESOLUTION_X: the x value of the resolution we pull from the camera. With the JeVois, the camera resolution determines what camera configuration is used.
+IMAGE_RESOLUTION_Y: the y value of the resolution we pull from the camera.
+
+IMAGE_CAPTURE_STREAM: simply for debugging purposes. When True, program uses any connected camera to grab images. When false, program uses image set in Main.Capture() method
+
+TARGET_ANGLE_1: The angle of the box on the left of the target.
+TARGET_ANGLE_2: The angle of the box on the right of the target.
+ANGLE_ERROR: the number used to determine the "range" that the angle can be in
+
+TARGET_ASPECT_RATIO: the aspect ratio (w/h) that one side of the target is
+ASPECT_RATIO_ERROR: the number used to determine the range the aspect ratio can be in
+
+TARGET_CONTOUR_AREA: the area of the contour we area looking for
+TARGET_AREA_ERROR: determines the range of error for the area 
+
+TARGET_CONTOUR_DISTANCE: the distance in inches that separates the two boxes
+CONTOUR_DISTANCE_ERROR: number to determine the range distance can be
+
+
+UDP_IP: the IP address of the RoboRIO.
+UDP_PORT: the port that the RIO is on.
