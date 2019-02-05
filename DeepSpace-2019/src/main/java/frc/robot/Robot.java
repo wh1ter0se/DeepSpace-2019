@@ -93,21 +93,23 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getMotorValues()[0]);
-    // SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getMotorValues()[1]);
+    SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getMotorValues()[0]);
+    SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getMotorValues()[1]);
 
-    // SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
-    // SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
+    SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
+    SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
 
-    // SmartDashboard.putNumber("Highest Left RPM", Robot.SUB_DRIVE.getHighestVelocities()[0]);
-    // SmartDashboard.putNumber("Highest Right RPM", Robot.SUB_DRIVE.getHighestVelocities()[1]);
-
-    // SmartDashboard.putBoolean("Pushing", Robot.SUB_DRIVE.isPushing());
+    SmartDashboard.putBoolean("Pushing", Robot.SUB_DRIVE.isPushing());
 
     SmartDashboard.putBoolean("First Gear", Robot.SUB_SHIFTER.isFirstGear());
     SmartDashboard.putBoolean("Second Gear", !Robot.SUB_SHIFTER.isFirstGear());
+    SmartDashboard.putBoolean("Auto Shifting", Robot.SUB_SHIFTER.isAutoShifting());
 
     SmartDashboard.putString("Mast Position", Robot.SUB_MAST.getStoredPosition().toString());
+
+    SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
+
+    SmartDashboard.putBoolean("Caleb is Illiterate", true);
 
     SmartDashboard.putData("Sub_Ball_Manipulator", SUB_BALL_MANIPULATOR);
     SmartDashboard.putData("Sub_Clamp", SUB_CLAMP);
@@ -154,6 +156,7 @@ public class Robot extends TimedRobot {
 
   public void teleopInit() {
     Robot.SUB_CLAMP.closeClamp();
+    Robot.SUB_SHIFTER.downShift();
   }
 
   /**

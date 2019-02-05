@@ -38,7 +38,7 @@ public class SubsystemReceiver extends Subsystem {
     latestSegment = "NO DATA YET";
     latestTime    = System.currentTimeMillis();
 
-    SmartDashboard.putString("RPi Coordinate", "null");
+    SmartDashboard.putString("RPi Data", latestSegment);
 
     try {
       serverSocket = new DatagramSocket(3695);

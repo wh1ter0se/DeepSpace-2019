@@ -29,6 +29,7 @@ public class CyborgCommandAutoShift extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.SUB_SHIFTER.setAutoShifting(true);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -58,8 +59,8 @@ public class CyborgCommandAutoShift extends Command {
       downshiftRPM = shiftingPoints[3][2]; } 
 
     // SAVE THIS -- this is the old, kinda working code
-    // double upshiftRPM = Util.getAndSetDouble("Upshift RPM", Constants.UPSHIFT_RPM);
-    // double downshiftRPM = Util.getAndSetDouble("Downshift RPM", Constants.DOWNSHIFT_RPM);
+      // double upshiftRPM = Util.getAndSetDouble("Upshift RPM", Constants.UPSHIFT_RPM);
+      // double downshiftRPM = Util.getAndSetDouble("Downshift RPM", Constants.DOWNSHIFT_RPM);
 
     if (Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.getVelocities()[0] >= upshiftRPM && Robot.SUB_DRIVE.getVelocities()[1] >= upshiftRPM && !Robot.SUB_DRIVE.isPushing()) {
       Robot.SUB_SHIFTER.upShift();
@@ -81,6 +82,7 @@ public class CyborgCommandAutoShift extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.SUB_SHIFTER.setAutoShifting(false);
   }
 
   // Called when another command which requires one or more of the same
