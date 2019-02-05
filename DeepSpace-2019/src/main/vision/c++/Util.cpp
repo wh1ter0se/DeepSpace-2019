@@ -35,6 +35,9 @@ bool Util::IsElgible(cv::RotatedRect rect) {
     int areaMin = Settings::Area_Min();
     int area = (int) (width * height);
     
+    //cout << area << "\n";
+    //cout.flush();
+    
     areaTest = (area < areaMax && area > areaMin);
     
 

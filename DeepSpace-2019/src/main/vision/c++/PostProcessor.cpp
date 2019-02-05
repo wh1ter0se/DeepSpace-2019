@@ -13,6 +13,8 @@ using namespace std;
  */
 PostProcessor::PostProcessor() {
     this->cap = cv::VideoCapture(0); //creates a new video streaming utility
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, Settings::CAMERA_RESOLUTION_X);
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, Settings::CAMERA_RESOLUTION_Y);
 
     if(Settings::DEBUG)
         cout << "Postprocessor starting in debugging mode.";
@@ -29,10 +31,10 @@ void PostProcessor::Loop() {
     while(!stop) {
         cv::Mat img; //image we will be processing
         cv::Mat out; //color image we output
-        //bool readSuccess = cap.read(img); //reads an image to process from our video stream
-        img = cv::imread("target_3.jpg");
+        bool readSuccess = cap.read(img); //reads an image to process from our video stream
+        //img = cv::imread("target_3.jpg");
         img.copyTo(out);
-        bool readSuccess=true;
+        //bool readSuccess=true;
 
         vector<PairData> pairedRects; //rectangles that have found a pair in target
         vector<RotatedRect> unpairedRects; //rectangles that are invalid or have not found buddy
