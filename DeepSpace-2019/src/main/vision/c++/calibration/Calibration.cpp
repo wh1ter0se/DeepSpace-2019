@@ -33,8 +33,6 @@ string Calibration::Process(cv::VideoCapture cap) {
     known_distance = std::stod(dist_string);
     known_height = std::stoi(height_string);
 
-    cout << "known distance: " + known_distance;
-
     cv::Mat img = GetImage(cap); //this is where we grab the image from the camera
     cv::Mat out; //output image with drawn contours
     cv::Mat bin;
