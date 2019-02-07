@@ -13,7 +13,10 @@ using namespace std;
 GtkWidget *window; //main window that displays everything on desktop
 GtkWidget *master_container; //container that packs everything into window
 GtkWidget *button_container; //container that the buttons go into
+GtkWidget *textbox_container;
+GtkWidget *textbox_label;
 GtkWidget *contour_information; //label that contour data goes into
+GtkWidget *distance_text_box;
 GtkWidget *process_button; //button that triggers processing
 GtkWidget *resume_button; //button that resumes normal function after processing.
 
@@ -28,25 +31,47 @@ static void Destroy() {
     gtk_main_quit();
 }
 
+/**
+ * processes the image and outputs the targeting information on the gui
+ */
 static void Process() {
-    if(resume)
-        Calibration::Process(cap);
+    //try to get text from the textbox and parse to int
+    
+    if(resume) {
         resume = false;
+        string Message = Calibration::Process(cap);
+        const gchar *mes; //the text we display on the label
+        mes = Message.c_str();
+        gtk_label_set_text(GTK_LABEL(contour_information), mes);
+    }
+
 }
 
+/**
+ * allows the stream to keep going after processing an image.
+ */
 static void Resume() {
     resume = true;
 }
 
-static void update() {
-    cout << resume << "\n";
-    if(resume)
+/**
+ * update the image seen on screen.
+ */
+static gboolean update() {
+    if(resume) {
         Calibration::Update(cap);
+        // cout << "update\n";
+        // cout.flush();
+    }
+
+    return TRUE;
 }
 
 int main(int argc, char *argv[]) {
 
     gtk_init(&argc, &argv);
+
+    
 
     //main window
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL); //create new window
@@ -62,7 +87,6 @@ int main(int argc, char *argv[]) {
     contour_information = gtk_label_new("Contour information will show up here when you process an image.");
     gtk_box_pack_start(GTK_BOX(master_container), contour_information, TRUE, TRUE, 10);
 
-    
     //button box 
     button_container = gtk_hbox_new(FALSE, 10);
     gtk_box_pack_start(GTK_BOX(master_container), button_container, TRUE, TRUE, 10);
