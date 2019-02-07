@@ -14,7 +14,7 @@ void Calibration::Update(cv::VideoCapture cap) {
 string Calibration::Process(cv::VideoCapture cap) {
     string returnMessage = ""; //the message that this method will return at the end.
 
-    int known_distance = 0;
+    double known_distance = 0;
     int known_height = 0;
 
     //first grab the distance from target so we can do distance calculations
@@ -30,9 +30,10 @@ string Calibration::Process(cv::VideoCapture cap) {
     cout << "\n";
 
     //now attempt to convert those values into ints
-    known_distance = std::stoi(dist_string);
+    known_distance = std::stod(dist_string);
     known_height = std::stoi(height_string);
 
+    cout << "known distance: " + known_distance;
 
     cv::Mat img = GetImage(cap); //this is where we grab the image from the camera
     cv::Mat out; //output image with drawn contours
@@ -55,9 +56,10 @@ string Calibration::Process(cv::VideoCapture cap) {
     for(int i=0; i<contours.size(); i++) {
         vector<Point> contour = contours[i];
         cv::RotatedRect rect = cv::minAreaRect(contour); //get the rotated rectange
+        int area = rect.size.width * rect.size.height;
 
-        if(abs(rect.angle) > 4) {
-            // the contour is angled meaning it could be a target
+        if(abs(rect.angle) > 4 && area > 1500) { 
+            // the contour is angled meaning it could be a target. area must also be more than 1500 to eliminate noise
             validContours.push_back(contour);
             cv::Rect rect = cv::boundingRect(contour);
             cv::rectangle(out, rect, cv::Scalar(255,0,0), 3);
@@ -115,7 +117,7 @@ string Calibration::Process(cv::VideoCapture cap) {
 
         int targetHeight = WhichIsGreater(leftRect.size.width, leftRect.size.height); //gets the actual height of the target (since opencv gets it mixed up sometimes)
 
-        focalLength = (targetHeight * known_distance) / known_height; //calculate focal distance.
+        focalLength = (double )(targetHeight * known_distance) / (double) known_height; //calculate focal distance.
 
         //how package the entire thing into a string that we return 
         returnMessage = "CONTOUR FEATURES:\n";

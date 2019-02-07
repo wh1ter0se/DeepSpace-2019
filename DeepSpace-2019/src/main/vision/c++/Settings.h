@@ -8,6 +8,11 @@ class Settings {
     static const int 
         CAMERA_RESOLUTION_X = 252,
         CAMERA_RESOLUTION_Y = 128;
+        
+    //distance measurement settings
+    static constexpr double 
+        KNOWN_HEIGHT = 5.5,
+        FOCAL_HEIGHT = 374.0;
 
     //size settings (inches)
     static constexpr double
@@ -15,8 +20,8 @@ class Settings {
         ASPECT_RATIO_ERROR = 0.2;
 
     static const int 
-        AREA = 500,
-        AREA_ERROR = 1000;
+        AREA = 2500,
+        AREA_ERROR = 2000;
     
     //angle settings (degrees)
     static const int

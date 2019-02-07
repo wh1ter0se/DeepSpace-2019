@@ -6,7 +6,7 @@ using namespace cv;
 
 class Calibration {
     public:
-    static const bool USE_IMAGE = true; //when true uses image "target.jpg"
+    static const bool USE_IMAGE = false; //when true uses image "target.jpg"
 
     //called every frame to update the output image
     static void Update(cv::VideoCapture cap);

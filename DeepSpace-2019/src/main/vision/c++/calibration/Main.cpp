@@ -71,7 +71,9 @@ int main(int argc, char *argv[]) {
 
     gtk_init(&argc, &argv);
 
-    
+    //set all the camera settings (so just resolution)
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, 252);
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, 128);
 
     //main window
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL); //create new window

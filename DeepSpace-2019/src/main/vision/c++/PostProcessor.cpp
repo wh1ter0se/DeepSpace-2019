@@ -88,6 +88,10 @@ void PostProcessor::Loop() {
                 target_x = target_center.x;
                 target_y = target_center.y;
                 target_height = biggestTarget.height();
+                
+                //(true distance * focal) / pixels
+                
+                target_dist = (Settings::KNOWN_HEIGHT * Settings::FOCAL_HEIGHT) / target_height;
             } //else {
                 //if(pairedRects.size() == 1) {
                     //get the area of the only contour in there
