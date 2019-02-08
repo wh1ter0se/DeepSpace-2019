@@ -1,0 +1,44 @@
+
+-------------------------------------------------------------
+
+FRC team 3695 vision manual
+
+-------------------------------------------------------------
+
+This file goes over how to work with the code and what certain parts of it are and do. 
+NOTE: All vision code in this folder is written in C++, and assumes that the image captured from the video stream is already preprocessed.
+
+contents:
+I.   The Settings
+II.  Compiling the code
+
+
+---------------
+I. The Settings
+---------------
+
+All settings for the program are located in "Settings.h".
+
+DEBUG              : Option to run the program in debugging mode. In this mode, postprocessed image is displayed and a GUI is provided.
+USE_IMAGE          : Option to use image included in folder (target_3.jpg). This is for developing outside of the room.
+                    
+ASPECT_RATIO       : The aspect ratio of ONE side of the target. For the DeepSpace challenge, it is somewhere around .3 (2in / 5.5in)
+ASPECT_RATIO_ERROR : The amount of deviation from the aspect ratio that is allowed for a contour to pass
+                    
+AREA               : The area of the contour. This will usually be a big number with a big range of error. This is simply to root out noise.
+AREA_ERROR         : The amount of deviation from the area that is allowed.
+
+LEFT_ANGLE         : The angle of the leftmost contour of the target. Probably will be negative (thanks opencv!). Use Calibrate.py in the python folder to get the best angle
+RIGHT_ANGLE        : The angle of the righmost contour of the target. Again, just use the calibration program in the python folder.
+ANGLE_ERROR        : The amount of deviation from the angle that is allowed for a contour to pass.
+                    
+DISTANCE           : The distance in inches between the centers of the target.
+DISTANCE_ERROR     : The amount of deviation the distance between the contours can be.
+
+
+-------------
+II. Compiling
+-------------
+
+To compile the code, use the below command. gcc can also be used in place of g++.
+g++ -o Main Main.cpp Vision.h PostProcessor.cpp Util.cpp PairData.cpp Settings.h Settings.cpp `pkg-config --cflags --libs opencv`
