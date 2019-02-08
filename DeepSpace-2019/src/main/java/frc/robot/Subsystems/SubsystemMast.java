@@ -10,9 +10,12 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
+import frc.robot.Commands.ManualCommandTestMast;
 import frc.robot.Enumeration.MastPosition;
+import frc.robot.Util.Xbox;
 
 /**
  * Add your docs here.
@@ -21,14 +24,20 @@ public class SubsystemMast extends Subsystem {
 
   private static MastPosition storedPosition;
 
-  // private static TalonSRX firstStage;
-  // private static TalonSRX secondStage;
+  private static TalonSRX firstStage;
+  private static TalonSRX secondStage;
 
   @Override
-  public void initDefaultCommand() {}
+  public void initDefaultCommand() {
+    setDefaultCommand(new ManualCommandTestMast()); // TODO remove when limit switches are installed
+  }
 
   public SubsystemMast() {
     storedPosition = MastPosition.LOW;
+
+    firstStage  = new TalonSRX(Constants.FIRST_STAGE_ID);
+    secondStage = new TalonSRX(Constants.SECOND_STAGE_ID);
+
     setAmpLimit(60);
   }
 
@@ -41,16 +50,21 @@ public class SubsystemMast extends Subsystem {
   }
 
   public void moveFirstStage(double percentOutput) {
-    // firstStage.set(ControlMode.PercentOutput, percentOutput);
+    firstStage.set(ControlMode.PercentOutput, percentOutput);
   }
 
   public void moveSecondStage(double percentOutput) {
-    // secondStage.set(ControlMode.PercentOutput, percentOutput);
+    secondStage.set(ControlMode.PercentOutput, percentOutput);
+  }
+
+  public void moveWithJoystick(Joystick joy, double firstStageInhibitor, double secondStageInhibitor) {
+    moveFirstStage(Xbox.LEFT_Y(joy) * Math.abs(firstStageInhibitor));
+    moveFirstStage(Xbox.RIGHT_Y(joy) * Math.abs(secondStageInhibitor));
   }
 
   public void setAmpLimit(int amps) {
-    // firstStage.configPeakCurrentLimit(amps);
-    // secondStage.configPeakCurrentLimit(amps);
+    firstStage.configPeakCurrentLimit(amps);
+    secondStage.configPeakCurrentLimit(amps);
   }
 
   public Boolean[] getLimitSwitches() {

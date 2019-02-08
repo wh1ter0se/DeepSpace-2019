@@ -9,28 +9,32 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.Util.Util;
 
-public class ButtonCommandSpit extends Command {
-  public ButtonCommandSpit() {
+public class ButtonCommandToggleIntake extends Command {
+
+  Boolean isFinished;
+
+  public ButtonCommandToggleIntake() {
     requires(Robot.SUB_PRELOADER);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    isFinished = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.SUB_LAUNCHER.spit(Util.getAndSetDouble("Spit Speed", 1));
+    Robot.SUB_PRELOADER.toggleExtender();
+    isFinished = true;
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return isFinished;
   }
 
   // Called once after isFinished returns true
@@ -42,6 +46,5 @@ public class ButtonCommandSpit extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.SUB_LAUNCHER.stopMotor();
   }
 }

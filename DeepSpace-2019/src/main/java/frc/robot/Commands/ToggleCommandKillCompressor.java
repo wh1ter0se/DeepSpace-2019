@@ -9,39 +9,30 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.Util.Util;
+  /**
+ * Code that kills compressor until interruption
+ */
+public class ToggleCommandKillCompressor extends Command {
 
-public class ButtonCommandSpit extends Command {
-  public ButtonCommandSpit() {
-    requires(Robot.SUB_PRELOADER);
+  public ToggleCommandKillCompressor() {
+      requires(Robot.SUB_COMPRESSOR);
   }
 
-  // Called just before this Command runs the first time
-  @Override
   protected void initialize() {
+    Robot.SUB_COMPRESSOR.setState(false);
   }
 
-  // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
-    Robot.SUB_LAUNCHER.spit(Util.getAndSetDouble("Spit Speed", 1));
-  }
+  protected void execute() {}
 
-  // Make this return true when this Command no longer needs to run execute()
-  @Override
   protected boolean isFinished() {
-    return false;
+      return false;
   }
 
-  // Called once after isFinished returns true
-  @Override
   protected void end() {
+    Robot.SUB_COMPRESSOR.setState(true);
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
   protected void interrupted() {
-    Robot.SUB_LAUNCHER.stopMotor();
+    end();
   }
 }

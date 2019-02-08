@@ -11,12 +11,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Subsystems.SubsystemBallManipulator;
+import frc.robot.Subsystems.SubsystemPreloader;
+import frc.robot.Enumeration.MastPosition;
 import frc.robot.Subsystems.SubsystemClamp;
 import frc.robot.Subsystems.SubsystemClimb;
 import frc.robot.Subsystems.SubsystemCompressor;
 import frc.robot.Subsystems.SubsystemDrive;
 import frc.robot.Subsystems.SubsystemFlipper;
+import frc.robot.Subsystems.SubsystemLauncher;
 import frc.robot.Subsystems.SubsystemMast;
 import frc.robot.Subsystems.SubsystemReceiver;
 import frc.robot.Subsystems.SubsystemShifter;
@@ -41,17 +43,18 @@ public class Robot extends TimedRobot {
   /**
    * Initialize Subsystems
    */
-  public static SubsystemBallManipulator SUB_BALL_MANIPULATOR;
-  public static SubsystemClamp           SUB_CLAMP;
-  public static SubsystemClimb           SUB_CLIMB;
-  public static SubsystemCompressor      SUB_COMPRESSOR;
-  public static SubsystemDrive           SUB_DRIVE;
-  public static SubsystemFlipper         SUB_FLIPPER;
-  public static SubsystemMast            SUB_MAST;
-  public static SubsystemReceiver        SUB_RECEIVER;
-  public static SubsystemShifter         SUB_SHIFTER;
-  public static OI                       OI;
-  public static Vision                   VISION;
+  public static SubsystemClamp      SUB_CLAMP;
+  public static SubsystemClimb      SUB_CLIMB;
+  public static SubsystemCompressor SUB_COMPRESSOR;
+  public static SubsystemDrive      SUB_DRIVE;
+  public static SubsystemFlipper    SUB_FLIPPER;
+  public static SubsystemLauncher   SUB_LAUNCHER;
+  public static SubsystemMast       SUB_MAST;
+  public static SubsystemPreloader  SUB_PRELOADER;
+  public static SubsystemReceiver   SUB_RECEIVER;
+  public static SubsystemShifter    SUB_SHIFTER;
+  public static OI                  OI;
+  public static Vision              VISION;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -66,17 +69,18 @@ public class Robot extends TimedRobot {
     /**
      * Instantiate Subsystems
      */
-    SUB_BALL_MANIPULATOR = new SubsystemBallManipulator();
-    SUB_CLAMP            = new SubsystemClamp();
-    SUB_CLIMB            = new SubsystemClimb();
-    SUB_COMPRESSOR       = new SubsystemCompressor();
-    SUB_DRIVE            = new SubsystemDrive();
-    SUB_FLIPPER          = new SubsystemFlipper();
-    SUB_MAST             = new SubsystemMast();
-    SUB_RECEIVER         = new SubsystemReceiver();
-    SUB_SHIFTER          = new SubsystemShifter();
-    OI                   = new OI();
-    VISION               = new Vision();
+    SUB_CLAMP      = new SubsystemClamp();
+    SUB_CLIMB      = new SubsystemClimb();
+    SUB_COMPRESSOR = new SubsystemCompressor();
+    SUB_DRIVE      = new SubsystemDrive();
+    SUB_FLIPPER    = new SubsystemFlipper();
+    SUB_LAUNCHER   = new SubsystemLauncher();
+    SUB_MAST       = new SubsystemMast();
+    SUB_PRELOADER  = new SubsystemPreloader();
+    SUB_RECEIVER   = new SubsystemReceiver();
+    SUB_SHIFTER    = new SubsystemShifter();
+    OI             = new OI();
+    VISION         = new Vision();
 
 
 
@@ -106,12 +110,16 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Auto Shifting", Robot.SUB_SHIFTER.isAutoShifting());
 
     SmartDashboard.putString("Mast Position", Robot.SUB_MAST.getStoredPosition().toString());
+    SmartDashboard.putBoolean("Mast Low", Robot.SUB_MAST.getStoredPosition() == MastPosition.LOW);
+    SmartDashboard.putBoolean("Mast Mid", Robot.SUB_MAST.getStoredPosition() == MastPosition.MID);
+    SmartDashboard.putBoolean("Mast High", Robot.SUB_MAST.getStoredPosition() == MastPosition.HIGH);
 
     SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
 
     SmartDashboard.putBoolean("Caleb is Illiterate", true);
+    SmartDashboard.putBoolean("I want to be here", false);
 
-    SmartDashboard.putData("Sub_Ball_Manipulator", SUB_BALL_MANIPULATOR);
+    SmartDashboard.putData("Sub_Preloader", SUB_PRELOADER);
     SmartDashboard.putData("Sub_Clamp", SUB_CLAMP);
     SmartDashboard.putData("Sub_Climb", SUB_CLIMB);
     SmartDashboard.putData("Sub_Compressor", SUB_COMPRESSOR);
@@ -157,6 +165,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     Robot.SUB_CLAMP.closeClamp();
     Robot.SUB_SHIFTER.downShift();
+    Robot.SUB_PRELOADER.retract();
   }
 
   /**

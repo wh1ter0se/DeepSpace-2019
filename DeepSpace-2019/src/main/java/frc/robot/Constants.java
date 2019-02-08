@@ -57,9 +57,11 @@ public class Constants {
         LEFT_DRIVE_INVERT   = false,
         RIGHT_DRIVE_INVERT  = true,
         FIRST_STAGE_INVERT  = false,
-        SECOND_STAGE_INVERT = false;
+        SECOND_STAGE_INVERT = false,
+        LAUNCHER_INVERT     = true,
+        INTAKE_INVERT       = false;
 
-    /**f
+    /**
      * Mast Speed Backup Values
      */
     public static final double
@@ -80,7 +82,9 @@ public class Constants {
         CLOSE_CLAMP_ID = 0,
         OPEN_CLAMP_ID  = 1,
         DOWNSHIFT_ID   = 7,
-        UPSHIFT_ID     = 6;
+        UPSHIFT_ID     = 6,
+        EXTEND_ID      = 2,
+        RETRACT_ID     = 3;
         
     /**
      * Spark IDs
@@ -95,7 +99,12 @@ public class Constants {
      * Talon IDS
      */
     public static final int
-        CLIMBER_ID = 4;
+        CLIMBER_ID      = 5,
+        FIRST_STAGE_ID  = 9,
+        SECOND_STAGE_ID = 8,
+        LAUNCHER_ID     = 6,
+        INTAKE_ID       = 10,
+        FLIPPER_ID      = 7;
 
     /**
      * Vision Values

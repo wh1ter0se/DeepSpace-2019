@@ -7,18 +7,37 @@
 
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.Constants;
 
 /**
  * Add your docs here.
  */
-public class SubsystemBallManipulator extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
+public class SubsystemLauncher extends Subsystem {
+  
+  TalonSRX launcher;
 
   @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+  public void initDefaultCommand() {}
+
+  public SubsystemLauncher() {
+    launcher = new TalonSRX(Constants.LAUNCHER_ID);
+    setInverts();
   }
+
+  public void spit(double speed) {
+    launcher.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void stopMotor() {
+    launcher.set(ControlMode.PercentOutput, 0);
+  }
+
+  private void setInverts() {
+    launcher.setInverted(Constants.LAUNCHER_INVERT);
+  }
+
 }

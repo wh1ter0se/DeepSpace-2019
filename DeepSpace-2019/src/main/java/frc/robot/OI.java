@@ -18,10 +18,12 @@ import frc.robot.Commands.ButtonCommandFlipCamera;
 import frc.robot.Commands.ButtonCommandSetGear;
 import frc.robot.Commands.ButtonCommandSpit;
 import frc.robot.Commands.ButtonCommandToggleClamp;
+import frc.robot.Commands.ButtonCommandToggleIntake;
 import frc.robot.Commands.ButtonCommandToggleShift;
 import frc.robot.Commands.CyborgCommandAutoShift;
 import frc.robot.Commands.CyborgCommandFlip;
 import frc.robot.Commands.SubmanualCommandAscend;
+import frc.robot.Commands.ToggleCommandKillCompressor;
 import frc.robot.Util.Util;
 import frc.robot.Util.Xbox;
 
@@ -37,6 +39,9 @@ public class OI {
      */
 	public OI() {
 
+        		/// To Compress, or Not To Compress. It is now an option.
+            SmartDashboard.putData("Disable Compressor", new ToggleCommandKillCompressor());
+            
         /**
          * Driver
          */
@@ -61,14 +66,17 @@ public class OI {
         /**
          * Operator
          */
+            Button toggleIntake = new JoystickButton(OPERATOR, Xbox.LB);
+                toggleIntake.toggleWhenPressed(new ButtonCommandToggleIntake());
+
             Button ascend = new JoystickButton(OPERATOR, Xbox.RB);
                 ascend.toggleWhenPressed(new SubmanualCommandAscend());
 
             Button eat = new JoystickButton(OPERATOR, Xbox.X);
-                eat.whenPressed(new ButtonCommandEat());
+                eat.whileHeld(new ButtonCommandEat());
 
             Button spit = new JoystickButton(OPERATOR, Xbox.A);
-                spit.whenPressed(new ButtonCommandSpit());
+                spit.whileHeld(new ButtonCommandSpit());
 
             Button flipArm = new JoystickButton(OPERATOR, Xbox.Y);
                 flipArm.toggleWhenPressed(new CyborgCommandFlip());
