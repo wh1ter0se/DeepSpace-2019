@@ -6,8 +6,10 @@
  */
  
 gint processID;
+cv::VideoCapture vidCap;
 GtkWidget *tuning_window; //the main window everything goes in
 GtkWidget *tuning_content_pane; //the box that displays all contents of window
+GtkWidget *tuning_output_label; //the label that displays the distance between camera and target
 GtkWidget *tuning_label_known_distance;
 GtkWidget *tuning_slider_known_distance;
 GtkWidget *tuning_label_known_width;
@@ -19,8 +21,25 @@ GtkWidget *tuning_slider_error_correction; //the slider where error correction i
 GtkWidget *tuning_exit_button; //the button that closes the window and disposes the object.
 
 static gboolean tuning_Update() {
-	cout << "tune update";
-	cout.flush();
+	int known_height = 0,
+		focal_height = 0,
+		error_correct = 0,
+		known_distance = 0;
+	
+	//grab the values off the sliders
+	known_height = gtk_range_get_value(GTK_RANGE(tuning_slider_known_width));
+	focal_height = gtk_range_get_value(GTK_RANGE(tuning_slider_focal_distance));
+	error_correct = gtk_range_get_value(GTK_RANGE(tuning_slider_error_correction));
+	known_distance = gtk_range_get_value(GTK_RANGE(tuning_slider_known_distance));
+
+	int dist = PostProcessor::Update(vidCap, known_height, focal_height, error_correct, known_distance);
+	string dist_str = std::to_string(dist); //converts our value into a string to put on label
+
+	dist_str = "Distance: " + dist_str;
+	const gchar *out = dist_str.c_str(); //make it contant so that we can put it onto the label
+
+	gtk_label_set_text(GTK_LABEL(tuning_output_label), out);
+
 	return TRUE;
 }
 
@@ -53,7 +72,7 @@ static void tuning_Destroy() {
  * Uses the given video stream to create a new instance of the class.
  */
 Tuning::Tuning(cv::VideoCapture cap) {
-	this->cap = cap;
+	vidCap = cap;
 	
 	//create the main window
 	tuning_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -62,6 +81,10 @@ Tuning::Tuning(cv::VideoCapture cap) {
 	
 	tuning_content_pane = gtk_vbox_new(FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(tuning_window), tuning_content_pane);
+
+	//output label
+	tuning_output_label = gtk_label_new("Distance:");
+	gtk_box_pack_start(GTK_BOX(tuning_content_pane), tuning_output_label, TRUE, TRUE, 0);
 
 	//sliders
 
@@ -115,6 +138,7 @@ Tuning::Tuning(cv::VideoCapture cap) {
 	gtk_widget_show(tuning_label_known_distance);
 	gtk_widget_show(tuning_label_known_width);
 	gtk_widget_show(tuning_slider_known_width);
+	gtk_widget_show(tuning_output_label);
 	gtk_widget_show(tuning_content_pane);
 	gtk_widget_show(tuning_window);
 

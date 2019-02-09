@@ -16,6 +16,7 @@ class Calibration {
 
     //called every frame to update the output image
     static void Update(cv::VideoCapture cap);
+    static cv::Mat GetImage(cv::VideoCapture cap);
 
     //called to process an image, returns the string to put on the label
     static string Process(cv::VideoCapture cap);
@@ -23,19 +24,18 @@ class Calibration {
     private:
     static double GetAspectRatio(int width, int height);
     static int WhichIsGreater(int num1, int num2);
-    static cv::Mat GetImage(cv::VideoCapture cap);
 };
 
 class Tuning {
     public:
     Tuning(cv::VideoCapture cap);
+    //static cv::VideoCapture cap;
 
-    //gtk widgets needed for the window
-    
-    
-    private:
-    cv::VideoCapture cap;
+};
 
+class PostProcessor {
+    public:
+    static int Update(cv::VideoCapture cap, int known_height, int focal_height, int error_correct, int known_distance);
 };
 
 #endif
