@@ -1,3 +1,7 @@
+#ifndef VISION_H
+#define VISION_H
+
+
 #include <iostream>
 #include "opencv2/opencv.hpp"
 #include "Settings.h"
@@ -29,6 +33,7 @@ class Util {
     static bool IsElgible(cv::RotatedRect rect); //tests rotated rect to see if it is good for the target
     static bool IsPair(cv::RotatedRect rect1, cv::RotatedRect rect2);
     static double returnTrueDistanceScalar(cv::RotatedRect rectangle);
+    static int WhichIsBigger(int num1, int num2);
 };
 
 /**
@@ -46,3 +51,5 @@ class PairData {
     cv::RotatedRect rect1;
     cv::RotatedRect rect2;
 };
+
+#endif

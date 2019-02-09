@@ -13,12 +13,14 @@ using namespace std;
 GtkWidget *window; //main window that displays everything on desktop
 GtkWidget *master_container; //container that packs everything into window
 GtkWidget *button_container; //container that the buttons go into
+GtkWidget *exit_container;
 GtkWidget *textbox_container;
 GtkWidget *textbox_label;
 GtkWidget *contour_information; //label that contour data goes into
 GtkWidget *distance_text_box;
 GtkWidget *process_button; //button that triggers processing
 GtkWidget *resume_button; //button that resumes normal function after processing.
+GtkWidget *exit_button;
 
 cv::VideoCapture cap(0); //create and init the videocapture we shall use
 bool resume = true; //does not update frames when false
@@ -102,16 +104,27 @@ int main(int argc, char *argv[]) {
     resume_button = gtk_button_new_with_label("Resume");
     gtk_signal_connect(GTK_OBJECT(resume_button), "clicked", G_CALLBACK(Resume), NULL);
     gtk_box_pack_start(GTK_BOX(button_container), resume_button, TRUE, TRUE, 0);
+    
+    //exit button box
+    exit_container = gtk_hbox_new(FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(master_container), exit_container, TRUE, TRUE, 0);
+    
+    //exit button
+    exit_button = gtk_button_new_with_label("Exit");
+    gtk_signal_connect(GTK_OBJECT(exit_button), "clicked", G_CALLBACK(Destroy), NULL);
+    gtk_box_pack_start(GTK_BOX(exit_container), exit_button, TRUE, TRUE, 0);
 
     //show all widgets
     gtk_widget_show(resume_button);
     gtk_widget_show(process_button);
+    gtk_widget_show(exit_button);
+    gtk_widget_show(exit_container);
     gtk_widget_show(button_container);
     gtk_widget_show(contour_information);
     gtk_widget_show(master_container);
     gtk_widget_show(window);
 
-    g_timeout_add(100, GtkFunction(update), NULL); //calls updateValues() 10 times/second
+    g_timeout_add(25, GtkFunction(update), NULL); //calls updateValues() 10 times/second
     gtk_main();
     return 0;
 }

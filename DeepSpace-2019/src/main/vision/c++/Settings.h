@@ -1,3 +1,6 @@
+#ifndef SETTINGS_H
+#define SETTINGS_H
+
 class Settings {
     public:
     static const bool 
@@ -12,7 +15,7 @@ class Settings {
     //distance measurement settings
     static constexpr double 
         KNOWN_HEIGHT = 5.5,
-        FOCAL_HEIGHT = 374.0;
+        FOCAL_HEIGHT = 230.0;
 
     //size settings (inches)
     static constexpr double
@@ -20,8 +23,7 @@ class Settings {
         ASPECT_RATIO_ERROR = 0.2;
 
     static const int 
-        AREA = 2500,
-        AREA_ERROR = 2000;
+        MIN_AREA = 1000;
     
     //angle settings (degrees)
     static const int
@@ -38,9 +40,8 @@ class Settings {
     static double Aspect_Ratio_Max();
     static double Aspect_Ratio_Min();
 
-    static int Area_Max();
-    static int Area_Min();
-
     static int Opposite_Angle(int angle);
     static int Closest_Angle(int angle);
 };
+
+#endif

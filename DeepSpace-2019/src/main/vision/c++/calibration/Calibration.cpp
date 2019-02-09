@@ -15,7 +15,7 @@ string Calibration::Process(cv::VideoCapture cap) {
     string returnMessage = ""; //the message that this method will return at the end.
 
     double known_distance = 0;
-    int known_height = 0;
+    double known_height = 0;
 
     //first grab the distance from target so we can do distance calculations
     string dist_string = "";
@@ -31,7 +31,10 @@ string Calibration::Process(cv::VideoCapture cap) {
 
     //now attempt to convert those values into ints
     known_distance = std::stod(dist_string);
-    known_height = std::stoi(height_string);
+    known_height = std::stod(height_string);
+    
+    cout << "known dist: " << known_distance << "\n";
+    cout << "known height: " << known_height << "\n";
 
     cv::Mat img = GetImage(cap); //this is where we grab the image from the camera
     cv::Mat out; //output image with drawn contours
@@ -78,7 +81,7 @@ string Calibration::Process(cv::VideoCapture cap) {
         int rightAngle = 0; //the angle of the rightmost contour
         int area = 0; //the averaged area of the two contours
         int distance = 0; //the distance between the two contours
-        int focalLength = 0; //the focal distance of the target, used for depth perception
+        double focalLength = 0; //the focal distance of the target, used for depth perception
         double aspect_ratio = 0.0; //the averaged aspect ratio of the contours
 
         //find the left and the right rect first
@@ -91,6 +94,12 @@ string Calibration::Process(cv::VideoCapture cap) {
             leftRect = rect2;
             rightRect = rect1;
         }
+        
+        //quickly draw a point in the center of the thing
+        int center_x = (rect1.center.x + rect2.center.x) / 2;
+        int center_y = (rect2.center.x + rect2.center.y) / 2;
+        cv::circle(out, cv::Point(center_x, center_y), 3, cv::Scalar(255,255,0), 4);
+        
         //now look at the information of the contours and format into a string
         
         //angle
@@ -115,7 +124,7 @@ string Calibration::Process(cv::VideoCapture cap) {
 
         int targetHeight = WhichIsGreater(leftRect.size.width, leftRect.size.height); //gets the actual height of the target (since opencv gets it mixed up sometimes)
 
-        focalLength = (double )(targetHeight * known_distance) / (double) known_height; //calculate focal distance.
+        focalLength = (double) (targetHeight * known_distance) / known_height; //calculate focal distance.
 
         //how package the entire thing into a string that we return 
         returnMessage = "CONTOUR FEATURES:\n";
