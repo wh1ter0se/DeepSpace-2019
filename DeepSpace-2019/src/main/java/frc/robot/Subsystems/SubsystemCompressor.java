@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * Add your docs here.
+ * Just starts up the extremely loud pneumatic compressor
  */
 public class SubsystemCompressor extends Subsystem {
   
@@ -21,15 +21,27 @@ public class SubsystemCompressor extends Subsystem {
   public void initDefaultCommand() {
   }
 
+  /**
+   * Retrieves the on/off state of the compressor
+   * @return true if compressor is active, false if it is idle
+   */
   public boolean isEnabled() {
     return comp.enabled();
   }
 
+  /**
+   * Sets the on/off state of the compressor
+   * @param state true for on, false for off
+   */
   public void setState(Boolean state) {
     if (state) {  comp.start(); }
     else { comp.stop(); }
   }
 
+  /**
+   * Checks the on/off state of the compressor and sets
+   * it to the opposite
+   */
   public void toggle() {
     setState(!isEnabled());
   }

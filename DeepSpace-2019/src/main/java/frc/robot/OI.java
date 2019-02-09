@@ -22,6 +22,8 @@ import frc.robot.Commands.ButtonCommandToggleIntake;
 import frc.robot.Commands.ButtonCommandToggleShift;
 import frc.robot.Commands.CyborgCommandAutoShift;
 import frc.robot.Commands.CyborgCommandFlip;
+import frc.robot.Commands.ManualCommandTestFlipper;
+import frc.robot.Commands.ManualCommandTestMast;
 import frc.robot.Commands.SubmanualCommandAscend;
 import frc.robot.Commands.ToggleCommandKillCompressor;
 import frc.robot.Util.Util;
@@ -39,8 +41,12 @@ public class OI {
      */
 	public OI() {
 
-        		/// To Compress, or Not To Compress. It is now an option.
+        // To Compress, or Not To Compress. It is now an option.
             SmartDashboard.putData("Disable Compressor", new ToggleCommandKillCompressor());
+
+        // tester functions
+            SmartDashboard.putData("Test Mast", new ManualCommandTestMast());
+            SmartDashboard.putData("Test Flipper", new ManualCommandTestFlipper());
             
         /**
          * Driver

@@ -20,7 +20,6 @@ public class ButtonCommandChangeMastPosition extends Command {
   int intPosition;
 
   public ButtonCommandChangeMastPosition(int displacement) {
-    requires(Robot.SUB_MAST);
     this.displacement = displacement;
   }
 
@@ -29,7 +28,7 @@ public class ButtonCommandChangeMastPosition extends Command {
   protected void initialize() {
     isFinished = false;
     intPosition = Robot.SUB_MAST.getStoredPosition().toInt() + displacement;
-    intPosition = Util.truncateInt(intPosition, 1, 3);
+    intPosition = Util.truncateInt(intPosition, 1, 6);
     if (intPosition == Robot.SUB_MAST.getStoredPosition().toInt()) { isFinished = true; }
   }
 
@@ -40,13 +39,22 @@ public class ButtonCommandChangeMastPosition extends Command {
       MastPosition position = MastPosition.SOMEWHERE;
       switch (intPosition) {
         case 1:
-          position = MastPosition.LOW;
+          position = MastPosition.HATCH_1;
           break;
         case 2:
-          position = MastPosition.MID;
+          position = MastPosition.CARGO_1;
           break;
         case 3:
-          position = MastPosition.HIGH;
+          position = MastPosition.HATCH_2;
+          break;
+        case 4:
+          position = MastPosition.CARGO_2;
+          break;
+        case 5:
+          position = MastPosition.HATCH_3;
+          break;
+        case 6:
+          position = MastPosition.CARGO_3;
           break;
       }
       Robot.SUB_MAST.setStoredPosition(position);

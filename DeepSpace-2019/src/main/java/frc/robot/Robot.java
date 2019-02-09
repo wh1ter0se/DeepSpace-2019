@@ -100,8 +100,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getMotorValues()[0]);
     SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getMotorValues()[1]);
 
-    SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
-    SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
+    // SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
+    // SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
 
     SmartDashboard.putBoolean("Pushing", Robot.SUB_DRIVE.isPushing());
 
@@ -109,15 +109,21 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Second Gear", !Robot.SUB_SHIFTER.isFirstGear());
     SmartDashboard.putBoolean("Auto Shifting", Robot.SUB_SHIFTER.isAutoShifting());
 
-    SmartDashboard.putString("Mast Position", Robot.SUB_MAST.getStoredPosition().toString());
-    SmartDashboard.putBoolean("Mast Low", Robot.SUB_MAST.getStoredPosition() == MastPosition.LOW);
-    SmartDashboard.putBoolean("Mast Mid", Robot.SUB_MAST.getStoredPosition() == MastPosition.MID);
-    SmartDashboard.putBoolean("Mast High", Robot.SUB_MAST.getStoredPosition() == MastPosition.HIGH);
+    SmartDashboard.putBoolean("Hatch 1", Robot.SUB_MAST.getStoredPosition() == MastPosition.HATCH_1);
+    SmartDashboard.putBoolean("Cargo 1", Robot.SUB_MAST.getStoredPosition() == MastPosition.CARGO_1);
+    SmartDashboard.putBoolean("Hatch 2", Robot.SUB_MAST.getStoredPosition() == MastPosition.HATCH_2);
+    SmartDashboard.putBoolean("Cargo 2", Robot.SUB_MAST.getStoredPosition() == MastPosition.CARGO_2);
+    SmartDashboard.putBoolean("Hatch 3", Robot.SUB_MAST.getStoredPosition() == MastPosition.HATCH_3);
+    SmartDashboard.putBoolean("Cargo 3", Robot.SUB_MAST.getStoredPosition() == MastPosition.CARGO_3);
 
     SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
 
+    SmartDashboard.putNumber("Flipper Amps", Robot.SUB_FLIPPER.getAmps());
+
+    SmartDashboard.putNumber("First Stage Amps", Robot.SUB_MAST.getAmperage()[0]);
+    SmartDashboard.putNumber("Second Stage Amps", Robot.SUB_MAST.getAmperage()[1]);
+
     SmartDashboard.putBoolean("Caleb is Illiterate", true);
-    SmartDashboard.putBoolean("I want to be here", false);
 
     SmartDashboard.putData("Sub_Preloader", SUB_PRELOADER);
     SmartDashboard.putData("Sub_Clamp", SUB_CLAMP);
@@ -125,6 +131,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Sub_Compressor", SUB_COMPRESSOR);
     SmartDashboard.putData("Sub_Drive", SUB_DRIVE);
     SmartDashboard.putData("Sub_Flipper", SUB_FLIPPER);
+    SmartDashboard.putData("Sub_Launcher", SUB_LAUNCHER);
     SmartDashboard.putData("Sub_Mast", SUB_MAST);
     SmartDashboard.putData("Sub_Receiver", SUB_RECEIVER);
     SmartDashboard.putData("Sub_Shifter", SUB_SHIFTER);
@@ -151,7 +158,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    
+    Scheduler.getInstance().run();
   }
 
   /**
@@ -163,9 +170,10 @@ public class Robot extends TimedRobot {
   }
 
   public void teleopInit() {
-    Robot.SUB_CLAMP.closeClamp();
-    Robot.SUB_SHIFTER.downShift();
-    Robot.SUB_PRELOADER.retract();
+    //TODO Move these to autoInit before comp
+      Robot.SUB_CLAMP.closeClamp();
+      Robot.SUB_SHIFTER.downShift();
+      Robot.SUB_PRELOADER.retract();
   }
 
   /**

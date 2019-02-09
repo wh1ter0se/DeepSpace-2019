@@ -8,6 +8,7 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -18,7 +19,7 @@ import frc.robot.Enumeration.MastPosition;
 import frc.robot.Util.Xbox;
 
 /**
- * Add your docs here.
+ * Two-stage system that moves the maniuplator vertically
  */
 public class SubsystemMast extends Subsystem {
 
@@ -27,44 +28,52 @@ public class SubsystemMast extends Subsystem {
   private static TalonSRX firstStage;
   private static TalonSRX secondStage;
 
+  private static Boolean loopRunning;
+
   @Override
-  public void initDefaultCommand() {
-    setDefaultCommand(new ManualCommandTestMast()); // TODO remove when limit switches are installed
-  }
+  public void initDefaultCommand() {}
 
   public SubsystemMast() {
-    storedPosition = MastPosition.LOW;
+    storedPosition = MastPosition.HATCH_1;
 
     firstStage  = new TalonSRX(Constants.FIRST_STAGE_ID);
     secondStage = new TalonSRX(Constants.SECOND_STAGE_ID);
 
-    setAmpLimit(60);
+    initConfig(50, 0, true);
   }
 
   public void setStoredPosition(MastPosition position) {
     storedPosition = position;
+    loopRunning    = false;
   }
 
   public MastPosition getStoredPosition() {
     return storedPosition;
   }
 
-  public void moveFirstStage(double percentOutput) {
-    firstStage.set(ControlMode.PercentOutput, percentOutput);
+  public Boolean getLoopRunning() {
+    return loopRunning;
   }
 
-  public void moveSecondStage(double percentOutput) {
-    secondStage.set(ControlMode.PercentOutput, percentOutput);
+  public void moveFirstStageByPercent(double speed) {
+    firstStage.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void moveFirstStageByPosition(double inches) {
+
+  }
+
+  public void moveSecondStageByPercent(double speed) {
+    secondStage.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void moveSecondStageByPosition(double inches) {
+
   }
 
   public void moveWithJoystick(Joystick joy, double firstStageInhibitor, double secondStageInhibitor) {
-    moveFirstStage(Xbox.LEFT_Y(joy) * Math.abs(firstStageInhibitor));
-    moveFirstStage(Xbox.RIGHT_Y(joy) * Math.abs(secondStageInhibitor));
-  }
-
-  public void setAmpLimit(int amps) {
-    firstStage.configPeakCurrentLimit(amps);
-    secondStage.configPeakCurrentLimit(amps);
+    firstStage.set(ControlMode.PercentOutput, Xbox.LEFT_Y(joy) * Math.abs(firstStageInhibitor));
+    secondStage.set(ControlMode.PercentOutput, Xbox.RIGHT_Y(joy) * Math.abs(secondStageInhibitor));
   }
 
   public Boolean[] getLimitSwitches() {
@@ -76,9 +85,22 @@ public class SubsystemMast extends Subsystem {
     return array;
   }
 
-  public void setInverts() {
-    // firstStage.setInverted(Constants.FIRST_STAGE_INVERT); // TODO positive should move it up
-    // secondStage.setInverted(Constants.SECOND_STAGE_INVERT); // TODO positive should move it up
+  public void initConfig(int ampLimit, double ramp, Boolean braking) {
+    firstStage.setInverted(Constants.FIRST_STAGE_INVERT);
+      firstStage.configOpenloopRamp(ramp);
+      firstStage.configContinuousCurrentLimit(ampLimit);
+      firstStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
+    secondStage.setInverted(Constants.SECOND_STAGE_INVERT);
+      secondStage.configOpenloopRamp(ramp);
+      secondStage.configContinuousCurrentLimit(ampLimit);
+      secondStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
+  }
+  public double[] getAmperage() {
+    return new double[]{firstStage.getOutputCurrent(), secondStage.getOutputCurrent()};
+  }
+
+  public void zeroEncoders() {
+    //TODO add code to zero them
   }
 
 }

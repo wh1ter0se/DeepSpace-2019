@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
 
 /**
- * Add your docs here.
+ * Mechanism to suck balls
  */
 public class SubsystemPreloader extends Subsystem {
   
@@ -31,7 +31,7 @@ public class SubsystemPreloader extends Subsystem {
 
   public SubsystemPreloader() {
     intake = new TalonSRX(Constants.INTAKE_ID);
-    
+      intake.configOpenloopRamp(0); //TODO remove when not needed
     extend = new Solenoid(Constants.EXTEND_ID);
     retract = new Solenoid(Constants.RETRACT_ID);
   }

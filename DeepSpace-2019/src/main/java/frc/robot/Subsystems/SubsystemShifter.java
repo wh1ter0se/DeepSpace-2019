@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
 
 /**
- * Add your docs here.
+ * Pneumatics for the drivetrain's two-speed gearboxes
  */
 public class SubsystemShifter extends Subsystem {
 
@@ -72,10 +72,17 @@ public class SubsystemShifter extends Subsystem {
     return firstGear;
   }
 
+  /**
+   * Retrieves the state of the automatic shifting
+   * @return true if auto, false if manual
+   */
   public Boolean isAutoShifting() {
     return autoShifting;
   }
 
+  /**
+   * Enables RPM/throttle-based shifting instead of manual shifting
+   */
   public void setAutoShifting(boolean isAutoShifting) {
     autoShifting = isAutoShifting;
   }

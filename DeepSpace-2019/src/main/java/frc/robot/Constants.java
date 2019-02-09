@@ -57,9 +57,10 @@ public class Constants {
         LEFT_DRIVE_INVERT   = false,
         RIGHT_DRIVE_INVERT  = true,
         FIRST_STAGE_INVERT  = false,
-        SECOND_STAGE_INVERT = false,
+        SECOND_STAGE_INVERT = true,
         LAUNCHER_INVERT     = true,
-        INTAKE_INVERT       = false;
+        INTAKE_INVERT       = false,
+        FLIPPER_INVERT      = false;
 
     /**
      * Mast Speed Backup Values
@@ -100,8 +101,8 @@ public class Constants {
      */
     public static final int
         CLIMBER_ID      = 5,
-        FIRST_STAGE_ID  = 9,
-        SECOND_STAGE_ID = 8,
+        FIRST_STAGE_ID  = 8,
+        SECOND_STAGE_ID = 9,
         LAUNCHER_ID     = 6,
         INTAKE_ID       = 10,
         FLIPPER_ID      = 7;

@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
 
 /**
- * Add your docs here.
+ * Ball hood that ejects balls
  */
 public class SubsystemLauncher extends Subsystem {
   

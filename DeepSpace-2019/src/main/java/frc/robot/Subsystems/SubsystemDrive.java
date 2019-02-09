@@ -69,6 +69,11 @@ public class SubsystemDrive extends Subsystem {
       rightSlave.set(right);
   }
 
+  /**
+   * Moves the drivetrain based on a set distance and PID parameters
+   * @param inches how many inches forward it should move
+   * @param PID    array of the PID gains
+   */
   public void driveByPosition(double inches, double[] PID) {
     double rotations = Constants.ROTATIONS_PER_INCH * inches;
 
@@ -91,6 +96,14 @@ public class SubsystemDrive extends Subsystem {
     rightMaster.getPIDController().setReference(rotations * Constants.ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 1);
   }
 
+  /**
+   * TODO - SKETCHY- MAYBE WORKS?
+   * Checks how far the drivetrain position loop is from its target
+   * without accessing the REV code, since REV is dumb
+   * @param initEncoderPositions array of the encoder positions at init
+   * @param inches               how many inches away the target WAS
+   * @return                     error in encoder ticks
+   */
   public double[] getError(double[] initEncoderPositions, double inches) {
     double ticks = inches * Constants.ENCODER_TICKS_PER_ROTATION * Constants.ROTATIONS_PER_INCH;
     double[] output = new double[2];
@@ -195,8 +208,9 @@ public class SubsystemDrive extends Subsystem {
   }
 
   /**
-   * Checks if the robot is pushing by checking if both sides are pulling high amperage
-   * @return left and right motor are both pulling over 55A
+   * Checks if the robot is pushing by checking if both sides 
+   * are pulling high amperage
+   * @return left and right motor are both pulling over the threshold amperage
    */
   public Boolean isPushing() {
     return leftMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE && rightMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE;

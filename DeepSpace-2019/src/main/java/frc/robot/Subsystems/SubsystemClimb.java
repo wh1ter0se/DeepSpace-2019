@@ -17,7 +17,7 @@ import frc.robot.Constants;
 import frc.robot.Util.Xbox;
 
 /**
- * Add your docs here.
+ * Screw-based climbing mechanism in the bottom rear
  */
 public class SubsystemClimb extends Subsystem {
 
@@ -35,6 +35,12 @@ public class SubsystemClimb extends Subsystem {
     setAmpLimit(60);
   }
 
+  /**
+   * Controls the percent output of the climb screw based
+   * on the triggers of the given joystick
+   * @param joy the joystick to be used
+   * @return    the motor amperage
+   */
   public double ascendByJoystick(Joystick joy) {
     double percentOutput = Xbox.RT(joy) - Xbox.LT(joy);
     climber.set(ControlMode.PercentOutput, percentOutput);
@@ -42,14 +48,25 @@ public class SubsystemClimb extends Subsystem {
     return climber.getOutputCurrent();
   }
 
+  /**
+   * Sets the maximum allowable amperage of the climb motor
+   */
   public void setAmpLimit(int amps) {
     climber.configPeakCurrentLimit(amps);
   }
 
+  /**
+   * Sets the state of the 'safety', which only allows
+   * control after RB is pressed so the operator doesn't do the dumb
+   */
   public void setSafetyMode(boolean active) {
     safetyMode = active;
   }
 
+  /**
+   * Retrieves whether or not the safety is on
+   * @return true if controls are locked, false if they are unlocked
+   */
   public Boolean getSafetyMode() {
     return safetyMode;
   }

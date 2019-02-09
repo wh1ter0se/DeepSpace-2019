@@ -8,12 +8,12 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.OI;
 import frc.robot.Robot;
-import frc.robot.Util.Util;
 
-public class ButtonCommandSpit extends Command {
-  public ButtonCommandSpit() {
-    requires(Robot.SUB_LAUNCHER);
+public class ManualCommandTestFlipper extends Command {
+  public ManualCommandTestFlipper() {
+    requires(Robot.SUB_FLIPPER);
   }
 
   // Called just before this Command runs the first time
@@ -24,7 +24,7 @@ public class ButtonCommandSpit extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.SUB_LAUNCHER.spit(Util.getAndSetDouble("Spit Speed", 1));
+    Robot.SUB_FLIPPER.moveByJoystick(OI.OPERATOR);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -42,6 +42,6 @@ public class ButtonCommandSpit extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.SUB_LAUNCHER.stopMotor();
+    Robot.SUB_FLIPPER.stopMotor();
   }
 }
