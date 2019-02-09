@@ -60,7 +60,7 @@ static void tune_distance() {
     cout.flush();
     
     //opens a new window where depth perception can be tuned.
-    
+    Tuning tuneWin = Tuning(cap);
 }
 
 /**

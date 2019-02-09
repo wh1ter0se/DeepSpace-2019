@@ -29,21 +29,13 @@ class Calibration {
 class Tuning {
     public:
     Tuning(cv::VideoCapture cap);
+
+    //gtk widgets needed for the window
+    
     
     private:
     cv::VideoCapture cap;
-    
-    static void Update();
-    static void Destroy();
-    static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer pointer);
-    
-    //gtk widgets needed for the window
-    GtkWidget *window; //the main window everything goes in
-    GtkWidget *content_pane; //the box that displays all contents of window
-    GtkWidget *slider_focal_distance; //the slider where focal distance is adjusted.
-    GtkWidget *slider_error_correction; //the slider where error correction is adjusted.
-    GtkWidget *exit_button; //the button that closes the window and disposes the object.
-    
+
 };
 
 #endif

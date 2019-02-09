@@ -151,12 +151,14 @@ string Calibration::Process(cv::VideoCapture cap) {
 }
 
 cv::Mat Calibration::GetImage(cv::VideoCapture cap) {
-    cv::Mat img;
-    if(Calibration::USE_IMAGE) { //means that we have to use target.jpg
-        img = cv::imread("target.jpg");
-    } else {
-        cap.read(img);
-    }
+    // cv::Mat img;
+    // if(Calibration::USE_IMAGE) { //means that we have to use target.jpg
+    //     img = cv::imread("target.jpg");
+    // } else {
+    //     cap.read(img);
+    // }
+
+    cv::Mat img = cv::imread("target.jpg");
 
     return img;
 }
