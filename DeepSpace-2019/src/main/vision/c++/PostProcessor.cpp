@@ -97,7 +97,7 @@ void PostProcessor::Loop() {
                 if(unpairedRects.size() == 1) {
                     //calculate the height and distance of our lonely rectangle
                     cv::RotatedRect lonelyRect = unpairedRects[0];
-                    target_height = lonelyRect.size.height;
+                    target_height = Util::WhichIsBigger(lonelyRect.size.width, lonelyRect.size.height);
 
                     target_dist = (Settings::KNOWN_HEIGHT * Settings::FOCAL_HEIGHT) / target_height;
                     

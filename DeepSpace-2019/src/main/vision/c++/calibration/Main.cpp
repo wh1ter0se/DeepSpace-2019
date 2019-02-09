@@ -1,5 +1,3 @@
-#include <iostream>
-#include "gtk-2.0/gtk/gtk.h"
 #include "Calibration.h"
 
 
@@ -20,6 +18,7 @@ GtkWidget *contour_information; //label that contour data goes into
 GtkWidget *distance_text_box;
 GtkWidget *process_button; //button that triggers processing
 GtkWidget *resume_button; //button that resumes normal function after processing.
+GtkWidget *distance_button;
 GtkWidget *exit_button;
 
 cv::VideoCapture cap(0); //create and init the videocapture we shall use
@@ -54,6 +53,14 @@ static void Process() {
  */
 static void Resume() {
     resume = true;
+}
+
+static void tune_distance() {
+    cout << "tuning distance.\n";
+    cout.flush();
+    
+    //opens a new window where depth perception can be tuned.
+    
 }
 
 /**
@@ -106,8 +113,13 @@ int main(int argc, char *argv[]) {
     gtk_box_pack_start(GTK_BOX(button_container), resume_button, TRUE, TRUE, 0);
     
     //exit button box
-    exit_container = gtk_hbox_new(FALSE, 0);
+    exit_container = gtk_vbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(master_container), exit_container, TRUE, TRUE, 0);
+    
+    //distance button
+    distance_button = gtk_button_new_with_label("Tune Distance");
+    gtk_signal_connect(GTK_OBJECT(distance_button), "clicked", G_CALLBACK(tune_distance), NULL);
+    gtk_box_pack_start(GTK_BOX(exit_container), distance_button, TRUE, TRUE, 0);
     
     //exit button
     exit_button = gtk_button_new_with_label("Exit");
@@ -117,6 +129,7 @@ int main(int argc, char *argv[]) {
     //show all widgets
     gtk_widget_show(resume_button);
     gtk_widget_show(process_button);
+    gtk_widget_show(distance_button);
     gtk_widget_show(exit_button);
     gtk_widget_show(exit_container);
     gtk_widget_show(button_container);
