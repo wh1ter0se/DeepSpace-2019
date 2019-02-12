@@ -53,14 +53,16 @@ int PostProcessor::Update(cv::VideoCapture cap, int known_height, int focal_heig
 
         distance = (known_height * focal_height) / target_height;
         
-        cout << distance << "\n";
 
         int error = known_distance - distance;
-        known_distance *= error_correct;
+        error *= error_correct;
+        cout << "distance: " << distance << ", error: " << error << "\n";
         distance += error;
+        
 
         cv::imshow("Output", out);
         cv::waitKey(5);
+
 
         return distance;
     }
