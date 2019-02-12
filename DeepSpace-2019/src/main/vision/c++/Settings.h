@@ -15,7 +15,10 @@ class Settings {
     //distance measurement settings
     static constexpr double 
         KNOWN_HEIGHT = 5.5,
-        FOCAL_HEIGHT = 230.0;
+        FOCAL_HEIGHT = 319.0,
+        CALIBRATED_DISTANCE = 18,
+        ERROR_CORRECTION = -0.14;
+        
 
     //size settings (inches)
     static constexpr double

@@ -35,7 +35,7 @@ class Tuning {
 
 class PostProcessor {
     public:
-    static int Update(cv::VideoCapture cap, int known_height, int focal_height, int error_correct, int known_distance);
+    static int Update(cv::VideoCapture cap, double known_height, double focal_height, double error_correct, double known_distance);
 };
 
 #endif

@@ -5,7 +5,7 @@
  */
 
 
-int PostProcessor::Update(cv::VideoCapture cap, int known_height, int focal_height, int error_correct, int known_distance) {
+int PostProcessor::Update(cv::VideoCapture cap, double known_height, double focal_height, double error_correct, double known_distance) {
 
     cv::Mat img;
     cv::Mat out;
@@ -28,11 +28,15 @@ int PostProcessor::Update(cv::VideoCapture cap, int known_height, int focal_heig
         int rectArea = minRect.size.width * minRect.size.height;
         int rectAngle = minRect.angle;
 
-        if(abs(rectAngle) > 4 && rectArea > 1500) {
+        if(abs(rectAngle) > 4 && rectArea > 1000) {
+            cv::Rect box = cv::boundingRect(contour);
             cv::circle(out, minRect.center, 3, cv::Scalar(0,0,255), 4);
-            cv::rectangle(out, cv::boundingRect(contour), cv::Scalar(255,0,0), 3);
-
-            validContours.push_back(contour);
+            cv::rectangle(out, box, cv::Scalar(255,0,0), 3);
+            
+            if(box.x > 25 && (252 - box.x > 25)) {
+                validContours.push_back(contour);
+                cv::circle(out, cv::Point(box.x,  box.y), 3, cv::Scalar(0,255,0), 4);
+            }
         }
     }
 
@@ -41,7 +45,7 @@ int PostProcessor::Update(cv::VideoCapture cap, int known_height, int focal_heig
     if(validContours.size() > 0 && validContours.size() < 3) {
         //find which one is left, and which one is right
         cv::RotatedRect leftRect = cv::minAreaRect(validContours[0]); //for distance we will only focus on left rect for efficency purposes
-        int distance = 0;
+        double distance = 0;
 
 
         //calculate the distance between the target and the camera
@@ -51,20 +55,21 @@ int PostProcessor::Update(cv::VideoCapture cap, int known_height, int focal_heig
         else
             target_height = leftRect.size.width;
 
-        distance = (known_height * focal_height) / target_height;
+        distance = (double) ((known_height * focal_height) / (double) target_height);
         
 
-        int error = known_distance - distance;
-        error *= error_correct;
-        cout << "distance: " << distance << ", error: " << error << "\n";
+        double error = known_distance - distance;
+        error *= (double) error_correct;
         distance += error;
+        
+        cout << "height: " << target_height << " " << "distance: " << distance << ", error: " << error << "\n";
         
 
         cv::imshow("Output", out);
         cv::waitKey(5);
 
 
-        return distance;
+        return (int) distance;
     }
 
     return -1;

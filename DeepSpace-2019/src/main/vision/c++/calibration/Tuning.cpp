@@ -21,7 +21,7 @@ GtkWidget *tuning_slider_error_correction; //the slider where error correction i
 GtkWidget *tuning_exit_button; //the button that closes the window and disposes the object.
 
 static gboolean tuning_Update() {
-	int known_height = 0,
+	double known_height = 0,
 		focal_height = 0,
 		error_correct = 0,
 		known_distance = 0;
@@ -120,7 +120,8 @@ Tuning::Tuning(cv::VideoCapture cap) {
 	gtk_box_pack_start(GTK_BOX(tuning_content_pane), tuning_label_error_correction, TRUE, FALSE, 0);
 
 	//err slider
-	tuning_slider_error_correction = gtk_hscale_new_with_range(0, 5, 0.05);
+	tuning_slider_error_correction = gtk_hscale_new_with_range(-5, 5, 0.05);
+	gtk_range_set_value(GTK_RANGE(tuning_slider_error_correction), 0.0);
 	gtk_object_set(GTK_OBJECT(tuning_slider_error_correction), "width-request", 400, NULL);
 	gtk_box_pack_start(GTK_BOX(tuning_content_pane), tuning_slider_error_correction, TRUE, FALSE, 0);
 

@@ -85,7 +85,7 @@ void PostProcessor::Loop() {
             int target_x = -1;
             int target_y = -1;
             int target_height = -1; //px
-            int target_dist = -1;
+            double target_dist = -1;
             if(pairedRects.size() > 0) {
                 cv::Point target_center = biggestTarget.center();
                 target_x = target_center.x;
@@ -94,7 +94,13 @@ void PostProcessor::Loop() {
                 
                 //(true distance * focal) / pixels
                 
-                target_dist = (Settings::KNOWN_HEIGHT * Settings::FOCAL_HEIGHT) / target_height;
+                target_dist = (double) ((Settings::KNOWN_HEIGHT * Settings::FOCAL_HEIGHT) / (double) target_height);
+                double error = Settings::CALIBRATED_DISTANCE - target_dist;
+                error *= (double) Settings::ERROR_CORRECTION;
+                target_dist += error;
+                
+                //cout << target_height << ", " << target_dist << ", " << error << "\n";
+                //cout.flush();
             } else {
                 if(unpairedRects.size() == 1) {
                     //calculate the height and distance of our lonely rectangle
@@ -110,7 +116,7 @@ void PostProcessor::Loop() {
             string x = std::to_string(target_x);
             string y = std::to_string(target_y);
             string h = std::to_string(target_height);
-            string d = std::to_string(target_dist);
+            string d = std::to_string((int) target_dist);
             sendToRIO = ":" + x + "," + y + "," + h + "," + d + ";";
             
             //cout << sendToRIO << "\n";
