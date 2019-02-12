@@ -60,7 +60,13 @@ public class SubsystemMast extends Subsystem {
   }
 
   public void moveFirstStageByPosition(double inches) {
+    firstStage.set(ControlMode.Position, inches);
+  }
 
+  public Boolean firstStageWithinRange(double inches) {
+    double position = firstStage.getSensorCollection().getQuadraturePosition();
+    double target   = inches * Constants.CTRE_TICKS_PER_ROTATION * Constants.MAST_ROTATIONS_PER_INCH;
+    return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
   }
 
   public void moveSecondStageByPercent(double speed) {
@@ -68,7 +74,13 @@ public class SubsystemMast extends Subsystem {
   }
 
   public void moveSecondStageByPosition(double inches) {
+    secondStage.set(ControlMode.Position, inches);
+  }
 
+  public Boolean secondStageWithinRange(double inches) {
+    double position = secondStage.getSensorCollection().getQuadraturePosition();
+    double target   = inches * Constants.CTRE_TICKS_PER_ROTATION * Constants.MAST_ROTATIONS_PER_INCH;
+    return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
   }
 
   public void moveWithJoystick(Joystick joy, double firstStageInhibitor, double secondStageInhibitor) {
@@ -85,6 +97,12 @@ public class SubsystemMast extends Subsystem {
     return array;
   }
 
+  /**
+   * 
+   * @param ampLimit
+   * @param ramp
+   * @param braking
+   */
   public void initConfig(int ampLimit, double ramp, Boolean braking) {
     firstStage.setInverted(Constants.FIRST_STAGE_INVERT);
       firstStage.configOpenloopRamp(ramp);
@@ -95,12 +113,21 @@ public class SubsystemMast extends Subsystem {
       secondStage.configContinuousCurrentLimit(ampLimit);
       secondStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
   }
+
+  /**
+   * 
+   * @return
+   */
   public double[] getAmperage() {
     return new double[]{firstStage.getOutputCurrent(), secondStage.getOutputCurrent()};
   }
 
+  /**
+   * Sets the encoder position of both masts to 0
+   */
   public void zeroEncoders() {
-    //TODO add code to zero them
+    firstStage.getSensorCollection().setQuadraturePosition(0, 0);
+    secondStage.getSensorCollection().setQuadraturePosition(0, 0);
   }
 
 }

@@ -39,7 +39,9 @@ public class Constants {
      * Per values
      */
     public static final double
-        ENCODER_TICKS_PER_ROTATION = 42,
+        CTRE_TICKS_PER_ROTATION = 4096,
+        MAST_ROTATIONS_PER_INCH = 0, //TODO find this out
+        REV_ENCODER_TICKS_PER_ROTATION = 42,
         ROTATIONS_PER_INCH = 1 / (4.67 * 6 *  Math.PI); // calculated with a cimple box and 42 TPR
 
     /**
@@ -61,6 +63,16 @@ public class Constants {
         LAUNCHER_INVERT     = true,
         INTAKE_INVERT       = false,
         FLIPPER_INVERT      = false;
+
+    /**
+     * Mast Values
+     */
+    public static final double
+        MAST_ALLOWABLE_ERROR = 100, // error in ticks
+        CARGO_1_HEIGHT = 0.0,
+        HATCH_2_HEIGHT = 0.0,
+        CARGO_2_HEIGHT = 0.0,
+        HATCH_3_HEIGHT = 0.0; // TODO these need to be calibrated
 
     /**
      * Mast Speed Backup Values

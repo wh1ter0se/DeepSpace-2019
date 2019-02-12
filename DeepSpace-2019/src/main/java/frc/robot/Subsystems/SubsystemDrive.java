@@ -92,8 +92,8 @@ public class SubsystemDrive extends Subsystem {
     leftMaster.getPIDController().setOutputRange(-100, 100);
     rightMaster.getPIDController().setOutputRange(-100, 100);
 
-    leftMaster.getPIDController().setReference(rotations * Constants.ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 0);
-    rightMaster.getPIDController().setReference(rotations * Constants.ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 1);
+    leftMaster.getPIDController().setReference(rotations * Constants.REV_ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 0);
+    rightMaster.getPIDController().setReference(rotations * Constants.REV_ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 1);
   }
 
   /**
@@ -105,7 +105,7 @@ public class SubsystemDrive extends Subsystem {
    * @return                     error in encoder ticks
    */
   public double[] getError(double[] initEncoderPositions, double inches) {
-    double ticks = inches * Constants.ENCODER_TICKS_PER_ROTATION * Constants.ROTATIONS_PER_INCH;
+    double ticks = inches * Constants.REV_ENCODER_TICKS_PER_ROTATION * Constants.ROTATIONS_PER_INCH;
     double[] output = new double[2];
     output[0] = initEncoderPositions[0] 
                 + (ticks *= leftMaster.getInverted() ? -1 : 1) 

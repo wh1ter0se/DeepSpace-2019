@@ -20,7 +20,13 @@ public class CyborgCommandAutoShift extends Command {
   double throttle;
   double upshiftRPM;
 
+  double disengagementTime;
+
   double[][] shiftingPoints;
+
+  long shiftTime;
+  
+  Boolean disengaged;
 
   public CyborgCommandAutoShift() {
     requires(Robot.SUB_SHIFTER);
@@ -30,11 +36,19 @@ public class CyborgCommandAutoShift extends Command {
   @Override
   protected void initialize() {
     Robot.SUB_SHIFTER.setAutoShifting(true);
+    disengaged = false;
+    shiftTime= 0;
+    disengagementTime = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    disengagementTime = Util.getAndSetDouble("Disengagement Time", 2000);
+
+    if (!disengaged || System.currentTimeMillis() > shiftTime + disengagementTime) {
+
+    Robot.SUB_DRIVE.setBraking(true);
 
     // throttles, upshift RPMs, downshift RPMs
     shiftingPoints = new double[][]{
@@ -63,14 +77,14 @@ public class CyborgCommandAutoShift extends Command {
       // double downshiftRPM = Util.getAndSetDouble("Downshift RPM", Constants.DOWNSHIFT_RPM);
 
     if (Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.getVelocities()[0] >= upshiftRPM && Robot.SUB_DRIVE.getVelocities()[1] >= upshiftRPM && !Robot.SUB_DRIVE.isPushing()) {
-      Robot.SUB_SHIFTER.upShift();
+      upshift();
     } else if (!Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.getVelocities()[0] <= downshiftRPM && Robot.SUB_DRIVE.getVelocities()[1] <= downshiftRPM) {
-      Robot.SUB_SHIFTER.downShift();
+      downshift();
     } else if (!Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.isPushing()) {
-      Robot.SUB_SHIFTER.downShift();
+      downshift();
     }
 
-
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -89,5 +103,19 @@ public class CyborgCommandAutoShift extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+  }
+
+  private void upshift() {
+    Robot.SUB_SHIFTER.upShift();
+    Robot.SUB_DRIVE.setBraking(false);
+    shiftTime = System.currentTimeMillis();
+    disengaged = true;
+  }
+
+  private void downshift() {
+    Robot.SUB_SHIFTER.downShift();
+    Robot.SUB_DRIVE.setBraking(false);
+    shiftTime = System.currentTimeMillis();
+    disengaged = true;
   }
 }

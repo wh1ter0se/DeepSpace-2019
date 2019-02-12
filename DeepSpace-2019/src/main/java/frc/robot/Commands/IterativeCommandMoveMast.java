@@ -40,87 +40,59 @@ public class IterativeCommandMoveMast extends Command {
 
     position = Robot.SUB_MAST.getStoredPosition();
     loopRunning = Robot.SUB_MAST.getLoopRunning();
+
     firstStageSpeed = Math.abs(Util.getAndSetDouble("First Stage Speed", Constants.FIRST_STAGE_SPEED));
     secondStageSpeed = Math.abs(Util.getAndSetDouble("Second Stage Speed", Constants.FIRST_STAGE_SPEED));
+    
     switch(position) {
       case HATCH_1:
-          if (!Robot.SUB_MAST.getLimitSwitches()[0]) { Robot.SUB_MAST.moveFirstStageByPercent(-1 * firstStageSpeed); }
-          if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveSecondStageByPercent(-1 * secondStageSpeed); }
-          stable = Robot.SUB_MAST.getLimitSwitches()[0] && Robot.SUB_MAST.getLimitSwitches()[2];
-          break;
+        if (!Robot.SUB_MAST.getLimitSwitches()[0]) { Robot.SUB_MAST.moveFirstStageByPercent(-1 * firstStageSpeed); } // ram first stage down if not already
+        if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveSecondStageByPercent(-1 * secondStageSpeed); } // ram second stage down if not already
+        stable = Robot.SUB_MAST.getLimitSwitches()[0] && Robot.SUB_MAST.getLimitSwitches()[2];
+        break;
 
       case CARGO_1:
-          if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveSecondStageByPercent(-1 * secondStageSpeed); }
-          if (!loopRunning) {
-            loopRunning = true;
-            //move first stage to x position
-          }
-          break;
+        if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveSecondStageByPercent(-1 * secondStageSpeed); } // ram second stage down if not already
+        if (!loopRunning) {
+          loopRunning = true;
+          Robot.SUB_MAST.moveFirstStageByPosition(Constants.CARGO_1_HEIGHT); // move first stage to x position
+        }
+        stable  = Robot.SUB_MAST.getLimitSwitches()[2] && Robot.SUB_MAST.firstStageWithinRange(Constants.CARGO_1_HEIGHT);
+        break;
 
       case HATCH_2:
-          if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveSecondStageByPercent(-1 * secondStageSpeed); }
-          if (!loopRunning) {
-            loopRunning = true;
-            //move first stage to x position
-          }
-          break;
+        if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveSecondStageByPercent(-1 * secondStageSpeed); } // ram second stage down if not already
+        if (!loopRunning) {
+          loopRunning = true;
+          Robot.SUB_MAST.moveFirstStageByPosition(Constants.HATCH_2_HEIGHT); // move first stage to x position
+        }
+        stable = Robot.SUB_MAST.getLimitSwitches()[2] && Robot.SUB_MAST.firstStageWithinRange(Constants.HATCH_2_HEIGHT);
+        break;
 
       case CARGO_2:
-          if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveFirstStageByPercent(firstStageSpeed); }
-          if (!loopRunning) {
-            loopRunning = true;
-            //move second stage to x position
-          }
-          break;
+        if (!Robot.SUB_MAST.getLimitSwitches()[1]) { Robot.SUB_MAST.moveFirstStageByPercent(firstStageSpeed); } // ram first stage up if not already
+        if (!loopRunning) {
+          loopRunning = true;
+          Robot.SUB_MAST.moveSecondStageByPosition(Constants.CARGO_2_HEIGHT); // move second stage to x position
+        }
+        stable = Robot.SUB_MAST.getLimitSwitches()[2] && Robot.SUB_MAST.secondStageWithinRange(Constants.CARGO_2_HEIGHT);
+        break;
 
       case HATCH_3:
-          if (Robot.SUB_MAST.getLimitSwitches()[0]) { Robot.SUB_MAST.moveFirstStageByPercent(firstStageSpeed); }
-          if (!loopRunning) {
-            loopRunning = true;
-            //move second stage to x position
-          }
-          break;
+        if (!Robot.SUB_MAST.getLimitSwitches()[1]) { Robot.SUB_MAST.moveFirstStageByPercent(firstStageSpeed); } // ram first stage up if not already
+        if (!loopRunning) {
+          loopRunning = true;
+          Robot.SUB_MAST.moveSecondStageByPosition(Constants.HATCH_3_HEIGHT); // move second stage to x position
+        }
+        stable = Robot.SUB_MAST.getLimitSwitches()[1] && Robot.SUB_MAST.secondStageWithinRange(Constants.HATCH_3_HEIGHT);
+        break;
 
       case CARGO_3:
-          if (!Robot.SUB_MAST.getLimitSwitches()[1]) { Robot.SUB_MAST.moveFirstStageByPercent(firstStageSpeed); }
-          if (!Robot.SUB_MAST.getLimitSwitches()[3]) { Robot.SUB_MAST.moveSecondStageByPercent(secondStageSpeed); }
-          stable = Robot.SUB_MAST.getLimitSwitches()[1] && Robot.SUB_MAST.getLimitSwitches()[3];
-          break;
+        if (!Robot.SUB_MAST.getLimitSwitches()[1]) { Robot.SUB_MAST.moveFirstStageByPercent(firstStageSpeed); } // ram first stage up if not already
+        if (!Robot.SUB_MAST.getLimitSwitches()[3]) { Robot.SUB_MAST.moveSecondStageByPercent(secondStageSpeed); } // ram second stage up if not already
+        stable = Robot.SUB_MAST.getLimitSwitches()[1] && Robot.SUB_MAST.getLimitSwitches()[3];
+        break;
     }
-    // OLD CODE
-    
-    // switch (position) {
-    //   case LOW:
-    //     stable = Robot.SUB_MAST.getLimitSwitches()[0] && Robot.SUB_MAST.getLimitSwitches()[2];
-        
-    //     if (!Robot.SUB_MAST.getLimitSwitches()[0]) { // lower first stage until limit
-    //       Robot.SUB_MAST.moveFirstStageByPercent(-1 * Math.abs(Util.getAndSetDouble("First Stage Speed", Constants.FIRST_STAGE_SPEED))); }
-    //     if (!Robot.SUB_MAST.getLimitSwitches()[2]) { // lower second stage until limit
-    //       Robot.SUB_MAST.moveSecondStageByPercent(-1 * Math.abs(Util.getAndSetDouble("First Stage Speed", Constants.FIRST_STAGE_SPEED))); }
-    //     break;
-
-    //   case MID:
-    //     stable = Robot.SUB_MAST.getLimitSwitches()[1] && Robot.SUB_MAST.getLimitSwitches()[2];
-          
-    //     if (!Robot.SUB_MAST.getLimitSwitches()[1]) { // raise first stage until limit
-    //       Robot.SUB_MAST.moveFirstStageByPercent(Math.abs(Util.getAndSetDouble("First Stage Speed", Constants.FIRST_STAGE_SPEED))); }
-    //     if (!Robot.SUB_MAST.getLimitSwitches()[2]) { // lower second stage until limit
-    //       Robot.SUB_MAST.moveSecondStageByPercent(-1 * Math.abs(Util.getAndSetDouble("First Stage Speed", Constants.FIRST_STAGE_SPEED))); }
-    //     break;
-
-    //   case HIGH:
-    //     stable = Robot.SUB_MAST.getLimitSwitches()[1] && Robot.SUB_MAST.getLimitSwitches()[3];
-          
-    //     if (!Robot.SUB_MAST.getLimitSwitches()[1]) { // raise first stage until limit
-    //       Robot.SUB_MAST.moveFirstStageByPercent(Math.abs(Util.getAndSetDouble("First Stage Speed", Constants.FIRST_STAGE_SPEED))); }
-    //     if (!Robot.SUB_MAST.getLimitSwitches()[3]) { // raise second stage until limit
-    //       Robot.SUB_MAST.moveSecondStageByPercent(Math.abs(Util.getAndSetDouble("First Stage Speed", Constants.FIRST_STAGE_SPEED))); }
-    //     break;
-
-    //   default:
-    //     DriverStation.reportError("DESIRED MAST POSITION NOT FOUND", false);
-    //     break;
-    // }
 
     SmartDashboard.putBoolean("Stable Mast", stable);
   }
