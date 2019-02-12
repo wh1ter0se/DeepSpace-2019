@@ -7,6 +7,19 @@
 #include "Settings.h"
 
 using namespace cv;
+using namespace std;
+
+
+/**
+ * A UDP sender utility that sends and recieves information to and from the RIO.
+ */
+class UDP {
+    //implementation here
+    public:
+    UDP();
+    void Send(string msg);
+    string Receive();
+};
 
 /**
  * The PostProcessor is the thing that takes the camera data and produces an output from it. 
@@ -22,6 +35,7 @@ class PostProcessor {
 
     private:
     bool stop = false;
+    UDP sender;
     cv::VideoCapture cap;
 };
 
@@ -52,11 +66,5 @@ class PairData {
     cv::RotatedRect rect2;
 };
 
-class UDP {
-    //implementation here
-    public:
-    UDP();
-    void Send(string msg);
-};
 
 #endif
