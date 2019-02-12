@@ -52,4 +52,11 @@ class PairData {
     cv::RotatedRect rect2;
 };
 
+class UDP {
+    //implementation here
+    public:
+    UDP();
+    void Send(string msg);
+};
+
 #endif
