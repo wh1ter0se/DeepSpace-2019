@@ -28,14 +28,15 @@ public class SubsystemFlipper extends Subsystem {
 
   public SubsystemFlipper() {
     flipper = new TalonSRX(Constants.FLIPPER_ID);
-      initConfig(20, 0, true);
+      initConfig(10, 0, true);
   }
 
   /**
    * Moves the flipper based on the left joystick of the given controller
    * @param joy the joystick to read from
    */
-  public void moveByJoystick(Joystick joy){
+  public void 
+  moveByJoystick(Joystick joy){
     flipper.set(ControlMode.PercentOutput, Xbox.LEFT_Y(joy));
   }
 
@@ -60,7 +61,7 @@ public class SubsystemFlipper extends Subsystem {
   }
 
   public void setAmpLimit(int amps) {
-    flipper.configPeakCurrentLimit(amps);
+    flipper.configContinuousCurrentLimit(amps);
   }
 
   public void setInvert() {

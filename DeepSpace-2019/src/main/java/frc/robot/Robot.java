@@ -185,5 +185,6 @@ public class Robot extends TimedRobot {
   
   public void disabledInit() {
     Robot.SUB_DRIVE.setBraking(false);
+    Robot.SUB_SHIFTER.upShift();
   }
 }

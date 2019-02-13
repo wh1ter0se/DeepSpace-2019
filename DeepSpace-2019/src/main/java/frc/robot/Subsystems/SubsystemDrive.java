@@ -127,10 +127,10 @@ public class SubsystemDrive extends Subsystem {
    * Sets all motor controller values to zero
    */
   public void stopMotors() {
-    leftMaster.stopMotor();
-      // leftSlave.stopMotor();
-    rightMaster.stopMotor();
-      // rightSlave.stopMotor();
+    leftMaster.set(0);
+      leftSlave.set(0);
+    rightMaster.set(0);
+      rightSlave.set(0);
   }
 
   /**

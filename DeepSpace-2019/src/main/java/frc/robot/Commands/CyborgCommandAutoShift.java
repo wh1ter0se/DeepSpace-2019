@@ -16,16 +16,18 @@ import frc.robot.Util.Xbox;
 
 public class CyborgCommandAutoShift extends Command {
 
+  private CyborgCommandDisengage disengage;
+
+  double disengagementTime;
+
   double downshiftRPM;
   double throttle;
   double upshiftRPM;
 
-  double disengagementTime;
-
   double[][] shiftingPoints;
 
   long shiftTime;
-  
+
   Boolean disengaged;
 
   public CyborgCommandAutoShift() {
@@ -39,16 +41,16 @@ public class CyborgCommandAutoShift extends Command {
     disengaged = false;
     shiftTime= 0;
     disengagementTime = 0;
+    disengage = new CyborgCommandDisengage();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    disengagementTime = Util.getAndSetDouble("Disengagement Time", 2000);
+
+    disengagementTime = Util.getAndSetDouble("Shifter Lockout", 2000);
 
     if (!disengaged || System.currentTimeMillis() > shiftTime + disengagementTime) {
-
-    Robot.SUB_DRIVE.setBraking(true);
 
     // throttles, upshift RPMs, downshift RPMs
     shiftingPoints = new double[][]{
@@ -107,15 +109,15 @@ public class CyborgCommandAutoShift extends Command {
 
   private void upshift() {
     Robot.SUB_SHIFTER.upShift();
-    Robot.SUB_DRIVE.setBraking(false);
     shiftTime = System.currentTimeMillis();
     disengaged = true;
+    disengage.start();
   }
 
   private void downshift() {
     Robot.SUB_SHIFTER.downShift();
-    Robot.SUB_DRIVE.setBraking(false);
     shiftTime = System.currentTimeMillis();
     disengaged = true;
+    disengage.start();
   }
 }
