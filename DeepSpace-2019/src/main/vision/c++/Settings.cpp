@@ -13,14 +13,6 @@ double Settings::Aspect_Ratio_Min() {
     return Settings::ASPECT_RATIO - Settings::ASPECT_RATIO_ERROR;
 }
 
-int Settings::Area_Max() {
-    return Settings::AREA + Settings::AREA_ERROR;
-}
-
-int Settings::Area_Min() {
-    return Settings::AREA - Settings::AREA_ERROR;
-}
-
 /**
  * Returns the opposite angle of the given angle in terms of the target.
  * For example, if an angle in range with the right angle is given, the value of the left angle

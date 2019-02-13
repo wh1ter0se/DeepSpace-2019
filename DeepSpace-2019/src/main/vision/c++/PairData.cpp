@@ -33,8 +33,8 @@ int PairData::area() {
  * Returns the height of the target by averaging the height of the two contours.
  */
 int PairData::height() {
-    int height1 = rect1.size.height;
-    int height2 = rect2.size.height;
+    int height1 = Util::WhichIsBigger(rect1.size.width, rect1.size.height);
+    int height2 = Util::WhichIsBigger(rect2.size.width, rect2.size.height);
     
     int avg = height1 + height2;
     avg /= 2;
