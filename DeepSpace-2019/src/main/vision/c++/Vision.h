@@ -1,8 +1,25 @@
+#ifndef VISION_H
+#define VISION_H
+
+
 #include <iostream>
 #include "opencv2/opencv.hpp"
 #include "Settings.h"
 
 using namespace cv;
+using namespace std;
+
+
+/**
+ * A UDP sender utility that sends and recieves information to and from the RIO.
+ */
+class UDP {
+    //implementation here
+    public:
+    UDP();
+    void Send(string msg);
+    string Receive();
+};
 
 /**
  * The PostProcessor is the thing that takes the camera data and produces an output from it. 
@@ -18,6 +35,7 @@ class PostProcessor {
 
     private:
     bool stop = false;
+    UDP sender;
     cv::VideoCapture cap;
 };
 
@@ -29,6 +47,7 @@ class Util {
     static bool IsElgible(cv::RotatedRect rect); //tests rotated rect to see if it is good for the target
     static bool IsPair(cv::RotatedRect rect1, cv::RotatedRect rect2);
     static double returnTrueDistanceScalar(cv::RotatedRect rectangle);
+    static int WhichIsBigger(int num1, int num2);
 };
 
 /**
@@ -46,3 +65,6 @@ class PairData {
     cv::RotatedRect rect1;
     cv::RotatedRect rect2;
 };
+
+
+#endif

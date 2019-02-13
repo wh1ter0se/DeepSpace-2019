@@ -31,14 +31,12 @@ bool Util::IsElgible(cv::RotatedRect rect) {
     ratioTest = (aspect_ratio < ARMax && aspect_ratio > ARMin);
 
     //the area test
-    int areaMax = Settings::Area_Max();
-    int areaMin = Settings::Area_Min();
     int area = (int) (width * height);
     
     //cout << area << "\n";
     //cout.flush();
     
-    areaTest = (area < areaMax && area > areaMin);
+    areaTest = (area > Settings::MIN_AREA);
     
 
     //the angle test
@@ -103,4 +101,11 @@ double Util::returnTrueDistanceScalar(cv::RotatedRect rectangle) {
         return 5.5 / rectangle.size.height;
     else 
         return 5.5 / rectangle.size.width;
+}
+
+int Util::WhichIsBigger(int num1, int num2) {
+    if(num1 > num2)
+        return num1;
+        
+    return num2;
 }

@@ -12,6 +12,8 @@ using namespace std;
  * Constructs a new postprocessor.
  */
 PostProcessor::PostProcessor() {
+    this->sender = UDP(); //init our UDP sender so we can talk to the RIO.
+    
     this->cap = cv::VideoCapture(0); //creates a new video streaming utility
     cap.set(cv::CAP_PROP_FRAME_WIDTH, Settings::CAMERA_RESOLUTION_X);
     cap.set(cv::CAP_PROP_FRAME_HEIGHT, Settings::CAMERA_RESOLUTION_Y);
@@ -57,6 +59,7 @@ void PostProcessor::Loop() {
                     if(Settings::DEBUG) {
                         cv::Rect boxRect = minRect.boundingRect();
                         cv::rectangle(out, boxRect, cv::Scalar(255,0,0), 2);
+                        cv::circle(out, cv::Point(minRect.center.x, minRect.center.y), 3, cv::Scalar(0,0,255), 4);
                     }
 
                     //try to find any pairs that might be there
@@ -81,32 +84,51 @@ void PostProcessor::Loop() {
             string sendToRIO = "";
             int target_x = -1;
             int target_y = -1;
-            int target_height = -1;
-            int target_dist = -1;
+            int target_height = -1; //px
+            double target_dist = -1;
             if(pairedRects.size() > 0) {
                 cv::Point target_center = biggestTarget.center();
                 target_x = target_center.x;
                 target_y = target_center.y;
                 target_height = biggestTarget.height();
-            } //else {
-                //if(pairedRects.size() == 1) {
-                    //get the area of the only contour in there
-                //}
-            //}
+                
+                //(true distance * focal) / pixels
+                
+                target_dist = (double) ((Settings::KNOWN_HEIGHT * Settings::FOCAL_HEIGHT) / (double) target_height);
+                double error = Settings::CALIBRATED_DISTANCE - target_dist;
+                error *= (double) Settings::ERROR_CORRECTION;
+                target_dist += error;
+                
+                //cout << target_height << ", " << target_dist << ", " << error << "\n";
+                //cout.flush();
+            } else {
+                if(unpairedRects.size() == 1) {
+                    //calculate the height and distance of our lonely rectangle
+                    cv::RotatedRect lonelyRect = unpairedRects[0];
+                    target_height = Util::WhichIsBigger(lonelyRect.size.width, lonelyRect.size.height);
+
+                    target_dist = (Settings::KNOWN_HEIGHT * Settings::FOCAL_HEIGHT) / target_height;
+                    
+                }
+            }
             
             //x, y, h, d : the string values for the values to send to the RIO
             string x = std::to_string(target_x);
             string y = std::to_string(target_y);
             string h = std::to_string(target_height);
-            string d = std::to_string(target_dist);
+            string d = std::to_string((int) target_dist);
             sendToRIO = ":" + x + "," + y + "," + h + "," + d + ";";
             
-            cout << sendToRIO << "\n";
-            cout.flush();
+            //cout << sendToRIO << "\n";
+            //cout.flush();
             //UDP send to RIO here.
+            
             
 
             if(Settings::DEBUG) {
+                //puttext(img, text, point, font, scale, color)
+                cv::putText(out, sendToRIO, cv::Point(5,25), cv::FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,255), 2);
+
                 for(int a=0; a<pairedRects.size(); a++) {
                     cv::circle(out, pairedRects[a].center(), 3 , cv::Scalar(255,255,0), 5);
                 }
