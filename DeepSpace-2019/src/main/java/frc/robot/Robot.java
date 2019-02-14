@@ -9,8 +9,19 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Subsystems.SubsystemPreloader;
+import frc.robot.Enumeration.MastPosition;
+import frc.robot.Subsystems.SubsystemClamp;
+import frc.robot.Subsystems.SubsystemClimb;
+import frc.robot.Subsystems.SubsystemCompressor;
 import frc.robot.Subsystems.SubsystemDrive;
+import frc.robot.Subsystems.SubsystemFlipper;
+import frc.robot.Subsystems.SubsystemLauncher;
+import frc.robot.Subsystems.SubsystemMast;
+import frc.robot.Subsystems.SubsystemReceiver;
+import frc.robot.Subsystems.SubsystemShifter;
 
 //        _____   _____   ____     ______
 //       |__  /  / ___/  / __ \   / ____/
@@ -30,10 +41,20 @@ import frc.robot.Subsystems.SubsystemDrive;
 public class Robot extends TimedRobot {
 
   /**
-   * Create Subsystems
+   * Initialize Subsystems
    */
-  public static SubsystemDrive SUB_DRIVE;
-  public static Vision         VISION;
+  public static SubsystemClamp      SUB_CLAMP;
+  public static SubsystemClimb      SUB_CLIMB;
+  public static SubsystemCompressor SUB_COMPRESSOR;
+  public static SubsystemDrive      SUB_DRIVE;
+  public static SubsystemFlipper    SUB_FLIPPER;
+  public static SubsystemLauncher   SUB_LAUNCHER;
+  public static SubsystemMast       SUB_MAST;
+  public static SubsystemPreloader  SUB_PRELOADER;
+  public static SubsystemReceiver   SUB_RECEIVER;
+  public static SubsystemShifter    SUB_SHIFTER;
+  public static OI                  OI;
+  public static Vision              VISION;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -48,9 +69,18 @@ public class Robot extends TimedRobot {
     /**
      * Instantiate Subsystems
      */
-    SUB_DRIVE = new SubsystemDrive();
-    VISION    = new Vision();
-      VISION.startFrameCameraThread();
+    SUB_CLAMP      = new SubsystemClamp();
+    SUB_CLIMB      = new SubsystemClimb();
+    SUB_COMPRESSOR = new SubsystemCompressor();
+    SUB_DRIVE      = new SubsystemDrive();
+    SUB_FLIPPER    = new SubsystemFlipper();
+    SUB_LAUNCHER   = new SubsystemLauncher();
+    SUB_MAST       = new SubsystemMast();
+    SUB_PRELOADER  = new SubsystemPreloader();
+    SUB_RECEIVER   = new SubsystemReceiver();
+    SUB_SHIFTER    = new SubsystemShifter();
+    OI             = new OI();
+    VISION         = new Vision();
 
 
 
@@ -67,6 +97,45 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getMotorValues()[0]);
+    SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getMotorValues()[1]);
+
+    // SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
+    // SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
+
+    SmartDashboard.putBoolean("Pushing", Robot.SUB_DRIVE.isPushing());
+
+    SmartDashboard.putBoolean("First Gear", Robot.SUB_SHIFTER.isFirstGear());
+    SmartDashboard.putBoolean("Second Gear", !Robot.SUB_SHIFTER.isFirstGear());
+    SmartDashboard.putBoolean("Auto Shifting", Robot.SUB_SHIFTER.isAutoShifting());
+
+    SmartDashboard.putBoolean("Hatch 1", Robot.SUB_MAST.getStoredPosition() == MastPosition.HATCH_1);
+    SmartDashboard.putBoolean("Cargo 1", Robot.SUB_MAST.getStoredPosition() == MastPosition.CARGO_1);
+    SmartDashboard.putBoolean("Hatch 2", Robot.SUB_MAST.getStoredPosition() == MastPosition.HATCH_2);
+    SmartDashboard.putBoolean("Cargo 2", Robot.SUB_MAST.getStoredPosition() == MastPosition.CARGO_2);
+    SmartDashboard.putBoolean("Hatch 3", Robot.SUB_MAST.getStoredPosition() == MastPosition.HATCH_3);
+    SmartDashboard.putBoolean("Cargo 3", Robot.SUB_MAST.getStoredPosition() == MastPosition.CARGO_3);
+
+    SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
+
+    SmartDashboard.putNumber("Flipper Amps", Robot.SUB_FLIPPER.getAmps());
+
+    SmartDashboard.putNumber("First Stage Amps", Robot.SUB_MAST.getAmperage()[0]);
+    SmartDashboard.putNumber("Second Stage Amps", Robot.SUB_MAST.getAmperage()[1]);
+
+    SmartDashboard.putBoolean("Caleb is Illiterate", true);
+
+    SmartDashboard.putData("Sub_Preloader", SUB_PRELOADER);
+    SmartDashboard.putData("Sub_Clamp", SUB_CLAMP);
+    SmartDashboard.putData("Sub_Climb", SUB_CLIMB);
+    SmartDashboard.putData("Sub_Compressor", SUB_COMPRESSOR);
+    SmartDashboard.putData("Sub_Drive", SUB_DRIVE);
+    SmartDashboard.putData("Sub_Flipper", SUB_FLIPPER);
+    SmartDashboard.putData("Sub_Launcher", SUB_LAUNCHER);
+    SmartDashboard.putData("Sub_Mast", SUB_MAST);
+    SmartDashboard.putData("Sub_Receiver", SUB_RECEIVER);
+    SmartDashboard.putData("Sub_Shifter", SUB_SHIFTER);
+    // SmartDashboard.putNumber("Bandwidth", Robot.VISION.getTotalBandwidth());
   }
 
   /**
@@ -89,7 +158,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    
+    Scheduler.getInstance().run();
   }
 
   /**
@@ -97,6 +166,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Scheduler.getInstance().run();
+  }
+
+  public void teleopInit() {
+    //TODO Move these to autoInit before comp
+      Robot.SUB_CLAMP.closeClamp();
+      Robot.SUB_SHIFTER.downShift();
+      Robot.SUB_PRELOADER.retract();
   }
 
   /**
@@ -104,5 +181,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+  
+  public void disabledInit() {
+    Robot.SUB_DRIVE.setBraking(false);
+    Robot.SUB_SHIFTER.upShift();
   }
 }
