@@ -92,8 +92,8 @@ public class Constants {
      * Solenoid IDS
      */
     public static final int
-        CLOSE_CLAMP_ID = 0,
-        OPEN_CLAMP_ID  = 1,
+        CLOSE_CLAMP_ID = 1,
+        OPEN_CLAMP_ID  = 0,
         DOWNSHIFT_ID   = 7,
         UPSHIFT_ID     = 6,
         EXTEND_ID      = 2,

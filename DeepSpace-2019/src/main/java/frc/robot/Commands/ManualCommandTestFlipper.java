@@ -14,6 +14,7 @@ import frc.robot.Robot;
 public class ManualCommandTestFlipper extends Command {
   public ManualCommandTestFlipper() {
     requires(Robot.SUB_FLIPPER);
+    requires(Robot.SUB_MAST);
   }
 
   // Called just before this Command runs the first time

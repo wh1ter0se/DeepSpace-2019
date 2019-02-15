@@ -14,6 +14,7 @@ import frc.robot.Util.Util;
 
 public class ManualCommandTestMast extends Command {
   public ManualCommandTestMast() {
+    requires(Robot.SUB_FLIPPER);
     requires(Robot.SUB_MAST);
   }
 

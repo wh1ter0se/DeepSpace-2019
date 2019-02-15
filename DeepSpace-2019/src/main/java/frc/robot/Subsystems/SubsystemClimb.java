@@ -52,7 +52,7 @@ public class SubsystemClimb extends Subsystem {
    * Sets the maximum allowable amperage of the climb motor
    */
   public void setAmpLimit(int amps) {
-    climber.configPeakCurrentLimit(amps);
+    climber.configContinuousCurrentLimit(amps);
   }
 
   /**

@@ -113,4 +113,14 @@ public class IterativeCommandMoveMast extends Command {
   @Override
   protected void interrupted() {
   }
+
+  private Boolean firstStageInSafeRange() {
+    // return Robot.SUB_MAST.getFirstStageInches() < Constants.FIRST_STAGE_MAX_HEIGHT;
+    // TODO finish
+    return true;
+  }
+
+  private Boolean secondStageInSafeRange() {
+    return true;
+  }
 }
