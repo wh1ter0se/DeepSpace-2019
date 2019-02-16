@@ -21,12 +21,14 @@ All settings for the program are located in "Settings.h".
 
  - DEBUG              : Option to run the program in debugging mode. In this mode, postprocessed image is displayed and a GUI is provided.
  - USE_IMAGE          : Option to use image included in folder (target_3.jpg). This is for developing outside of the room.
-                    
+
  - CAMERA_RESOLUTION_X: The camera resolution width. This must match that of the JeVois configuration, or we will not get the right image.
  - CAMERA_RESOLUTION_Y: The camera resolution height. This also must match the resolution height of the JeVois camera.
 
  - KNOWN_HEIGHT       : The height of ONE of the rectangular pieces of the target in inches. In our case the height is 5.5 inches tall. This should not change.
  - FOCAL_HEIGHT       : The percieved focal height of the target from 24 inches. You should get this value from the calibrator.
+ - CALIBRATED_DISTANCE: The distance from the target that the settings were calibrated at. usually somewhere between 18-24 inches
+ - ERROR_CORRECTION   : The correction factor for the found distances.
 
  - ASPECT_RATIO       : The aspect ratio of ONE side of the target. For the DeepSpace challenge, it is somewhere around .3 (2in / 5.5in)
  - ASPECT_RATIO_ERROR : The amount of deviation from the aspect ratio that is allowed for a contour to pass

@@ -12,6 +12,11 @@ class Settings {
         CAMERA_RESOLUTION_X = 252,
         CAMERA_RESOLUTION_Y = 128;
         
+    //offsets (inches)
+    static const int 
+        CAMERA_OFFSET_X = 12,
+        CAMERA_OFFSET_Y = 3;
+        
     //distance measurement settings
     static constexpr double 
         KNOWN_HEIGHT = 5.5,
@@ -19,7 +24,6 @@ class Settings {
         CALIBRATED_DISTANCE = 18,
         ERROR_CORRECTION = -0.14;
         
-
     //size settings (inches)
     static constexpr double
         ASPECT_RATIO = 0.34,

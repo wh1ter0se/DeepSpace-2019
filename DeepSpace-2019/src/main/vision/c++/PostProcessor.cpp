@@ -33,10 +33,10 @@ void PostProcessor::Loop() {
     while(!stop) {
         cv::Mat img; //image we will be processing
         cv::Mat out; //color image we output
-        bool readSuccess = cap.read(img); //reads an image to process from our video stream
-        //img = cv::imread("target_3.jpg");
+        //bool readSuccess = cap.read(img); //reads an image to process from our video stream
+        img = cv::imread("target_3.jpg");
         img.copyTo(out);
-        //bool readSuccess=true;
+        bool readSuccess=true;
 
         PairData biggestTarget; //the biggest target we find, which is what we will return to the RIO.
 
@@ -49,7 +49,6 @@ void PostProcessor::Loop() {
 
             vector< vector <Point>> contours; //output array for edge detection
             cv::findContours(img, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-            cv::drawContours(out, contours, -1, cv::Scalar(0,255,0), 3);
 
             for(int i=0; i<contours.size(); i++) {
                 vector<Point> contour = contours[i]; //the contour we are processing
@@ -84,40 +83,47 @@ void PostProcessor::Loop() {
             string sendToRIO = "";
             int target_x = -1;
             int target_y = -1;
-            int target_height = -1; //px
             double target_dist = -1;
+            int target_angle = -1;
             if(pairedRects.size() > 0) {
                 cv::Point target_center = biggestTarget.center();
-                target_x = target_center.x;
+                target_x = target_center.x; //grab center of target
                 target_y = target_center.y;
-                target_height = biggestTarget.height();
-                
+
+                //offset the thing because the camera is not at the center of the bot
+                double pixelsToInches = Settings::KNOWN_HEIGHT / biggestTarget.height(); //get the amount of pixels per inch of the target
+                cv::Point offset = Util::computeOffsets(target_x, target_y, pixelsToInches);
+                target_x = offset.x; //stores our new offset value in the number to send to RIOs
+                target_y = offset.y;
                 //(true distance * focal) / pixels
-                
-                target_dist = (double) ((Settings::KNOWN_HEIGHT * Settings::FOCAL_HEIGHT) / (double) target_height);
+            
+                target_dist = (double) ((Settings::KNOWN_HEIGHT * Settings::FOCAL_HEIGHT) / (double) biggestTarget.height());
                 double error = Settings::CALIBRATED_DISTANCE - target_dist;
                 error *= (double) Settings::ERROR_CORRECTION;
                 target_dist += error;
+
+                //compute angle to the target
+                cv::Point robot_center = Util::computeOffsets(Settings::CAMERA_RESOLUTION_X, Settings::CAMERA_RESOLUTION_Y, pixelsToInches);
+                int distance_between_target = target_x - robot_center.x;
+                int distance_in_inches = distance_between_target * pixelsToInches;
+
+                target_angle = (int) atan((double) distance_in_inches / target_dist);
                 
-                //cout << target_height << ", " << target_dist << ", " << error << "\n";
-                //cout.flush();
             } else {
                 if(unpairedRects.size() == 1) {
                     //calculate the height and distance of our lonely rectangle
                     cv::RotatedRect lonelyRect = unpairedRects[0];
-                    target_height = Util::WhichIsBigger(lonelyRect.size.width, lonelyRect.size.height);
-
+                    int target_height = Util::WhichIsBigger(lonelyRect.size.width, lonelyRect.size.height);
                     target_dist = (Settings::KNOWN_HEIGHT * Settings::FOCAL_HEIGHT) / target_height;
-                    
                 }
             }
             
             //x, y, h, d : the string values for the values to send to the RIO
             string x = std::to_string(target_x);
             string y = std::to_string(target_y);
-            string h = std::to_string(target_height);
             string d = std::to_string((int) target_dist);
-            sendToRIO = ":" + x + "," + y + "," + h + "," + d + ";";
+            string a = std::to_string(target_angle);
+            sendToRIO = ":" + x + "," + y + "," + d + "," + a + ";";
             
             //cout << sendToRIO << "\n";
             //cout.flush();
@@ -127,6 +133,7 @@ void PostProcessor::Loop() {
 
             if(Settings::DEBUG) {
                 //puttext(img, text, point, font, scale, color)
+                cv::drawContours(out, contours, -1, cv::Scalar(0,255,0), 3);
                 cv::putText(out, sendToRIO, cv::Point(5,25), cv::FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,255), 2);
 
                 for(int a=0; a<pairedRects.size(); a++) {

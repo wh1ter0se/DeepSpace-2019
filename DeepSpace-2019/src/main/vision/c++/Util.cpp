@@ -109,3 +109,12 @@ int Util::WhichIsBigger(int num1, int num2) {
         
     return num2;
 }
+
+cv::Point Util::computeOffsets(int x, int y, double pixelsToInches) {
+    int offsetX = Settings::CAMERA_OFFSET_X * pixelsToInches; //get number of pixels to offset the center
+    int offsetY = Settings::CAMERA_OFFSET_Y * pixelsToInches; //y pixels to offset the thing by
+
+    int new_x = x + offsetX;
+    int new_y = y + offsetY;
+    return cv::Point(new_x, new_y);
+}

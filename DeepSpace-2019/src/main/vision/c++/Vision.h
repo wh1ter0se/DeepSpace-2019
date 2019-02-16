@@ -48,6 +48,7 @@ class Util {
     static bool IsPair(cv::RotatedRect rect1, cv::RotatedRect rect2);
     static double returnTrueDistanceScalar(cv::RotatedRect rectangle);
     static int WhichIsBigger(int num1, int num2);
+    static cv::Point computeOffsets(int x, int y, double pixelsToInches);
 };
 
 /**
