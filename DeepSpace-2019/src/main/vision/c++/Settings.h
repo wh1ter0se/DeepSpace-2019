@@ -30,7 +30,7 @@ class Settings {
         ASPECT_RATIO_ERROR = 0.2;
 
     static const int 
-        MIN_AREA = 1000;
+        MIN_AREA = 500;
     
     //angle settings (degrees)
     static const int

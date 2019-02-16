@@ -33,10 +33,10 @@ void PostProcessor::Loop() {
     while(!stop) {
         cv::Mat img; //image we will be processing
         cv::Mat out; //color image we output
-        //bool readSuccess = cap.read(img); //reads an image to process from our video stream
-        img = cv::imread("target_3.jpg");
+        bool readSuccess = cap.read(img); //reads an image to process from our video stream
+        //img = cv::imread("target_3.jpg");
         img.copyTo(out);
-        bool readSuccess=true;
+        //bool readSuccess=true;
 
         PairData biggestTarget; //the biggest target we find, which is what we will return to the RIO.
 
@@ -103,11 +103,16 @@ void PostProcessor::Loop() {
                 target_dist += error;
 
                 //compute angle to the target
-                cv::Point robot_center = Util::computeOffsets(Settings::CAMERA_RESOLUTION_X, Settings::CAMERA_RESOLUTION_Y, pixelsToInches);
+                cv::Point robot_center = Util::computeOffsets(Settings::CAMERA_RESOLUTION_X / 2, Settings::CAMERA_RESOLUTION_Y / 2, pixelsToInches);
                 int distance_between_target = target_x - robot_center.x;
                 int distance_in_inches = distance_between_target * pixelsToInches;
+                
+                target_angle = atan((double) distance_in_inches / (double) target_dist);
+                target_angle *= (180 / M_PI); //convert to degrees (NO radians allowed here!!);
+                
+                if(Settings::DEBUG)
+                    cv::circle(out, robot_center, 3, cv::Scalar(255, 0, 255), 4);
 
-                target_angle = (int) atan((double) distance_in_inches / target_dist);
                 
             } else {
                 if(unpairedRects.size() == 1) {
