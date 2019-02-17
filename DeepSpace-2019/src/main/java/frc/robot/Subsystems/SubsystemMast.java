@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Commands.ManualCommandTestMast;
 import frc.robot.Enumeration.MastPosition;
@@ -25,8 +26,8 @@ public class SubsystemMast extends Subsystem {
 
   private static MastPosition storedPosition;
 
-  private static TalonSRX firstStage;
-  private static TalonSRX secondStage;
+  private static TalonSRX innerStage;
+  private static TalonSRX outerStage;
 
   private static Boolean loopRunning;
 
@@ -36,8 +37,8 @@ public class SubsystemMast extends Subsystem {
   public SubsystemMast() {
     storedPosition = MastPosition.HATCH_1;
 
-    firstStage  = new TalonSRX(Constants.FIRST_STAGE_ID);
-    secondStage = new TalonSRX(Constants.SECOND_STAGE_ID);
+    innerStage  = new TalonSRX(Constants.INNER_STAGE_ID);
+    outerStage = new TalonSRX(Constants.OUTER_STAGE_ID);
 
     initConfig(50, 0, true);
   }
@@ -55,46 +56,57 @@ public class SubsystemMast extends Subsystem {
     return loopRunning;
   }
 
-  public void moveFirstStageByPercent(double speed) {
-    firstStage.set(ControlMode.PercentOutput, speed);
+  public void moveInnerStageByPercent(double speed) {
+    innerStage.set(ControlMode.PercentOutput, speed);
   }
 
-  public void moveFirstStageByPosition(double inches) {
-    firstStage.set(ControlMode.Position, inches);
+  public void moveInnerStageByPosition(double inches) {
+    innerStage.set(ControlMode.Position, inches);
   }
 
-  public Boolean firstStageWithinRange(double inches) {
-    double position = firstStage.getSensorCollection().getQuadraturePosition();
+  public Boolean innerStageWithinRange(double inches) {
+    double position = innerStage.getSensorCollection().getQuadraturePosition();
     double target   = inches * Constants.CTRE_TICKS_PER_ROTATION * Constants.MAST_ROTATIONS_PER_INCH;
     return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
   }
 
-  public void moveSecondStageByPercent(double speed) {
-    secondStage.set(ControlMode.PercentOutput, speed);
+  public void moveOuterStageByPercent(double speed) {
+    outerStage.set(ControlMode.PercentOutput, speed);
   }
 
-  public void moveSecondStageByPosition(double inches) {
-    secondStage.set(ControlMode.Position, inches);
+  public void moveOuterStageByPosition(double inches) {
+    outerStage.set(ControlMode.Position, inches);
   }
 
-  public Boolean secondStageWithinRange(double inches) {
-    double position = secondStage.getSensorCollection().getQuadraturePosition();
-    double target   = inches * Constants.CTRE_TICKS_PER_ROTATION * Constants.MAST_ROTATIONS_PER_INCH;
+  public Boolean outerStageWithinRange(double inches) {
+    double position = outerStage.getSensorCollection().getQuadraturePosition();
+    double target = inches * Constants.CTRE_TICKS_PER_ROTATION * Constants.MAST_ROTATIONS_PER_INCH;
     return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
   }
 
-  public void moveWithJoystick(Joystick joy, double firstStageInhibitor, double secondStageInhibitor) {
-    firstStage.set(ControlMode.PercentOutput, Xbox.LEFT_Y(joy) * Math.abs(firstStageInhibitor));
-    secondStage.set(ControlMode.PercentOutput, Xbox.RIGHT_Y(joy) * Math.abs(secondStageInhibitor));
+  public void moveWithJoystick(Joystick joy, double innerStageInhibitor, double outerStageInhibitor) {
+    innerStage.set(ControlMode.PercentOutput, Xbox.LEFT_Y(joy) * Math.abs(innerStageInhibitor));
+    outerStage.set(ControlMode.PercentOutput, Xbox.RIGHT_Y(joy) * Math.abs(outerStageInhibitor));
   }
 
   public Boolean[] getLimitSwitches() {
     Boolean[] array = new Boolean[4];
-    // array[0] = firstStageLow;
-    // array[1] = firstStageHigh;
-    // array[2] = SecondStageLow;
-    // array[3] = SecondStageHigh;
+    // array[0] = innerStageLow;
+    // array[1] = innerStageHigh;
+    // array[2] = outerStageLow;
+    // array[3] = outerStageHigh;
+    array[0] = innerStage.getSensorCollection().isFwdLimitSwitchClosed();
+    array[1] = innerStage.getSensorCollection().isRevLimitSwitchClosed();
+    array[2] = outerStage.getSensorCollection().isFwdLimitSwitchClosed();
+    array[3] = outerStage.getSensorCollection().isRevLimitSwitchClosed();
     return array;
+  }
+
+  public void publishLimitSwitches() {
+    SmartDashboard.putBoolean("Inner Stage Low [0]", getLimitSwitches()[0]);
+    SmartDashboard.putBoolean("Inner Stage High [1]", getLimitSwitches()[1]);
+    SmartDashboard.putBoolean("Outer Stage Low [2]", getLimitSwitches()[2]);
+    SmartDashboard.putBoolean("Outer Stage High [3]", getLimitSwitches()[3]);
   }
 
   /**
@@ -104,14 +116,14 @@ public class SubsystemMast extends Subsystem {
    * @param braking
    */
   public void initConfig(int ampLimit, double ramp, Boolean braking) {
-    firstStage.setInverted(Constants.FIRST_STAGE_INVERT);
-      firstStage.configOpenloopRamp(ramp);
-      firstStage.configContinuousCurrentLimit(ampLimit);
-      firstStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
-    secondStage.setInverted(Constants.SECOND_STAGE_INVERT);
-      secondStage.configOpenloopRamp(ramp);
-      secondStage.configContinuousCurrentLimit(ampLimit);
-      secondStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
+    innerStage.setInverted(Constants.INNER_STAGE_INVERT);
+      innerStage.configOpenloopRamp(ramp);
+      innerStage.configContinuousCurrentLimit(ampLimit);
+      innerStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
+    outerStage.setInverted(Constants.OUTER_STAGE_INVERT);
+      outerStage.configOpenloopRamp(ramp);
+      outerStage.configContinuousCurrentLimit(ampLimit);
+      outerStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
   }
 
   /**
@@ -119,15 +131,15 @@ public class SubsystemMast extends Subsystem {
    * @return
    */
   public double[] getAmperage() {
-    return new double[]{firstStage.getOutputCurrent(), secondStage.getOutputCurrent()};
+    return new double[]{innerStage.getOutputCurrent(), outerStage.getOutputCurrent()};
   }
 
   /**
    * Sets the encoder position of both masts to 0
    */
   public void zeroEncoders() {
-    firstStage.getSensorCollection().setQuadraturePosition(0, 0);
-    secondStage.getSensorCollection().setQuadraturePosition(0, 0);
+    innerStage.getSensorCollection().setQuadraturePosition(0, 0);
+    outerStage.getSensorCollection().setQuadraturePosition(0, 0);
   }
 
 }

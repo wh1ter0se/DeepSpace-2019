@@ -125,6 +125,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putBoolean("Caleb is Illiterate", true);
 
+    Robot.SUB_MAST.publishLimitSwitches();
+
     SmartDashboard.putData("Sub_Preloader", SUB_PRELOADER);
     SmartDashboard.putData("Sub_Clamp", SUB_CLAMP);
     SmartDashboard.putData("Sub_Climb", SUB_CLIMB);

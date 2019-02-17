@@ -25,32 +25,22 @@ public class Constants {
         FULL_UPSHIFT_RPM                 = 3000,
             FULL_DOWNSHIFT_RPM           = 1000;
 
+    /** 
+     * Docking Values
+     */
+    public static final double
+        DOCKING_TARGET_LOCK_RANGE = 20; // in inches
+
     /**
      * Drive values
      */
     public static final double
-        BACKUP_RAMP         = 0,
-        MAX_ALLOWABLE_AO    = .2, // percent output
-        MAX_ALLOWABLE_ERROR = .25, // inches
-        DOWNSHIFT_RPM       = 900,
-        UPSHIFT_RPM         = 1000;
-
-    /**
-     * Per values
-     */
-    public static final double
-        CTRE_TICKS_PER_ROTATION = 4096,
-        MAST_ROTATIONS_PER_INCH = 0, //TODO find this out
-        REV_ENCODER_TICKS_PER_ROTATION = 42,
-        ROTATIONS_PER_INCH = 1 / (4.67 * 6 *  Math.PI); // calculated with a cimple box and 42 TPR
-
-    /**
-     * PID backup values
-     */
-    public static final double
-        BACKUP_POSITION_kP = 0,
-        BACKUP_POSITION_kI = 0,
-        BACKUP_POSITION_kD = 0;
+        BACKUP_RAMP          = 0,
+        BACKUP_DOCKING_SPEED = .25,
+        MAX_ALLOWABLE_AO     = .2, // percent output
+        MAX_ALLOWABLE_ERROR  = .25, // inches
+        DOWNSHIFT_RPM        = 900,
+        UPSHIFT_RPM          = 1000;
 
     /**
      * Inverts
@@ -58,8 +48,8 @@ public class Constants {
     public static final Boolean
         LEFT_DRIVE_INVERT   = false,
         RIGHT_DRIVE_INVERT  = true,
-        FIRST_STAGE_INVERT  = false,
-        SECOND_STAGE_INVERT = true,
+        INNER_STAGE_INVERT  = true,
+        OUTER_STAGE_INVERT  = true,
         LAUNCHER_INVERT     = true,
         INTAKE_INVERT       = false,
         FLIPPER_INVERT      = false;
@@ -78,8 +68,28 @@ public class Constants {
      * Mast Speed Backup Values
      */
     public static final double
-        FIRST_STAGE_SPEED  = .5,
-        SECOND_STAGE_SPEED = .5;
+        INNER_STAGE_SPEED  = .5,
+        OUTER_STAGE_SPEED = .5;
+
+    /**
+     * Per values
+     */
+    public static final double
+        CTRE_TICKS_PER_ROTATION = 4096,
+        MAST_ROTATIONS_PER_INCH = 0, //TODO find this out
+        REV_ENCODER_TICKS_PER_ROTATION = 42,
+        ROTATIONS_PER_INCH = 1 / (4.67 * 6 *  Math.PI); // calculated with a cimple box and 42 TPR
+
+    /**
+     * PID backup values (safety values)
+     */
+    public static final double
+        BACKUP_POSITION_kP = 0,
+        BACKUP_POSITION_kI = 0,
+        BACKUP_POSITION_kD = 0,
+        BACKUP_DOCKING_kP  = 0,
+        BACKUP_DOCKING_kI  = 0,
+        BACKUP_DOCKING_kD  = 0;
 
     /**
      * Safety Values
@@ -93,8 +103,7 @@ public class Constants {
      */
     public static final int
         CLOSE_CLAMP_ID = 1,
-        OPEN_CLAMP_ID  = 0
-        ,
+        OPEN_CLAMP_ID  = 0,
         DOWNSHIFT_ID   = 7,
         UPSHIFT_ID     = 6,
         EXTEND_ID      = 2,
@@ -114,8 +123,8 @@ public class Constants {
      */
     public static final int
         CLIMBER_ID      = 5,
-        FIRST_STAGE_ID  = 8,
-        SECOND_STAGE_ID = 9,
+        INNER_STAGE_ID  = 8,
+        OUTER_STAGE_ID  = 9,
         LAUNCHER_ID     = 6,
         INTAKE_ID       = 10,
         FLIPPER_ID      = 7;

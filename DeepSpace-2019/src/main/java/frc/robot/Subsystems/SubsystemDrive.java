@@ -70,50 +70,15 @@ public class SubsystemDrive extends Subsystem {
   }
 
   /**
-   * Moves the drivetrain based on a set distance and PID parameters
-   * @param inches how many inches forward it should move
-   * @param PID    array of the PID gains
+   * Directly sends a percent output value to each side
+   * @param leftOutput  percent output of left side
+   * @param rightOutput percent output of right side
    */
-  public void driveByPosition(double inches, double[] PID) {
-    double rotations = Constants.ROTATIONS_PER_INCH * inches;
-
-    leftMaster.getPIDController().setP(PID[0], 0);
-      leftMaster.getPIDController().setI(PID[1], 0);
-      leftMaster.getPIDController().setD(PID[2], 0);
-      leftMaster.burnFlash();
-    rightMaster.getPIDController().setP(PID[0], 1);
-      rightMaster.getPIDController().setI(PID[1], 1);
-      rightMaster.getPIDController().setD(PID[2], 1);
-      rightMaster.burnFlash();
-
-    leftMaster.setMotorType(MotorType.kBrushless);
-    rightMaster.setMotorType(MotorType.kBrushless);
-
-    leftMaster.getPIDController().setOutputRange(-100, 100);
-    rightMaster.getPIDController().setOutputRange(-100, 100);
-
-    leftMaster.getPIDController().setReference(rotations * Constants.REV_ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 0);
-    rightMaster.getPIDController().setReference(rotations * Constants.REV_ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 1);
-  }
-
-  /**
-   * TODO - SKETCHY- MAYBE WORKS?
-   * Checks how far the drivetrain position loop is from its target
-   * without accessing the REV code, since REV is dumb
-   * @param initEncoderPositions array of the encoder positions at init
-   * @param inches               how many inches away the target WAS
-   * @return                     error in encoder ticks
-   */
-  public double[] getError(double[] initEncoderPositions, double inches) {
-    double ticks = inches * Constants.REV_ENCODER_TICKS_PER_ROTATION * Constants.ROTATIONS_PER_INCH;
-    double[] output = new double[2];
-    output[0] = initEncoderPositions[0] 
-                + (ticks *= leftMaster.getInverted() ? -1 : 1) 
-                - leftMaster.getEncoder().getPosition();
-    output[1] = initEncoderPositions[1] 
-                + (ticks *= rightMaster.getInverted() ? -1 : 1) 
-                - rightMaster.getEncoder().getPosition();
-    return output;
+  public void driveByPercentOutputs(double leftOutput, double rightOutput) {
+    leftMaster.set(leftOutput);
+      leftSlave.set(leftOutput);
+    rightMaster.set(rightOutput);
+      rightSlave.set(rightOutput);
   }
 
   public double[] getEncoderPositions() {
@@ -159,10 +124,10 @@ public class SubsystemDrive extends Subsystem {
    * @param ramp ramp rate in seconds
    */
   private void setRamps(double ramp) {
-    leftMaster.setRampRate(ramp);
-      // leftSlave.setRampRate(ramp);
-    rightMaster.setRampRate(ramp);
-      // rightSlave.setRampRate(ramp);
+    leftMaster.setOpenLoopRampRate(ramp);
+      leftSlave.setOpenLoopRampRate(ramp);
+    rightMaster.setOpenLoopRampRate(ramp);
+      rightSlave.setOpenLoopRampRate(ramp);
   }
 
   /**
