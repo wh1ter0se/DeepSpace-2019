@@ -7,14 +7,23 @@
 
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.Util.MiniPID;
+import frc.robot.Util.Util;
 
 public class CyborgCommandDock extends Command {
+
+  private static MiniPID turning;
+
+  private static Boolean canSee;
+  private static Boolean inRange;
+  private static Boolean isFinished;
+
+  private static double idleSpeed;
+  private static double loopOutput;
+
   public CyborgCommandDock() {
     requires(Robot.SUB_DRIVE);
   }
@@ -22,65 +31,47 @@ public class CyborgCommandDock extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    turning = new MiniPID(Util.getAndSetDouble("Docking kP", Constants.BACKUP_DOCKING_kP),
+                          Util.getAndSetDouble("Docking kI", Constants.BACKUP_DOCKING_kI),
+                          Util.getAndSetDouble("Docking kD", Constants.BACKUP_DOCKING_kD));
+    turning.setOutputLimits(-.5, .5);
+    turning.setSetpoint(0);
+
+    isFinished = Robot.SUB_RECEIVER.getLastKnownData()[3] == -1;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    PIDSource source = new PIDSource(){
-    
-      @Override
-      public void setPIDSourceType(PIDSourceType pidSource) {
-        
-      }
-    
-      @Override
-      public double pidGet() {
-        return 0;
-      }
-    
-      @Override
-      public PIDSourceType getPIDSourceType() {
-        return PIDSourceType.kDisplacement;
-      }
-    };
+    loopOutput = turning.getOutput(Robot.SUB_RECEIVER.getLastKnownData()[4]);
+    idleSpeed = Util.getAndSetDouble("Docking Speed", Constants.BACKUP_DOCKING_SPEED);
+    canSee = Robot.SUB_RECEIVER.getLastKnownData()[4] != -1;
 
-
-    PIDOutput output = new PIDOutput(){
-    
-      @Override
-      public void pidWrite(double output) {
-        
-      }
-
-    };
-
-    PIDController turning = new PIDController(0, 0, 0, source, output);
-    // if (canSee)
-      // left wheel = constant speed + bang-bang turning
-      // right wheel = constant speed + bang-bang turning
-    // else if (within range)
-      // left wheel = constant speed
-      // right wheel = constant speed
-    // else
-      // rotate toward the side it was on last
+    if (canSee) {
+      Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed + loopOutput, idleSpeed - loopOutput);
+    } else if (!canSee && inRange) {
+      Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, idleSpeed);
+    } else {
+      Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, -1 * idleSpeed);
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    // return drivetrain amps > pushing for x time
-    return false;
+    return isFinished || Robot.SUB_DRIVE.isPushing();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.SUB_DRIVE.stopMotors();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.SUB_DRIVE.stopMotors();
   }
 }
