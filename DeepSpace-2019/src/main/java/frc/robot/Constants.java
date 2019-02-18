@@ -58,11 +58,12 @@ public class Constants {
      * Mast Values
      */
     public static final double
-        MAST_ALLOWABLE_ERROR = 100, // error in ticks
-        CARGO_1_HEIGHT = 0.0,
-        HATCH_2_HEIGHT = 0.0,
-        CARGO_2_HEIGHT = 0.0,
-        HATCH_3_HEIGHT = 0.0; // TODO these need to be calibrated
+        MAST_ALLOWABLE_ERROR = 20000, // error in ticks
+        CARGO_1_HEIGHT = 8.5,
+        HATCH_2_HEIGHT = 28,
+        CARGO_2_HEIGHT = 5.5,
+        HATCH_3_HEIGHT = 25; // TODO these need to be calibrated
+        // CARGO 3 HEIGHT = 33.5 on stage 2 (if limit doesn't work)
 
     /**
      * Mast Speed Backup Values
@@ -75,9 +76,10 @@ public class Constants {
      * Per values
      */
     public static final double
-        CTRE_TICKS_PER_ROTATION = 4096,
-        MAST_ROTATIONS_PER_INCH = 0, //TODO find this out
+        CTRE_ENCODER_TICKS_PER_ROTATION = 4096,
         REV_ENCODER_TICKS_PER_ROTATION = 42,
+        INNER_MAST_TICKS_PER_INCH = 39530,
+        OUTER_MAST_TICKS_PER_INCH = 39990,
         ROTATIONS_PER_INCH = 1 / (4.67 * 6 *  Math.PI); // calculated with a cimple box and 42 TPR
 
     /**
@@ -95,8 +97,9 @@ public class Constants {
      * Safety Values
      */
     public static final int
-        DANGER_AMPERAGE  = 55,
-        PUSHING_AMPERAGE = 55;
+        DANGER_AMPERAGE        = 55,
+        PUSHING_AMPERAGE       = 55,
+        FLIPPER_STALL_AMPERAGE = 25;
         
     /**
      * Solenoid IDS
@@ -122,12 +125,21 @@ public class Constants {
      * Talon IDS
      */
     public static final int
-        CLIMBER_ID      = 5,
-        INNER_STAGE_ID  = 8,
-        OUTER_STAGE_ID  = 9,
-        LAUNCHER_ID     = 6,
+    // PRACTICE
+        // CLIMBER_ID      = 5,
+        // INNER_STAGE_ID  = 8,
+        // OUTER_STAGE_ID  = 9,
+        // LAUNCHER_ID     = 6,
+        // INTAKE_ID       = 10,
+        // FLIPPER_ID      = 7;
+    // COMPETITION
+        CLIMBER_ID      = 8,
+        INNER_STAGE_ID  = 6,
+        OUTER_STAGE_ID  = 7,
+        LAUNCHER_ID     = 9,
         INTAKE_ID       = 10,
-        FLIPPER_ID      = 7;
+        FLIPPER_ID      = 5;
+
 
     /**
      * Vision Values

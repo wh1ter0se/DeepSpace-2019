@@ -21,22 +21,25 @@ import frc.robot.Util.Xbox;
  */
 public class SubsystemFlipper extends Subsystem {
   
-  TalonSRX flipper;
+  private static TalonSRX flipper;
+
+  private static Boolean atFront;
 
   @Override
   public void initDefaultCommand() {}
 
   public SubsystemFlipper() {
     flipper = new TalonSRX(Constants.FLIPPER_ID);
-      initConfig(10, 0, true);
+      initConfig(25, 1000, 0, true);
+
+    atFront = true;
   }
 
   /**
    * Moves the flipper based on the left joystick of the given controller
    * @param joy the joystick to read from
    */
-  public void 
-  moveByJoystick(Joystick joy){
+  public void moveByJoystick(Joystick joy){
     flipper.set(ControlMode.PercentOutput, Xbox.LEFT_Y(joy));
   }
 
@@ -44,16 +47,8 @@ public class SubsystemFlipper extends Subsystem {
    * Moves the flipper based on a given percent output
    * @param speed the percent output to directly assign
    */
-  public void movebyPercentOutput(double speed) {
+  public void moveByPercentOutput(double speed) {
     flipper.set(ControlMode.PercentOutput, speed);
-  }
-
-  public Boolean forwardUntilSwitch() {
-    return true; // should return true once at switch
-  }
-
-  public Boolean backwardUntilSwitch() {
-    return true; // should return true once at switch
   }
 
   public void stopMotor() {
@@ -76,11 +71,22 @@ public class SubsystemFlipper extends Subsystem {
     return flipper.getOutputCurrent();
   }
 
-  public void initConfig(int ampLimit, double ramp, Boolean braking) {
+  public void initConfig(int ampLimit, int ampLimitMs, double ramp, Boolean braking) {
     flipper.setInverted(Constants.FLIPPER_INVERT);
       flipper.configOpenloopRamp(ramp);
-      flipper.configContinuousCurrentLimit(ampLimit);
+      flipper.configContinuousCurrentLimit(ampLimit, ampLimitMs);
       flipper.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
   }
 
+  public void setAtFront(Boolean isAtFront) {
+    atFront = isAtFront;
+  }
+
+  public Boolean isAtFront() {
+    return atFront;
+  }
+
+  public Boolean isStalling() {
+    return flipper.getOutputCurrent() > Constants.FLIPPER_STALL_AMPERAGE;
+  }
 }

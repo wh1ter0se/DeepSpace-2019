@@ -125,6 +125,15 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putBoolean("Caleb is Illiterate", true);
 
+    SmartDashboard.putNumber("Inner Mast Position", Robot.SUB_MAST.getEncoderValues()[0]);
+    SmartDashboard.putNumber("Outer Mast Position", Robot.SUB_MAST.getEncoderValues()[1]);
+
+    SmartDashboard.putNumber("Inner Mast Inches", Robot.SUB_MAST.getEncoderValues()[0] / Constants.INNER_MAST_TICKS_PER_INCH);
+    SmartDashboard.putNumber("Outer Mast Inches", Robot.SUB_MAST.getEncoderValues()[1] / Constants.OUTER_MAST_TICKS_PER_INCH);
+
+    Robot.SUB_MAST.publishInnerStagePIDData();
+    Robot.SUB_MAST.publishOuterStagePIDData();
+
     Robot.SUB_MAST.publishLimitSwitches();
 
     SmartDashboard.putData("Sub_Preloader", SUB_PRELOADER);
@@ -176,6 +185,7 @@ public class Robot extends TimedRobot {
       Robot.SUB_CLAMP.closeClamp();
       Robot.SUB_SHIFTER.downShift();
       Robot.SUB_PRELOADER.retract();
+      Robot.SUB_MAST.zeroEncoders();
   }
 
   /**

@@ -24,6 +24,7 @@ import frc.robot.Commands.CyborgCommandAutoShift;
 import frc.robot.Commands.CyborgCommandFlip;
 import frc.robot.Commands.ManualCommandTestFlipper;
 import frc.robot.Commands.ManualCommandTestMast;
+import frc.robot.Commands.ManualCommandTestMastPID;
 import frc.robot.Commands.SubmanualCommandAscend;
 import frc.robot.Commands.ToggleCommandKillCompressor;
 import frc.robot.Util.Util;
@@ -46,6 +47,7 @@ public class OI {
 
         // tester functions
             SmartDashboard.putData("Test Mast", new ManualCommandTestMast());
+            SmartDashboard.putData("Test Mast PID", new ManualCommandTestMastPID());
             SmartDashboard.putData("Test Flipper", new ManualCommandTestFlipper());
             
         /**

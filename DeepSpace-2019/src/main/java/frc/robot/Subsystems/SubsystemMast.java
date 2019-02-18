@@ -9,12 +9,14 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Commands.IterativeCommandMoveMast;
 import frc.robot.Commands.ManualCommandTestMast;
 import frc.robot.Enumeration.MastPosition;
 import frc.robot.Util.Xbox;
@@ -32,13 +34,18 @@ public class SubsystemMast extends Subsystem {
   private static Boolean loopRunning;
 
   @Override
-  public void initDefaultCommand() {}
+  public void initDefaultCommand() {
+    // setDefaultCommand(new IterativeCommandMoveMast());
+  }
 
   public SubsystemMast() {
     storedPosition = MastPosition.HATCH_1;
 
     innerStage  = new TalonSRX(Constants.INNER_STAGE_ID);
     outerStage = new TalonSRX(Constants.OUTER_STAGE_ID);
+      outerStage.setSensorPhase(true);
+
+    loopRunning = false;
 
     initConfig(50, 0, true);
   }
@@ -61,12 +68,12 @@ public class SubsystemMast extends Subsystem {
   }
 
   public void moveInnerStageByPosition(double inches) {
-    innerStage.set(ControlMode.Position, inches);
+    innerStage.set(ControlMode.Position, -1 * inches * Constants.INNER_MAST_TICKS_PER_INCH);
   }
 
   public Boolean innerStageWithinRange(double inches) {
     double position = innerStage.getSensorCollection().getQuadraturePosition();
-    double target   = inches * Constants.CTRE_TICKS_PER_ROTATION * Constants.MAST_ROTATIONS_PER_INCH;
+    double target   = inches * Constants.INNER_MAST_TICKS_PER_INCH;
     return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
   }
 
@@ -75,12 +82,12 @@ public class SubsystemMast extends Subsystem {
   }
 
   public void moveOuterStageByPosition(double inches) {
-    outerStage.set(ControlMode.Position, inches);
+    outerStage.set(ControlMode.Position, -1 * inches * Constants.OUTER_MAST_TICKS_PER_INCH);
   }
 
   public Boolean outerStageWithinRange(double inches) {
     double position = outerStage.getSensorCollection().getQuadraturePosition();
-    double target = inches * Constants.CTRE_TICKS_PER_ROTATION * Constants.MAST_ROTATIONS_PER_INCH;
+    double target = inches * Constants.OUTER_MAST_TICKS_PER_INCH;
     return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
   }
 
@@ -142,4 +149,40 @@ public class SubsystemMast extends Subsystem {
     outerStage.getSensorCollection().setQuadraturePosition(0, 0);
   }
 
+  public int[] getEncoderValues() {
+    return new int[]{ innerStage.getSensorCollection().getQuadraturePosition(), outerStage.getSensorCollection().getQuadraturePosition() };
+  }
+
+  public void setInnerStagePIDF(double[] PIDF) {
+    innerStage.config_kP(0, PIDF[0]);
+    innerStage.config_kI(0, PIDF[1]);
+    innerStage.config_kD(0, PIDF[2]);
+    innerStage.config_kF(0, PIDF[3]);
+    innerStage.configNominalOutputForward(0);
+    innerStage.configNominalOutputReverse(0);
+  }
+
+  public void setOuterStagePIDF(double[] PIDF) {
+    outerStage.config_kP(0, PIDF[0]);
+    outerStage.config_kI(0, PIDF[1]);
+    outerStage.config_kD(0, PIDF[2]);
+    outerStage.config_kF(0, PIDF[3]);
+    outerStage.configNominalOutputForward(0);
+    outerStage.configNominalOutputReverse(0);
+  }
+
+  public void stopMotors() {
+    innerStage.set(ControlMode.PercentOutput, 0);
+    outerStage.set(ControlMode.PercentOutput, 0);
+  }
+
+  public void publishInnerStagePIDData() {
+    SmartDashboard.putNumber("Inner %", innerStage.getMotorOutputPercent());
+    SmartDashboard.putNumber("Inner Error", innerStage.getClosedLoopError());
+  }
+
+  public void publishOuterStagePIDData() {
+    SmartDashboard.putNumber("Outer %", outerStage.getMotorOutputPercent());
+    SmartDashboard.putNumber("Outer Error", outerStage.getClosedLoopError());
+  }
 }

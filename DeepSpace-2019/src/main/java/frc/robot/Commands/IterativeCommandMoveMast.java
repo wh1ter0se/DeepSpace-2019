@@ -37,6 +37,14 @@ public class IterativeCommandMoveMast extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.SUB_MAST.setInnerStagePIDF(new double[]{ Util.getAndSetDouble("Inner Mast kP", 0),
+                                                   Util.getAndSetDouble("Inner Mast kI", 0),
+                                                   Util.getAndSetDouble("Inner Mast kD", 0),
+                                                   Util.getAndSetDouble("Inner Mast kF", 0)});
+    Robot.SUB_MAST.setOuterStagePIDF(new double[]{ Util.getAndSetDouble("Outer Mast kP", 0),
+                                                   Util.getAndSetDouble("Outer Mast kI", 0),
+                                                   Util.getAndSetDouble("Outer Mast kD", 0),
+                                                   Util.getAndSetDouble("Outer Mast kF", 0)});                                                  
 
     position = Robot.SUB_MAST.getStoredPosition();
     loopRunning = Robot.SUB_MAST.getLoopRunning();
@@ -47,13 +55,17 @@ public class IterativeCommandMoveMast extends Command {
     switch(position) {
       case SOMEWHERE:
       case HATCH_1:
-        if (!Robot.SUB_MAST.getLimitSwitches()[0]) { Robot.SUB_MAST.moveInnerStageByPercent(-1 * innerStageSpeed); } // ram inner stage down if not already
-        if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveOuterStageByPercent(-1 * outerStageSpeed); } // ram outer stage down if not already
+        if (!loopRunning) {
+          loopRunning = true;
+          Robot.SUB_MAST.moveInnerStageByPosition(0); // move inner stage to x position
+        }
+        // if (!Robot.SUB_MAST.getLimitSwitches()[0]) { Robot.SUB_MAST.moveInnerStageByPercent(-1 * innerStageSpeed); } // ram inner stage down if not already
+        // if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveOuterStageByPercent(-1 * outerStageSpeed); } // ram outer stage down if not already
         stable = Robot.SUB_MAST.getLimitSwitches()[0] && Robot.SUB_MAST.getLimitSwitches()[2];
         break;
 
       case CARGO_1:
-        if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveOuterStageByPercent(-1 * outerStageSpeed); } // ram outer stage down if not already
+        // if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveOuterStageByPercent(-1 * outerStageSpeed); } // ram outer stage down if not already
         if (!loopRunning) {
           loopRunning = true;
           Robot.SUB_MAST.moveInnerStageByPosition(Constants.CARGO_1_HEIGHT); // move inner stage to x position
@@ -62,7 +74,7 @@ public class IterativeCommandMoveMast extends Command {
         break;
 
       case HATCH_2:
-        if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveOuterStageByPercent(-1 * outerStageSpeed); } // ram outer stage down if not already
+        // if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveOuterStageByPercent(-1 * outerStageSpeed); } // ram outer stage down if not already
         if (!loopRunning) {
           loopRunning = true;
           Robot.SUB_MAST.moveInnerStageByPosition(Constants.HATCH_2_HEIGHT); // move inner stage to x position
