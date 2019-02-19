@@ -46,13 +46,15 @@ public class Constants {
      * Inverts
      */
     public static final Boolean
-        LEFT_DRIVE_INVERT   = false,
-        RIGHT_DRIVE_INVERT  = true,
-        INNER_STAGE_INVERT  = true,
-        OUTER_STAGE_INVERT  = true,
-        LAUNCHER_INVERT     = true,
-        INTAKE_INVERT       = false,
-        FLIPPER_INVERT      = false;
+        LEFT_DRIVE_INVERT          = false,
+        RIGHT_DRIVE_INVERT         = true,
+        INNER_STAGE_INVERT         = false,
+        INNER_STAGE_ENCODER_INVERT = true,
+        OUTER_STAGE_INVERT         = false,
+        OUTER_STAGE_ENCODER_INVERT = false,
+        LAUNCHER_INVERT            = true,
+        INTAKE_INVERT              = false,
+        FLIPPER_INVERT             = false;
 
     /**
      * Mast Values
@@ -62,7 +64,9 @@ public class Constants {
         CARGO_1_HEIGHT = 8.5,
         HATCH_2_HEIGHT = 28,
         CARGO_2_HEIGHT = 5.5,
-        HATCH_3_HEIGHT = 25; // TODO these need to be calibrated
+        HATCH_3_HEIGHT = 25, // TODO these need to be calibrated
+        CARGO_3_HEIGHT = 31,
+        TOP_TIER_INNER_HEIGHT = 29;
         // CARGO 3 HEIGHT = 33.5 on stage 2 (if limit doesn't work)
 
     /**
@@ -116,7 +120,7 @@ public class Constants {
      * Spark IDs
      */
     public static final int
-        LEFT_MASTER_ID  = 0,
+        LEFT_MASTER_ID  = 4,
         LEFT_SLAVE_ID   = 3,
         RIGHT_MASTER_ID = 1,
         RIGHT_SLAVE_ID  = 2;

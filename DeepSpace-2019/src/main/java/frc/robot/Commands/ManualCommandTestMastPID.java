@@ -21,17 +21,16 @@ public class ManualCommandTestMastPID extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.SUB_MAST.initConfig(50, 0, true);
-    // Robot.SUB_MAST.setInnerStagePIDF(new double[]{ Util.getAndSetDouble("Test Mast kP", 0),
-    //                                                Util.getAndSetDouble("Test Mast kI", 0),
-    //                                                Util.getAndSetDouble("Test Mast kD", 0),
-    //                                                Util.getAndSetDouble("Test Mast kF", 0)});
-    // Robot.SUB_MAST.moveInnerStageByPosition(Util.getAndSetDouble("Mast PID Inches", 10));
+    Robot.SUB_MAST.setInnerStagePIDF(new double[]{ Util.getAndSetDouble("Test Mast kP", 0),
+                                                   Util.getAndSetDouble("Test Mast kI", 0),
+                                                   Util.getAndSetDouble("Test Mast kD", 0),
+                                                   Util.getAndSetDouble("Test Mast kF", 0)});
+    Robot.SUB_MAST.moveInnerStageByPosition(Util.getAndSetDouble("Inner Mast PID Inches", 10));
     Robot.SUB_MAST.setOuterStagePIDF(new double[]{ Util.getAndSetDouble("Test Mast kP", 0),
                                                    Util.getAndSetDouble("Test Mast kI", 0),
                                                    Util.getAndSetDouble("Test Mast kD", 0),
                                                    Util.getAndSetDouble("Test Mast kF", 0)});
-    Robot.SUB_MAST.moveOuterStageByPosition(Util.getAndSetDouble("Mast PID Inches", 10));
+    Robot.SUB_MAST.moveOuterStageByPosition(Util.getAndSetDouble("Outer Mast PID Inches", 10));
   }
 
   // Called repeatedly when this Command is scheduled to run

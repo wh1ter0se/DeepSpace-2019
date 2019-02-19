@@ -43,11 +43,10 @@ public class SubsystemMast extends Subsystem {
 
     innerStage  = new TalonSRX(Constants.INNER_STAGE_ID);
     outerStage = new TalonSRX(Constants.OUTER_STAGE_ID);
-      outerStage.setSensorPhase(true);
 
     loopRunning = false;
 
-    initConfig(50, 0, true);
+    initConfig(50, .25, 0, true);
   }
 
   public void setStoredPosition(MastPosition position) {
@@ -122,12 +121,18 @@ public class SubsystemMast extends Subsystem {
    * @param ramp
    * @param braking
    */
-  public void initConfig(int ampLimit, double ramp, Boolean braking) {
+  public void initConfig(int ampLimit, double nominalOutput, double ramp, Boolean braking) {
     innerStage.setInverted(Constants.INNER_STAGE_INVERT);
+    innerStage.setSensorPhase(Constants.INNER_STAGE_ENCODER_INVERT);
+      innerStage.configNominalOutputForward(nominalOutput);
+      innerStage.configNominalOutputReverse(-1 * nominalOutput);
       innerStage.configOpenloopRamp(ramp);
       innerStage.configContinuousCurrentLimit(ampLimit);
       innerStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
     outerStage.setInverted(Constants.OUTER_STAGE_INVERT);
+    outerStage.setSensorPhase(Constants.OUTER_STAGE_ENCODER_INVERT);
+      outerStage.configNominalOutputForward(nominalOutput);
+      outerStage.configNominalOutputReverse(-1 * nominalOutput);
       outerStage.configOpenloopRamp(ramp);
       outerStage.configContinuousCurrentLimit(ampLimit);
       outerStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
@@ -158,8 +163,6 @@ public class SubsystemMast extends Subsystem {
     innerStage.config_kI(0, PIDF[1]);
     innerStage.config_kD(0, PIDF[2]);
     innerStage.config_kF(0, PIDF[3]);
-    innerStage.configNominalOutputForward(0);
-    innerStage.configNominalOutputReverse(0);
   }
 
   public void setOuterStagePIDF(double[] PIDF) {
@@ -167,8 +170,6 @@ public class SubsystemMast extends Subsystem {
     outerStage.config_kI(0, PIDF[1]);
     outerStage.config_kD(0, PIDF[2]);
     outerStage.config_kF(0, PIDF[3]);
-    outerStage.configNominalOutputForward(0);
-    outerStage.configNominalOutputReverse(0);
   }
 
   public void stopMotors() {

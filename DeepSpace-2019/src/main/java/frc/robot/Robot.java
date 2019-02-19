@@ -185,7 +185,7 @@ public class Robot extends TimedRobot {
       Robot.SUB_CLAMP.closeClamp();
       Robot.SUB_SHIFTER.downShift();
       Robot.SUB_PRELOADER.retract();
-      Robot.SUB_MAST.zeroEncoders();
+      // Robot.SUB_MAST.zeroEncoders();
   }
 
   /**
