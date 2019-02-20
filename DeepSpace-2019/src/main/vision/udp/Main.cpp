@@ -3,35 +3,32 @@
 using namespace std;
 
 int main() {
-    cout << "hello world!" << endl;
-    UDP udp = UDP();
+    
+    UDP udp = UDP("127.0.0.1", 3695);
 
-    cout << "Please enter an action. \n1. Read\n2. Write\n3. Quit" << endl;
+    cout << "Please enter an action. Actions are:\n1. read\n2. write\n3. exit" << endl;
 
-    for(;;) {
-        //do things
-        string in;
-        cin >> in;
+    while(true) {
+        string action;
+        cout << "Enter an action: ";
+        cin >> action;
 
-        if(in == "1") {
-            string r = udp.Receive();
-            cout << r << endl;
-        } else if(in == "2") {
-            cout << "Write: ";
+        if(action == "1") {
+            string read = udp.Recieve();
+            cout << "read from udp: " << read << endl;
+        }
+        if(action == "2") {
             string write;
+            cout << "write: ";
             cin >> write;
-
             udp.Send(write);
-            cout << "Sent " << write << endl;
-
-        } else if(in == "3") {
+            cout << "sent " << write << endl;
+        }
+        if(action == "3") {
             break;
         }
     }
 
-    cout << "Closing UDP" << endl;
     udp.Close();
-
     cout << "Goodbye!" << endl;
 }
-
