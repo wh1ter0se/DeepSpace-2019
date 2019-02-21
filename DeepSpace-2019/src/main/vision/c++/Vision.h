@@ -3,6 +3,13 @@
 
 
 #include <iostream>
+#include "netdb.h"
+#include "string.h"
+#include "unistd.h"
+#include "sys/socket.h"
+#include "sys/types.h"
+#include "netinet/in.h"
+#include "arpa/inet.h"
 #include "opencv2/opencv.hpp"
 #include "Settings.h"
 
@@ -14,12 +21,18 @@ using namespace std;
  * A UDP sender utility that sends and recieves information to and from the RIO.
  */
 class UDP {
-    //implementation here
     public:
-    UDP();
+    UDP(){};
+    UDP(string dest_ip, int port);
     void Send(string msg);
-    string Receive();
+    string Recieve();
+    void Close();
+
+    private:
+    int sock; //sock fd returned by socket() call
+    sockaddr_in server_address; //address of the server
 };
+
 
 /**
  * The PostProcessor is the thing that takes the camera data and produces an output from it. 

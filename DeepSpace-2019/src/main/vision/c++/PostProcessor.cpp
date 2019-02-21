@@ -12,8 +12,8 @@ using namespace std;
  * Constructs a new postprocessor.
  */
 PostProcessor::PostProcessor() {
-    this->sender = UDP(); //init our UDP sender so we can talk to the RIO.
-    
+    this->sender = UDP("10.36.95.2", 3695); //init our UDP sender so we can talk to the RIO.
+
     this->cap = cv::VideoCapture(0); //creates a new video streaming utility
     cap.set(cv::CAP_PROP_FRAME_WIDTH, Settings::CAMERA_RESOLUTION_X);
     cap.set(cv::CAP_PROP_FRAME_HEIGHT, Settings::CAMERA_RESOLUTION_Y);
@@ -133,7 +133,7 @@ void PostProcessor::Loop() {
             //cout << sendToRIO << "\n";
             //cout.flush();
             //UDP send to RIO here.
-            
+            this->sender.Send(sendToRIO);
             
 
             if(Settings::DEBUG) {
