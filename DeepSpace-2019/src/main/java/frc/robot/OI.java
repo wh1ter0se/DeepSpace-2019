@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Commands.ButtonCommandCalibrateCamera;
 import frc.robot.Commands.ButtonCommandChangeMastPosition;
 import frc.robot.Commands.ButtonCommandEat;
 import frc.robot.Commands.ButtonCommandFlipCamera;
@@ -22,8 +21,12 @@ import frc.robot.Commands.ButtonCommandToggleIntake;
 import frc.robot.Commands.ButtonCommandToggleShift;
 import frc.robot.Commands.CyborgCommandAutoShift;
 import frc.robot.Commands.CyborgCommandFlip;
+import frc.robot.Commands.InstantCommandCalibrateCamera;
+import frc.robot.Commands.InstantCommandZeroMastEncoders;
+import frc.robot.Commands.IterativeCommandMoveMast;
 import frc.robot.Commands.ManualCommandTestFlipper;
 import frc.robot.Commands.ManualCommandTestMast;
+import frc.robot.Commands.ManualCommandTestMastPID;
 import frc.robot.Commands.SubmanualCommandAscend;
 import frc.robot.Commands.ToggleCommandKillCompressor;
 import frc.robot.Util.Util;
@@ -46,7 +49,10 @@ public class OI {
 
         // tester functions
             SmartDashboard.putData("Test Mast", new ManualCommandTestMast());
+            SmartDashboard.putData("Test Mast PID", new ManualCommandTestMastPID());
             SmartDashboard.putData("Test Flipper", new ManualCommandTestFlipper());
+            SmartDashboard.putData("Zero Mast Encoders", new InstantCommandZeroMastEncoders());
+            SmartDashboard.putData("Maintain Position", new IterativeCommandMoveMast());
             
         /**
          * Driver
@@ -55,7 +61,7 @@ public class OI {
                 flipCamera.toggleWhenPressed(new ButtonCommandFlipCamera());
 
             Button updateCameraConfig = new JoystickButton(DRIVER, Xbox.RSTICK);
-                updateCameraConfig.whenPressed(new ButtonCommandCalibrateCamera());
+                updateCameraConfig.whenPressed(new InstantCommandCalibrateCamera());
 
             Button toggleShift = new JoystickButton(DRIVER, Xbox.X);
                 toggleShift.whenPressed(new ButtonCommandToggleShift());

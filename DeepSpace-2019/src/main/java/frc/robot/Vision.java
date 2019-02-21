@@ -9,7 +9,10 @@ package frc.robot;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoSource;
@@ -26,19 +29,57 @@ public class Vision extends TimedRobot {
     private UsbCamera BCam;
     private VideoSink server;
 
-    public Vision(){
-        Size camSize = new Size(Constants.CAM_WIDTH, Constants.CAM_HEIGHT);
-        ACam = CameraServer.getInstance().startAutomaticCapture(Constants.ACAM_ID);
-        BCam = CameraServer.getInstance().startAutomaticCapture(Constants.BCAM_ID);
-        // CCam = CameraServer.getInstance().startAutomaticCapture(Constants.CCAM_ID);
-        server = CameraServer.getInstance().getServer();
-        ACam.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
-        BCam.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
-        // CCam.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
-        
-        server.setSource(ACam);
+    // public Vision(){
+    //     ACam = CameraServer.getInstance().startAutomaticCapture(Constants.ACAM_ID);
+    //         ACam.setResolution(80,50);
+    //     BCam = CameraServer.getInstance().startAutomaticCapture(Constants.BCAM_ID);
+    //         BCam.setResolution(80,50);
 
-        updateAllSettings((int) (Util.getAndSetDouble("Cam Exposure", Constants.BACKUP_EXPOSURE)));
+    //     updateAllSettings((int) (Util.getAndSetDouble("Cam Exposure", Constants.BACKUP_EXPOSURE)),
+    //         (int) (Util.getAndSetDouble("Cam FPS", 30)),
+    //         (int) (Util.getAndSetDouble("Cam White Balance", 1000)));
+
+    //     server = CameraServer.getInstance().getServer();
+
+    //     ACam.setConnectionStrategy(VideoSource.ConnectionStrategy.kAutoManage);
+    //     BCam.setConnectionStrategy(VideoSource.ConnectionStrategy.kAutoManage);
+
+    //     server.setSource(ACam);
+    // }
+
+    public Vision(){
+        new Thread(() -> {
+            ACam = CameraServer.getInstance().startAutomaticCapture();
+                ACam.setResolution(160, 100);
+                ACam.setFPS(30);
+                ACam.setExposureManual(45);
+            BCam = CameraServer.getInstance().startAutomaticCapture();
+                BCam.setResolution(160, 100);
+                BCam.setFPS(30);
+                BCam.setExposureManual(45);
+
+            ACam.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+            BCam.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+
+            server = CameraServer.getInstance().getServer();
+            server.setSource(BCam);
+
+            CvSink cvSink = CameraServer.getInstance().getVideo();
+            CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 80, 50);
+            
+            Mat source = new Mat();
+            Mat output = new Mat();
+            
+            while(!Thread.interrupted()) {
+                cvSink.grabFrame(source);
+                Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+                outputStream.putFrame(output);
+            }
+        }).start();
+
+        // updateAllSettings((int) (Util.getAndSetDouble("Cam Exposure", Constants.BACKUP_EXPOSURE)),
+            // (int) (Util.getAndSetDouble("Cam FPS", 30)),
+            // (int) (Util.getAndSetDouble("Cam White Balance", 1000)));
     }
 
     /**
@@ -49,9 +90,7 @@ public class Vision extends TimedRobot {
             server.setSource(ACam);
         } else if (ID == 1) {
             server.setSource(BCam);
-        } else if (ID == 2) {
-            // server.setSource(CCam);
-        }
+        } 
     }
 
     // public double getTotalBandwidth() {
@@ -63,58 +102,24 @@ public class Vision extends TimedRobot {
     //     return (total / 1048576);
     // }
 
-    public void updateAllSettings(int exposure) {
+    public void updateAllSettings(int exposure, int FPS, int whiteBalance) {
         updateExposure(exposure);
-        // add settings here as needed
+        updateFPS(FPS);
+        updateWhiteBalance(whiteBalance);
     }
 
     public void updateExposure(int exposure) {
         ACam.setExposureManual(exposure);
-        BCam.setExposureManual(exposure);
-        // CCam.setExposureManual(exposure);
+        // BCam.setExposureManual(exposure);
     }
 
-    // public void startFrameCameraThread(){
-    // 	new Thread(()-> {
+    public void updateFPS(int FPS) {
+        ACam.setFPS(FPS);
+        // BCam.setFPS(FPS);
+    }
 
-    //     // ACam = new UsbCamera("frame", 0);
-    //     // ACam.setFPS(30);
-    //     // ACam.setResolution(480,270);
-
-    // 	Mat streamImages = new Mat();
-
-    //     CvSink cvsinkA;
-    //     CvSink cvsinkB;
-
-    //     CvSource outputFrame;
-    //     if (camID == 0) {
-    //         ACam = CameraServer.getInstance().startAutomaticCapture("A-Cam", Constants.ACAM_ID);
-    //         cvsinkA = new CvSink("A-Sink");
-    // 	    cvsinkA.setSource(ACam);
-    //         cvsinkA.setEnabled(true);
-    //         outputFrame = CameraServer.getInstance().putVideo("A-Cam", Constants.CAM_WIDTH, Constants.CAM_HEIGHT);
-    //     } else {
-    //         BCam = CameraServer.getInstance().startAutomaticCapture("B-Cam", Constants.BCAM_ID);
-    //         cvsinkB = new CvSink("B-Sink");
-    // 	    cvsinkB.setSource(BCam);
-    // 	    cvsinkB.setEnabled(true);
-    //         outputFrame = CameraServer.getInstance().putVideo("B-Cam", Constants.CAM_WIDTH, Constants.CAM_HEIGHT);
-    //     }
-    // 	 while (!Thread.interrupted()){
-    //          try {
-    //              if (!streamImages.empty()) {
-    //                 if (camID == 0) {
-    //                     cvsinkA.grabFrame(streamImages);
-    //                 } else {
-    //                     cvsinkB.grabFrame(streamImages);
-    //                 }
-    //                 outputFrame.putFrame(streamImages);
-    //             }
-    //          } catch (CvException cameraFail){
-    //              DriverStation.reportWarning("Camera: " + cameraFail.toString(), false);
-    //              outputFrame.putFrame(failImage);
-    //          }
-    //      }
-    //     }).start();
-    // }
+    public void updateWhiteBalance(int WB) {
+        ACam.setWhiteBalanceManual(WB);
+        // BCam.setWhiteBalanceManual(WB);
+    }
 }
