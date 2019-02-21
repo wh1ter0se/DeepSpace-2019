@@ -49,7 +49,7 @@ public class Constants {
         LEFT_DRIVE_INVERT          = false,
         RIGHT_DRIVE_INVERT         = true,
         INNER_STAGE_INVERT         = false,
-        INNER_STAGE_ENCODER_INVERT = true,
+        INNER_STAGE_ENCODER_INVERT = false,
         OUTER_STAGE_INVERT         = false,
         OUTER_STAGE_ENCODER_INVERT = false,
         LAUNCHER_INVERT            = true,
@@ -60,7 +60,7 @@ public class Constants {
      * Mast Values
      */
     public static final double
-        MAST_ALLOWABLE_ERROR = 20000, // error in ticks
+        MAST_ALLOWABLE_ERROR = .5, // error in inches
         CARGO_1_HEIGHT = 8.5,
         HATCH_2_HEIGHT = 28,
         CARGO_2_HEIGHT = 5.5,

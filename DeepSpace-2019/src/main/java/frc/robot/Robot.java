@@ -180,8 +180,10 @@ public class Robot extends TimedRobot {
     Scheduler.getInstance().run();
   }
 
+  @Override
   public void teleopInit() {
     //TODO Move these to autoInit before comp
+    Robot.SUB_DRIVE.setBraking(true);
       Robot.SUB_CLAMP.closeClamp();
       Robot.SUB_SHIFTER.downShift();
       Robot.SUB_PRELOADER.retract();

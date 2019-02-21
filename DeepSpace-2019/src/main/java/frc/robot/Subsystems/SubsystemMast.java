@@ -9,15 +9,12 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Commands.IterativeCommandMoveMast;
-import frc.robot.Commands.ManualCommandTestMast;
 import frc.robot.Enumeration.MastPosition;
 import frc.robot.Util.Xbox;
 
@@ -62,45 +59,84 @@ public class SubsystemMast extends Subsystem {
     return loopRunning;
   }
 
+  /**
+   * Moves the inner stage by a percent output
+   * @param speed percent output to move at
+   */
   public void moveInnerStageByPercent(double speed) {
     innerStage.set(ControlMode.PercentOutput, speed);
   }
 
-  public void moveInnerStageByPosition(double inches) {
+  /**
+   * Moves the inner stage to a set position
+   * @param inches the target height in inches
+   * @param allowableError the amount of inches it can be withhin
+   */
+  public void moveInnerStageByPosition(double inches, double allowableError) {
     innerStage.set(ControlMode.Position, -1 * inches * Constants.INNER_MAST_TICKS_PER_INCH);
+    innerStage.configAllowableClosedloopError(0, (int) (allowableError * Constants.INNER_MAST_TICKS_PER_INCH));
   }
 
+  /**
+   * Shows if the inner mast is stable (within the allowable error)
+   * @param inches the target height of the current loop
+   * @return       whether the position is within the allowable error from the target or not
+   */
   public Boolean innerStageWithinRange(double inches) {
     double position = innerStage.getSensorCollection().getQuadraturePosition();
     double target   = inches * Constants.INNER_MAST_TICKS_PER_INCH;
     return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
   }
 
+  /**
+   * Moves the outer stage by a percent output
+   * @param speed percent output to move at
+   */
   public void moveOuterStageByPercent(double speed) {
     outerStage.set(ControlMode.PercentOutput, speed);
   }
 
-  public void moveOuterStageByPosition(double inches) {
+  /**
+   * Moves the outer stage to a set position
+   * @param inches the target height in inches
+   * @param allowableError the amount of inches it can be withhin
+   */
+  public void moveOuterStageByPosition(double inches, double allowableError) {
     outerStage.set(ControlMode.Position, -1 * inches * Constants.OUTER_MAST_TICKS_PER_INCH);
+    outerStage.configAllowableClosedloopError(0, (int) (allowableError * Constants.INNER_MAST_TICKS_PER_INCH));
   }
 
+  /**
+   * Shows if the outer mast is stable (within the allowable error)
+   * @param inches the target height of the current loop
+   * @return       whether the position is within the allowable error from the target or not
+   */
   public Boolean outerStageWithinRange(double inches) {
     double position = outerStage.getSensorCollection().getQuadraturePosition();
     double target = inches * Constants.OUTER_MAST_TICKS_PER_INCH;
     return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
   }
 
+  /**
+   * Controls both masts based on the position of the given controller's joysticks
+   * @param joy the controller to read data from
+   * @param innerStageInhibitor maximum percent output of the inner stage
+   * @param outerStageInhibitor maximum percent output of the outer stage
+   */
   public void moveWithJoystick(Joystick joy, double innerStageInhibitor, double outerStageInhibitor) {
     innerStage.set(ControlMode.PercentOutput, Xbox.LEFT_Y(joy) * Math.abs(innerStageInhibitor));
     outerStage.set(ControlMode.PercentOutput, Xbox.RIGHT_Y(joy) * Math.abs(outerStageInhibitor));
   }
 
+  /**
+   * Returns a boolean matrix of limit switch closed states
+   * @return [0] = innerStageLow
+   *         [1] = innerStageHigh
+   *         [2] = outerStageLow
+   *         [3] = outerStageHigh
+   */
   public Boolean[] getLimitSwitches() {
     Boolean[] array = new Boolean[4];
-    // array[0] = innerStageLow;
-    // array[1] = innerStageHigh;
-    // array[2] = outerStageLow;
-    // array[3] = outerStageHigh;
     array[0] = innerStage.getSensorCollection().isFwdLimitSwitchClosed();
     array[1] = innerStage.getSensorCollection().isRevLimitSwitchClosed();
     array[2] = outerStage.getSensorCollection().isFwdLimitSwitchClosed();
@@ -108,6 +144,9 @@ public class SubsystemMast extends Subsystem {
     return array;
   }
 
+  /**
+   * Updates all limit switch state indicators on the dashboard
+   */
   public void publishLimitSwitches() {
     SmartDashboard.putBoolean("Inner Stage Low [0]", getLimitSwitches()[0]);
     SmartDashboard.putBoolean("Inner Stage High [1]", getLimitSwitches()[1]);
@@ -116,10 +155,11 @@ public class SubsystemMast extends Subsystem {
   }
 
   /**
-   * 
-   * @param ampLimit
-   * @param ramp
-   * @param braking
+   * Configures the mast motors
+   * @param ampLimit      continuous current limit
+   * @param nominalOutput the minimum output of the motors
+   * @param ramp          motor ramprate
+   * @param braking       true for braking, false for coasting
    */
   public void initConfig(int ampLimit, double nominalOutput, double ramp, Boolean braking) {
     innerStage.setInverted(Constants.INNER_STAGE_INVERT);

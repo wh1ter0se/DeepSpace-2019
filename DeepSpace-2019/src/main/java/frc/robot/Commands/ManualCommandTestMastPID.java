@@ -8,6 +8,7 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Constants;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.Util.Util;
@@ -25,12 +26,15 @@ public class ManualCommandTestMastPID extends Command {
                                                    Util.getAndSetDouble("Test Mast kI", 0),
                                                    Util.getAndSetDouble("Test Mast kD", 0),
                                                    Util.getAndSetDouble("Test Mast kF", 0)});
-    Robot.SUB_MAST.moveInnerStageByPosition(Util.getAndSetDouble("Inner Mast PID Inches", 10));
+    Robot.SUB_MAST.moveInnerStageByPosition(Util.getAndSetDouble("Inner Mast PID Inches", 10), 
+                                            Util.getAndSetDouble("Mast Allowable Error", Constants.MAST_ALLOWABLE_ERROR));
+
     Robot.SUB_MAST.setOuterStagePIDF(new double[]{ Util.getAndSetDouble("Test Mast kP", 0),
                                                    Util.getAndSetDouble("Test Mast kI", 0),
                                                    Util.getAndSetDouble("Test Mast kD", 0),
                                                    Util.getAndSetDouble("Test Mast kF", 0)});
-    Robot.SUB_MAST.moveOuterStageByPosition(Util.getAndSetDouble("Outer Mast PID Inches", 10));
+    Robot.SUB_MAST.moveOuterStageByPosition(Util.getAndSetDouble("Outer Mast PID Inches", 10), 
+                                            Util.getAndSetDouble("Mast Allowable Error", Constants.MAST_ALLOWABLE_ERROR));
   }
 
   // Called repeatedly when this Command is scheduled to run
