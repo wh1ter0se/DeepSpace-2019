@@ -8,20 +8,25 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.OI;
 import frc.robot.Robot;
 
 public class ButtonCommandToggleShift extends Command {
   
   private Boolean isFinished;
 
+  private CyborgCommandQuickRumble rumble;
+
   public ButtonCommandToggleShift() {
     requires(Robot.SUB_SHIFTER);
+    rumble = new CyborgCommandQuickRumble(OI.DRIVER, 2, 1, 200);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     isFinished = false;
+    // rumble.start();
   }
 
   // Called repeatedly when this Command is scheduled to run

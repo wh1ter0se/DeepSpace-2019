@@ -20,6 +20,7 @@ import frc.robot.Commands.ButtonCommandToggleClamp;
 import frc.robot.Commands.ButtonCommandToggleIntake;
 import frc.robot.Commands.ButtonCommandToggleShift;
 import frc.robot.Commands.CyborgCommandAutoShift;
+import frc.robot.Commands.CyborgCommandDock;
 import frc.robot.Commands.CyborgCommandFlip;
 import frc.robot.Commands.InstantCommandCalibrateCamera;
 import frc.robot.Commands.InstantCommandZeroMastEncoders;
@@ -53,6 +54,7 @@ public class OI {
             SmartDashboard.putData("Test Flipper", new ManualCommandTestFlipper());
             SmartDashboard.putData("Zero Mast Encoders", new InstantCommandZeroMastEncoders());
             SmartDashboard.putData("Maintain Position", new IterativeCommandMoveMast());
+            SmartDashboard.putData("Dock", new CyborgCommandDock());
             
         /**
          * Driver

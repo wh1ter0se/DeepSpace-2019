@@ -8,6 +8,7 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.OI;
 import frc.robot.Robot;
 
 public class ButtonCommandSetGear extends Command {
@@ -15,14 +16,18 @@ public class ButtonCommandSetGear extends Command {
   private Boolean isFinished;
   private int gear;
 
+  private CyborgCommandQuickRumble rumble;
+
   public ButtonCommandSetGear(int gear) {
     requires(Robot.SUB_SHIFTER);
     this.gear = gear;
+    rumble = new CyborgCommandQuickRumble(OI.DRIVER, 2, 1, 200);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    // rumble.start();
     isFinished = false;
   }
 

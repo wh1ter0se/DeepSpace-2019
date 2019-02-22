@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.SubsystemPreloader;
 import frc.robot.Enumeration.MastPosition;
+import frc.robot.Subsystems.SubsystemCaleb;
 import frc.robot.Subsystems.SubsystemClamp;
 import frc.robot.Subsystems.SubsystemClimb;
 import frc.robot.Subsystems.SubsystemCompressor;
@@ -43,6 +44,7 @@ public class Robot extends TimedRobot {
   /**
    * Initialize Subsystems
    */
+  public static SubsystemCaleb      SUB_CALEB;
   public static SubsystemClamp      SUB_CLAMP;
   public static SubsystemClimb      SUB_CLIMB;
   public static SubsystemCompressor SUB_COMPRESSOR;
@@ -69,6 +71,7 @@ public class Robot extends TimedRobot {
     /**
      * Instantiate Subsystems
      */
+    SUB_CALEB      = new SubsystemCaleb();
     SUB_CLAMP      = new SubsystemClamp();
     SUB_CLIMB      = new SubsystemClimb();
     SUB_COMPRESSOR = new SubsystemCompressor();
@@ -136,7 +139,7 @@ public class Robot extends TimedRobot {
 
     Robot.SUB_MAST.publishLimitSwitches();
 
-    SmartDashboard.putData("Sub_Preloader", SUB_PRELOADER);
+    SmartDashboard.putData("Sub_Caleb", SUB_CALEB);
     SmartDashboard.putData("Sub_Clamp", SUB_CLAMP);
     SmartDashboard.putData("Sub_Climb", SUB_CLIMB);
     SmartDashboard.putData("Sub_Compressor", SUB_COMPRESSOR);
@@ -144,6 +147,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Sub_Flipper", SUB_FLIPPER);
     SmartDashboard.putData("Sub_Launcher", SUB_LAUNCHER);
     SmartDashboard.putData("Sub_Mast", SUB_MAST);
+    SmartDashboard.putData("Sub_Preloader", SUB_PRELOADER);
     SmartDashboard.putData("Sub_Receiver", SUB_RECEIVER);
     SmartDashboard.putData("Sub_Shifter", SUB_SHIFTER);
     // SmartDashboard.putNumber("Bandwidth", Robot.VISION.getTotalBandwidth());
