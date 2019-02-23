@@ -7,7 +7,9 @@
 
 package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Util.MiniPID;
@@ -35,22 +37,26 @@ public class CyborgCommandDock extends Command {
                           Util.getAndSetDouble("Docking kI", Constants.BACKUP_DOCKING_kI),
                           Util.getAndSetDouble("Docking kD", Constants.BACKUP_DOCKING_kD));
     turning.setOutputLimits(-.5, .5);
+    idleSpeed = Util.getAndSetDouble("Docking Speed", Constants.BACKUP_DOCKING_SPEED);
     turning.setSetpoint(0);
 
-    isFinished = Robot.SUB_RECEIVER.getLastKnownData()[3] == -1;
+    // isFinished = Robot.SUB_RECEIVER.getLastKnownData()[3] == -1;
+    isFinished = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    loopOutput = turning.getOutput(Robot.SUB_RECEIVER.getLastKnownData()[4]);
-    idleSpeed = Util.getAndSetDouble("Docking Speed", Constants.BACKUP_DOCKING_SPEED);
-    canSee = Robot.SUB_RECEIVER.getLastKnownData()[4] != -1;
+    loopOutput = turning.getOutput(Robot.SUB_RECEIVER.getLastKnownData()[3]);
+    // idleSpeed = .25;
+    canSee = Robot.SUB_RECEIVER.getLastKnownData()[2] != -1;
+    SmartDashboard.putBoolean("canSee", canSee);
 
     if (canSee) {
       Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed + loopOutput, idleSpeed - loopOutput);
-    } else if (!canSee && inRange) {
-      Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, idleSpeed);
+    // } else if (!canSee && inRange) {
+    //   Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, idleSpeed);
+      DriverStation.reportError("I AM DRIVING: " + idleSpeed + "," + loopOutput, false);
     } else {
       Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, -1 * idleSpeed);
     }

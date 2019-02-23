@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.Commands.ManualCommandDrive;
@@ -56,6 +57,7 @@ public class SubsystemDrive extends Subsystem {
     setInverts();
     setBraking(true);
     setRamps(ramp);
+    updateBrownoutRummble(joy);
 
     double adder = Xbox.RT(joy) - Xbox.LT(joy);
     double left = adder + (Xbox.LEFT_X(joy) / 1.333333);
@@ -79,6 +81,7 @@ public class SubsystemDrive extends Subsystem {
       leftSlave.set(leftOutput);
     rightMaster.set(rightOutput);
       rightSlave.set(rightOutput);
+      DriverStation.reportError("DRIVE COMMAND IS RUNNING", false);
   }
 
   public double[] getEncoderPositions() {
@@ -179,6 +182,11 @@ public class SubsystemDrive extends Subsystem {
    */
   public Boolean isPushing() {
     return leftMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE && rightMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE;
+  }
+
+  public void updateBrownoutRummble(Joystick joy) {
+    if (DriverStation.getInstance().isBrownedOut()) {
+      joy.setRumble(RumbleType.kRightRumble, 1); }
   }
 
   

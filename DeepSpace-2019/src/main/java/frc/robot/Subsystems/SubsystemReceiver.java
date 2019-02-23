@@ -64,7 +64,7 @@ public class SubsystemReceiver extends Subsystem {
         try {
           DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length); //create a new packet for the receiving data 
           serverSocket.receive(receivePacket); //receive the packet from the Socket
-          DriverStation.reportError("I GOT PI DATA", false);
+          // DriverStation.reportError("I GOT PI DATA", false);
           String segment = new String(receivePacket.getData()).replaceAll("\\s+",""); //remove whitespace and place data in 'segment'
           latestSegment = segment.substring(segment.indexOf(":") + 1, segment.indexOf(";")); // store segment without borders
           latestTime = System.currentTimeMillis(); // add timestamp for stored segment
@@ -88,7 +88,7 @@ public class SubsystemReceiver extends Subsystem {
    *         {-1,-1,-1,-1} for no known location
    */
   public double[] getLastKnownData() {
-      double[] data = new double[4];
+      double[] data = new double[]{-1,-1,-1,-1};
       int[] indices = IntStream.range(0, latestSegment.length())
                                .filter(i -> latestSegment.charAt(i) == ',')
                                .toArray();
@@ -96,7 +96,7 @@ public class SubsystemReceiver extends Subsystem {
         data[0] = Integer.parseInt(latestSegment.substring(0, latestSegment.indexOf(",", indices[0])));
         data[1] = Integer.parseInt(latestSegment.substring(latestSegment.indexOf(",", indices[0]) + 1, latestSegment.indexOf(",", indices[1])));
         data[2] = Integer.parseInt(latestSegment.substring(latestSegment.indexOf(",", indices[1]) + 1, latestSegment.indexOf(",", indices[2])));
-        data[4] = Integer.parseInt(latestSegment.substring(latestSegment.indexOf(",", indices[2]) + 1));
+        data[3] = Integer.parseInt(latestSegment.substring(latestSegment.indexOf(",", indices[2]) + 1));
         updateTargetLock(data);
       } catch (NumberFormatException e) {
         DriverStation.reportError("NUMBER FORMAT EXCEPTION", true); 
