@@ -187,7 +187,10 @@ public class SubsystemDrive extends Subsystem {
   public void updateBrownoutRummble(Joystick joy) {
     if (DriverStation.getInstance().isBrownedOut()) {
       joy.setRumble(RumbleType.kRightRumble, 1); }
-  }
+    else {
+      joy.setRumble(RumbleType.kRightRumble, 0);
+    }
+  } 
 
   
 }

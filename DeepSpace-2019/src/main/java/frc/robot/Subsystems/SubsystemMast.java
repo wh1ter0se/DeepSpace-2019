@@ -43,7 +43,7 @@ public class SubsystemMast extends Subsystem {
 
     loopRunning = false;
 
-    initConfig(50, .25, 0, true);
+    initConfig(50, 0, 0, true);
   }
 
   public void setStoredPosition(MastPosition position) {
@@ -70,11 +70,10 @@ public class SubsystemMast extends Subsystem {
   /**
    * Moves the inner stage to a set position
    * @param inches the target height in inches
-   * @param allowableError the amount of inches it can be withhin
    */
-  public void moveInnerStageByPosition(double inches, double allowableError) {
+  public void moveInnerStageByPosition(double inches) {
     innerStage.set(ControlMode.Position, -1 * inches * Constants.INNER_MAST_TICKS_PER_INCH);
-    innerStage.configAllowableClosedloopError(0, (int) (allowableError * Constants.INNER_MAST_TICKS_PER_INCH));
+    innerStage.configAllowableClosedloopError(0,0);
   }
 
   /**
@@ -99,11 +98,10 @@ public class SubsystemMast extends Subsystem {
   /**
    * Moves the outer stage to a set position
    * @param inches the target height in inches
-   * @param allowableError the amount of inches it can be withhin
    */
-  public void moveOuterStageByPosition(double inches, double allowableError) {
+  public void moveOuterStageByPosition(double inches) {
     outerStage.set(ControlMode.Position, -1 * inches * Constants.OUTER_MAST_TICKS_PER_INCH);
-    outerStage.configAllowableClosedloopError(0, (int) (allowableError * Constants.INNER_MAST_TICKS_PER_INCH));
+    outerStage.configAllowableClosedloopError(0,0);
   }
 
   /**

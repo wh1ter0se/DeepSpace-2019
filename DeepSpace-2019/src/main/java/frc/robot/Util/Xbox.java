@@ -28,6 +28,16 @@ public class Xbox {
 			LSTICK = 9,
 			RSTICK = 10;
 
+	public static final int
+			N  = 0,
+			NW = 0,
+			W  = 0,
+			SW = 0,
+			S  = 0,
+			SE = 0,
+			E  = 0,
+			NE = 0;
+
 	private static double deadzone(double rawAxis) { // deadzone value is in constants
 		boolean positive = rawAxis > 0.0;
 		rawAxis *= (positive ? 1.0 : -1.0); //flip if needed

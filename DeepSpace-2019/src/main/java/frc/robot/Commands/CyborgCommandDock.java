@@ -48,12 +48,14 @@ public class CyborgCommandDock extends Command {
   @Override
   protected void execute() {
     loopOutput = turning.getOutput(Robot.SUB_RECEIVER.getLastKnownData()[3]);
+    inRange = Robot.SUB_RECEIVER.getWithinRange();
     // idleSpeed = .25;
     canSee = Robot.SUB_RECEIVER.getLastKnownData()[2] != -1;
     SmartDashboard.putBoolean("canSee", canSee);
 
     if (canSee) {
-      Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed + loopOutput, idleSpeed - loopOutput);
+      // Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed - loopOutput, idleSpeed + loopOutput);
+      Robot.SUB_DRIVE.driveByPercentOutputs(-1 * loopOutput, loopOutput);
     // } else if (!canSee && inRange) {
     //   Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, idleSpeed);
       DriverStation.reportError("I AM DRIVING: " + idleSpeed + "," + loopOutput, false);

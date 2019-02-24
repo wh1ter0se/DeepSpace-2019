@@ -89,7 +89,7 @@ public class SubsystemReceiver extends Subsystem {
    */
   public double[] getLastKnownData() {
       double[] data = new double[]{-1,-1,-1,-1};
-      int[] indices = IntStream.range(0, latestSegment.length())
+      int[] indices = IntStream.range(0, latestSegment.length() - 1)
                                .filter(i -> latestSegment.charAt(i) == ',')
                                .toArray();
       try {
