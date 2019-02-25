@@ -22,6 +22,7 @@ public class ManualCommandTestMastPID extends Command {
   private static long    inRangeInit;
 
   private static double  errorMs;
+  private static double  allowableError;
 
 
   public ManualCommandTestMastPID() {
@@ -33,7 +34,7 @@ public class ManualCommandTestMastPID extends Command {
   @Override
   protected void initialize() {
     withinAllowableError = false;
-
+    allowableError = Util.getAndSetDouble("Mast Allowable Error", Constants.MAST_ALLOWABLE_ERROR);
     errorMs = 100;
 
     Robot.SUB_MAST.setInnerStagePIDF(new double[]{ Util.getAndSetDouble("Test Mast kP", 0),
@@ -52,13 +53,13 @@ public class ManualCommandTestMastPID extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    SmartDashboard.putBoolean("Within Error", Robot.SUB_MAST.innerStageWithinRange(Util.getAndSetDouble("Inner Mast PID Inches", 10)));
-    if (!withinAllowableError && Robot.SUB_MAST.innerStageWithinRange(Util.getAndSetDouble("Inner Mast PID Inches", 10))) {
+    SmartDashboard.putBoolean("Within Error", Robot.SUB_MAST.innerStageWithinRange(Util.getAndSetDouble("Inner Mast PID Inches", 10), allowableError));
+    if (!withinAllowableError && Robot.SUB_MAST.innerStageWithinRange(Util.getAndSetDouble("Inner Mast PID Inches", 10), allowableError)) {
       withinAllowableError = true;
       inRangeInit = System.currentTimeMillis();
     } else if (withinAllowableError && System.currentTimeMillis() > inRangeInit + errorMs) {
       Robot.SUB_MAST.moveInnerStageByPercent(0);
-    } else if (withinAllowableError && !Robot.SUB_MAST.innerStageWithinRange(Util.getAndSetDouble("Inner Mast PID Inches", 10))) {
+    } else if (withinAllowableError && !Robot.SUB_MAST.innerStageWithinRange(Util.getAndSetDouble("Inner Mast PID Inches", 10), allowableError)) {
       Robot.SUB_MAST.moveInnerStageByPosition(Util.getAndSetDouble("Inner Mast PID Inches", 10));
     }
   }

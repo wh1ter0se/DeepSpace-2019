@@ -55,10 +55,6 @@ public class SubsystemMast extends Subsystem {
     return storedPosition;
   }
 
-  public Boolean getLoopRunning() {
-    return loopRunning;
-  }
-
   /**
    * Moves the inner stage by a percent output
    * @param speed percent output to move at
@@ -81,10 +77,10 @@ public class SubsystemMast extends Subsystem {
    * @param inches the target height of the current loop
    * @return       whether the position is within the allowable error from the target or not
    */
-  public Boolean innerStageWithinRange(double inches) {
+  public Boolean innerStageWithinRange(double inches, double allowableError) {
     double position = innerStage.getSensorCollection().getQuadraturePosition();
     double target   = inches * Constants.INNER_MAST_TICKS_PER_INCH;
-    return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
+    return Math.abs(position - target) < allowableError * Constants.INNER_MAST_TICKS_PER_INCH;
   }
 
   /**
@@ -109,10 +105,10 @@ public class SubsystemMast extends Subsystem {
    * @param inches the target height of the current loop
    * @return       whether the position is within the allowable error from the target or not
    */
-  public Boolean outerStageWithinRange(double inches) {
+  public Boolean outerStageWithinRange(double inches, double allowableError) {
     double position = outerStage.getSensorCollection().getQuadraturePosition();
     double target = inches * Constants.OUTER_MAST_TICKS_PER_INCH;
-    return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
+    return Math.abs(position - target) < allowableError * Constants.OUTER_MAST_TICKS_PER_INCH;
   }
 
   /**

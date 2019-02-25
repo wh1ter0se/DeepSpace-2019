@@ -18,12 +18,14 @@ import frc.robot.Util.Util;
 public class IterativeCommandMoveMast extends Command {
 
   private static Boolean      stable;
-  private static Boolean      loopRunning;
+  private static Boolean      withinAllowableError;
 
-  private static double       innerStageSpeed;
-  private static double       outerStageSpeed;
-
+  private static double       innerStageHeight;
+  private static double       outerStageHeight;
+  private static double       errorMs;
   private static double       allowableError;
+
+  private static long         inRangeInit;
 
   private static MastPosition position;
 
@@ -34,6 +36,7 @@ public class IterativeCommandMoveMast extends Command {
   // Called just before this Command runs the inner time
   @Override
   protected void initialize() {
+    withinAllowableError = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -49,79 +52,59 @@ public class IterativeCommandMoveMast extends Command {
                                                    Util.getAndSetDouble("Outer Mast kF", 0)});                                                  
 
     position = Robot.SUB_MAST.getStoredPosition();
-    loopRunning = Robot.SUB_MAST.getLoopRunning();
-
-    innerStageSpeed = Math.abs(Util.getAndSetDouble("Inner Stage Speed", Constants.INNER_STAGE_SPEED));
-    outerStageSpeed = Math.abs(Util.getAndSetDouble("Outer Stage Speed", Constants.OUTER_STAGE_SPEED));
 
     allowableError = Util.getAndSetDouble("Mast Allowable Error", Constants.MAST_ALLOWABLE_ERROR);
     
     switch(position) {
       case SOMEWHERE:
       case HATCH_1:
-        if (!loopRunning) {
-          loopRunning = true;
-          Robot.SUB_MAST.moveInnerStageByPosition(0); // move inner stage to x position
-          Robot.SUB_MAST.moveOuterStageByPosition(0.5);
-        }
-        // if (!Robot.SUB_MAST.getLimitSwitches()[0]) { Robot.SUB_MAST.moveInnerStageByPercent(-1 * innerStageSpeed); } // ram inner stage down if not already
-        // if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveOuterStageByPercent(-1 * outerStageSpeed); } // ram outer stage down if not already
-        stable = Robot.SUB_MAST.getLimitSwitches()[0] && Robot.SUB_MAST.getLimitSwitches()[2];
+        innerStageHeight = 0;
+        outerStageHeight = 0;
         break;
 
       case CARGO_1:
-        // if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveOuterStageByPercent(-1 * outerStageSpeed); } // ram outer stage down if not already
-        if (!loopRunning) {
-          loopRunning = true;
-          Robot.SUB_MAST.moveInnerStageByPosition(Constants.CARGO_1_HEIGHT); // move inner stage to x position
-          Robot.SUB_MAST.moveOuterStageByPosition(0.5);
-        }
-        stable  = Robot.SUB_MAST.getLimitSwitches()[2] && Robot.SUB_MAST.innerStageWithinRange(Constants.CARGO_1_HEIGHT);
+        innerStageHeight = Constants.CARGO_1_HEIGHT;
+        outerStageHeight = 0;
         break;
 
       case HATCH_2:
-        // if (!Robot.SUB_MAST.getLimitSwitches()[2]) { Robot.SUB_MAST.moveOuterStageByPercent(-1 * outerStageSpeed); } // ram outer stage down if not already
-        if (!loopRunning) {
-          loopRunning = true;
-          Robot.SUB_MAST.moveInnerStageByPosition(Constants.HATCH_2_HEIGHT); // move inner stage to x position
-          Robot.SUB_MAST.moveOuterStageByPosition(0.5);
-        }
-        stable = Robot.SUB_MAST.getLimitSwitches()[2] && Robot.SUB_MAST.innerStageWithinRange(Constants.HATCH_2_HEIGHT);
+        innerStageHeight = Constants.HATCH_2_HEIGHT;
+        outerStageHeight = 0;
         break;
 
       case CARGO_2:
-        // if (!Robot.SUB_MAST.getLimitSwitches()[1]) { Robot.SUB_MAST.moveInnerStageByPercent(innerStageSpeed); } // ram inner stage up if not already
-        if (!loopRunning) {
-          loopRunning = true;
-          Robot.SUB_MAST.moveInnerStageByPosition(Constants.TOP_TIER_INNER_HEIGHT);
-          Robot.SUB_MAST.moveOuterStageByPosition(Constants.CARGO_2_HEIGHT); // move outer stage to x position
-        }
-        stable = Robot.SUB_MAST.getLimitSwitches()[2] && Robot.SUB_MAST.outerStageWithinRange(Constants.CARGO_2_HEIGHT);
+        innerStageHeight = Constants.TOP_TIER_INNER_HEIGHT;
+        outerStageHeight = Constants.CARGO_2_HEIGHT;
         break;
 
       case HATCH_3:
-        // if (!Robot.SUB_MAST.getLimitSwitches()[1]) { Robot.SUB_MAST.moveInnerStageByPercent(innerStageSpeed); } // ram inner stage up if not already
-        if (!loopRunning) {
-          loopRunning = true;
-          Robot.SUB_MAST.moveInnerStageByPosition(Constants.TOP_TIER_INNER_HEIGHT);
-          Robot.SUB_MAST.moveOuterStageByPosition(Constants.HATCH_3_HEIGHT); // move outer stage to x position
-        }
-        stable = Robot.SUB_MAST.getLimitSwitches()[1] && Robot.SUB_MAST.outerStageWithinRange(Constants.HATCH_3_HEIGHT);
+        innerStageHeight = Constants.TOP_TIER_INNER_HEIGHT;
+        outerStageHeight = Constants.HATCH_3_HEIGHT;
         break;
 
       case CARGO_3:
-        // if (!Robot.SUB_MAST.getLimitSwitches()[1]) { Robot.SUB_MAST.moveInnerStageByPercent(innerStageSpeed); } // ram inner stage up if not already
-        // if (!Robot.SUB_MAST.getLimitSwitches()[3]) { Robot.SUB_MAST.moveOuterStageByPercent(outerStageSpeed); } // ram outer stage up if not already
-        if (!loopRunning) {
-          loopRunning = true;
-          Robot.SUB_MAST.moveInnerStageByPosition(Constants.TOP_TIER_INNER_HEIGHT);
-          Robot.SUB_MAST.moveOuterStageByPosition(Constants.CARGO_3_HEIGHT); // move outer stage to x position
-        }
-        stable = Robot.SUB_MAST.getLimitSwitches()[1] && Robot.SUB_MAST.getLimitSwitches()[3];
+        innerStageHeight = Constants.TOP_TIER_INNER_HEIGHT;
+        outerStageHeight = Constants.CARGO_3_HEIGHT;
         break;
     }
 
+    stable = Robot.SUB_MAST.innerStageWithinRange(innerStageHeight, allowableError) 
+          && Robot.SUB_MAST.outerStageWithinRange(outerStageHeight, allowableError);
     SmartDashboard.putBoolean("Stable Mast", stable);
+
+    if (Robot.SUB_MAST.innerStageWithinRange(innerStageHeight + allowableError, allowableError) && !withinAllowableError) { // if it just entered the range
+      inRangeInit = System.currentTimeMillis();
+      withinAllowableError = true;
+    } else if (withinAllowableError && inRangeInit + errorMs < System.currentTimeMillis()) { // if it's just now timing out on the range
+      Robot.SUB_MAST.moveInnerStageByPercent(0);
+    } else if (withinAllowableError && inRangeInit + errorMs > System.currentTimeMillis()) { // if it's in range but not timed out
+      Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight + allowableError);
+    } else if (!Robot.SUB_MAST.innerStageWithinRange(innerStageHeight + allowableError, allowableError)) { // outside of the range
+      withinAllowableError = false;
+      Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight + allowableError);
+    }
+
+
   }
 
   // Make this return true when this Command no longer needs to run execute()
