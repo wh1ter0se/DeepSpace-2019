@@ -24,6 +24,7 @@ public class CyborgCommandDock extends Command {
   private static Boolean isFinished;
 
   private static double idleSpeed;
+  private static double lastAngle;
   private static double loopOutput;
 
   public CyborgCommandDock() {
@@ -33,6 +34,7 @@ public class CyborgCommandDock extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    lastAngle = 180;
     turning = new MiniPID(Util.getAndSetDouble("Docking kP", Constants.BACKUP_DOCKING_kP),
                           Util.getAndSetDouble("Docking kI", Constants.BACKUP_DOCKING_kI),
                           Util.getAndSetDouble("Docking kD", Constants.BACKUP_DOCKING_kD));
@@ -47,6 +49,9 @@ public class CyborgCommandDock extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if (Robot.SUB_RECEIVER.getLastKnownData()[3] != 180) {
+      lastAngle = Robot.SUB_RECEIVER.getLastKnownData()[3];
+    }
     loopOutput = turning.getOutput(Robot.SUB_RECEIVER.getLastKnownData()[3]);
     inRange = Robot.SUB_RECEIVER.getWithinRange();
     // idleSpeed = .25;
@@ -60,7 +65,11 @@ public class CyborgCommandDock extends Command {
     //   Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, idleSpeed);
       DriverStation.reportError("I AM DRIVING: " + idleSpeed + "," + loopOutput, false);
     } else {
-      Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, -1 * idleSpeed);
+      if (lastAngle > 0) {
+        Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, -1 * idleSpeed);
+      } else {
+        Robot.SUB_DRIVE.driveByPercentOutputs(-1 * idleSpeed, idleSpeed);
+      }
     }
   }
 

@@ -53,14 +53,19 @@ public class ManualCommandTestMastPID extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    double innerStageHeight = Util.getAndSetDouble("Inner Mast PID Inches", 10);
     SmartDashboard.putBoolean("Within Error", Robot.SUB_MAST.innerStageWithinRange(Util.getAndSetDouble("Inner Mast PID Inches", 10), allowableError));
-    if (!withinAllowableError && Robot.SUB_MAST.innerStageWithinRange(Util.getAndSetDouble("Inner Mast PID Inches", 10), allowableError)) {
-      withinAllowableError = true;
+    
+    if (Robot.SUB_MAST.innerStageWithinRange(innerStageHeight, allowableError) && !withinAllowableError) { // if it just entered the range
       inRangeInit = System.currentTimeMillis();
-    } else if (withinAllowableError && System.currentTimeMillis() > inRangeInit + errorMs) {
+      withinAllowableError = true;
+    } else if (withinAllowableError && inRangeInit + errorMs < System.currentTimeMillis()) { // if it's just now timing out on the range
       Robot.SUB_MAST.moveInnerStageByPercent(0);
-    } else if (withinAllowableError && !Robot.SUB_MAST.innerStageWithinRange(Util.getAndSetDouble("Inner Mast PID Inches", 10), allowableError)) {
-      Robot.SUB_MAST.moveInnerStageByPosition(Util.getAndSetDouble("Inner Mast PID Inches", 10));
+    } else if (withinAllowableError && inRangeInit + errorMs > System.currentTimeMillis()) { // if it's in range but not timed out
+      Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight);
+    } else if (!Robot.SUB_MAST.innerStageWithinRange(innerStageHeight, allowableError)) { // outside of the range
+      withinAllowableError = false;
+      Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight);
     }
   }
 

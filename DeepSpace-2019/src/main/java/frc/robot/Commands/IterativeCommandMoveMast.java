@@ -88,20 +88,26 @@ public class IterativeCommandMoveMast extends Command {
         break;
     }
 
+    // innerStageHeight += allowableError * Constants.INNER_MAST_TICKS_PER_INCH;
+    // outerStageHeight += allowableError * Constants.OUTER_MAST_TICKS_PER_INCH;
+
+    // innerStageHeight *= -1;
+    // outerStageHeight *= -1;
+
     stable = Robot.SUB_MAST.innerStageWithinRange(innerStageHeight, allowableError) 
           && Robot.SUB_MAST.outerStageWithinRange(outerStageHeight, allowableError);
     SmartDashboard.putBoolean("Stable Mast", stable);
 
-    if (Robot.SUB_MAST.innerStageWithinRange(innerStageHeight + allowableError, allowableError) && !withinAllowableError) { // if it just entered the range
+    if (Robot.SUB_MAST.innerStageWithinRange(innerStageHeight, allowableError) && !withinAllowableError) { // if it just entered the range
       inRangeInit = System.currentTimeMillis();
       withinAllowableError = true;
     } else if (withinAllowableError && inRangeInit + errorMs < System.currentTimeMillis()) { // if it's just now timing out on the range
       Robot.SUB_MAST.moveInnerStageByPercent(0);
     } else if (withinAllowableError && inRangeInit + errorMs > System.currentTimeMillis()) { // if it's in range but not timed out
-      Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight + allowableError);
-    } else if (!Robot.SUB_MAST.innerStageWithinRange(innerStageHeight + allowableError, allowableError)) { // outside of the range
+      Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight);
+    } else if (!Robot.SUB_MAST.innerStageWithinRange(innerStageHeight, allowableError)) { // outside of the range
       withinAllowableError = false;
-      Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight + allowableError);
+      Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight);
     }
 
 

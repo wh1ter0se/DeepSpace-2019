@@ -53,7 +53,7 @@ public class SubsystemDrive extends Subsystem {
    * Left and right triggers accelerate linearly and left stick rotates
    * @param joy the joystick to be used
    */
-  public void driveRLTank(Joystick joy, double ramp) {
+  public void driveRLTank(Joystick joy, double ramp, double inhibitor) {
     setInverts();
     setBraking(true);
     setRamps(ramp);
@@ -64,6 +64,9 @@ public class SubsystemDrive extends Subsystem {
     double right = adder - (Xbox.LEFT_X(joy) / 1.333333);
     left = (left > 1.0 ? 1.0 : (left < -1.0 ? -1.0 : left));
     right = (right > 1.0 ? 1.0 : (right < -1.0 ? -1.0 : right));
+    
+    left *= inhibitor;
+    right *= inhibitor;
     
     leftMaster.set(left);
       leftSlave.set(left);
