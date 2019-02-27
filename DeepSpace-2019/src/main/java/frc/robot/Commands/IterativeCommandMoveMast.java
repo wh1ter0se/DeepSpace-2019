@@ -18,14 +18,16 @@ import frc.robot.Util.Util;
 public class IterativeCommandMoveMast extends Command {
 
   private static Boolean      stable;
-  private static Boolean      withinAllowableError;
+  private static Boolean      innerWithinAllowableError;
+  private static Boolean      outerWithinAllowableError;
 
   private static double       innerStageHeight;
   private static double       outerStageHeight;
   private static double       errorMs;
   private static double       allowableError;
 
-  private static long         inRangeInit;
+  private static long         innerInRangeInit;
+  private static long         outerInRangeInit;
 
   private static MastPosition position;
 
@@ -36,7 +38,8 @@ public class IterativeCommandMoveMast extends Command {
   // Called just before this Command runs the inner time
   @Override
   protected void initialize() {
-    withinAllowableError = false;
+    innerWithinAllowableError = false;
+    outerWithinAllowableError = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -98,16 +101,28 @@ public class IterativeCommandMoveMast extends Command {
           && Robot.SUB_MAST.outerStageWithinRange(outerStageHeight, allowableError);
     SmartDashboard.putBoolean("Stable Mast", stable);
 
-    if (Robot.SUB_MAST.innerStageWithinRange(innerStageHeight, allowableError) && !withinAllowableError) { // if it just entered the range
-      inRangeInit = System.currentTimeMillis();
-      withinAllowableError = true;
-    } else if (withinAllowableError && inRangeInit + errorMs < System.currentTimeMillis()) { // if it's just now timing out on the range
-      Robot.SUB_MAST.moveInnerStageByPercent(0);
-    } else if (withinAllowableError && inRangeInit + errorMs > System.currentTimeMillis()) { // if it's in range but not timed out
-      Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight);
+    if (Robot.SUB_MAST.innerStageWithinRange(innerStageHeight, allowableError) && !innerWithinAllowableError) { // if it just entered the range
+      innerInRangeInit = System.currentTimeMillis();
+      innerWithinAllowableError = true;
     } else if (!Robot.SUB_MAST.innerStageWithinRange(innerStageHeight, allowableError)) { // outside of the range
-      withinAllowableError = false;
+      innerWithinAllowableError = false;
       Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight);
+    } else if (innerWithinAllowableError && innerInRangeInit + errorMs < System.currentTimeMillis()) { // if it's just now timing out on the range
+      Robot.SUB_MAST.moveInnerStageByPercent(0);
+    } else if (innerWithinAllowableError && innerInRangeInit + errorMs > System.currentTimeMillis()) { // if it's in range but not timed out
+      Robot.SUB_MAST.moveInnerStageByPosition(innerStageHeight);
+    }
+
+    if (Robot.SUB_MAST.outerStageWithinRange(outerStageHeight, allowableError) && !outerWithinAllowableError) { // if it just entered the range
+      outerInRangeInit = System.currentTimeMillis();
+      outerWithinAllowableError = true;
+    } else if (!Robot.SUB_MAST.outerStageWithinRange(outerStageHeight, allowableError)) { // outside of the range
+      outerWithinAllowableError = false;
+      Robot.SUB_MAST.moveOuterStageByPosition(outerStageHeight);
+    } else if (outerWithinAllowableError && outerInRangeInit + errorMs < System.currentTimeMillis()) { // if it's just now timing out on the range
+      Robot.SUB_MAST.moveOuterStageByPercent(0);
+    } else if (outerWithinAllowableError && outerInRangeInit + errorMs > System.currentTimeMillis()) { // if it's in range but not timed out
+      Robot.SUB_MAST.moveOuterStageByPosition(outerStageHeight);
     }
 
 

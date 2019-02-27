@@ -43,7 +43,7 @@ public class SubsystemMast extends Subsystem {
 
     loopRunning = false;
 
-    initConfig(50, 0, 0, true);
+    initConfig(50, 0, 1, 0, true);
   }
 
   public void setStoredPosition(MastPosition position) {
@@ -78,8 +78,8 @@ public class SubsystemMast extends Subsystem {
    * @return       whether the position is within the allowable error from the target or not
    */
   public Boolean innerStageWithinRange(double inches, double allowableError) {
-    double position = innerStage.getSensorCollection().getQuadraturePosition();
-    double target   = inches * Constants.INNER_MAST_TICKS_PER_INCH;
+    double position = Math.abs(innerStage.getSensorCollection().getQuadraturePosition());
+    double target   = Math.abs(inches * Constants.INNER_MAST_TICKS_PER_INCH);
     return Math.abs(position - target) < allowableError * Constants.INNER_MAST_TICKS_PER_INCH;
   }
 
@@ -106,8 +106,8 @@ public class SubsystemMast extends Subsystem {
    * @return       whether the position is within the allowable error from the target or not
    */
   public Boolean outerStageWithinRange(double inches, double allowableError) {
-    double position = outerStage.getSensorCollection().getQuadraturePosition();
-    double target = inches * Constants.OUTER_MAST_TICKS_PER_INCH;
+    double position = Math.abs(outerStage.getSensorCollection().getQuadraturePosition());
+    double target   = Math.abs(inches * Constants.OUTER_MAST_TICKS_PER_INCH);
     return Math.abs(position - target) < allowableError * Constants.OUTER_MAST_TICKS_PER_INCH;
   }
 
@@ -155,11 +155,13 @@ public class SubsystemMast extends Subsystem {
    * @param ramp          motor ramprate
    * @param braking       true for braking, false for coasting
    */
-  public void initConfig(int ampLimit, double nominalOutput, double ramp, Boolean braking) {
+  public void initConfig(int ampLimit, double nominalOutput, double maximumOutput, double ramp, Boolean braking) {
     innerStage.setInverted(Constants.INNER_STAGE_INVERT);
     innerStage.setSensorPhase(Constants.INNER_STAGE_ENCODER_INVERT);
       innerStage.configNominalOutputForward(nominalOutput);
       innerStage.configNominalOutputReverse(-1 * nominalOutput);
+      innerStage.configPeakOutputForward(maximumOutput);
+      innerStage.configPeakOutputReverse(-1 * maximumOutput);
       innerStage.configOpenloopRamp(ramp);
       innerStage.configContinuousCurrentLimit(ampLimit);
       innerStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
@@ -167,6 +169,8 @@ public class SubsystemMast extends Subsystem {
     outerStage.setSensorPhase(Constants.OUTER_STAGE_ENCODER_INVERT);
       outerStage.configNominalOutputForward(nominalOutput);
       outerStage.configNominalOutputReverse(-1 * nominalOutput);
+      outerStage.configPeakOutputForward(maximumOutput);
+      outerStage.configPeakOutputReverse(-1 * maximumOutput);
       outerStage.configOpenloopRamp(ramp);
       outerStage.configContinuousCurrentLimit(ampLimit);
       outerStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;

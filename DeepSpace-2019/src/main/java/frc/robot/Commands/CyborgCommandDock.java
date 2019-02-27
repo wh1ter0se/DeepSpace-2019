@@ -38,7 +38,7 @@ public class CyborgCommandDock extends Command {
     turning = new MiniPID(Util.getAndSetDouble("Docking kP", Constants.BACKUP_DOCKING_kP),
                           Util.getAndSetDouble("Docking kI", Constants.BACKUP_DOCKING_kI),
                           Util.getAndSetDouble("Docking kD", Constants.BACKUP_DOCKING_kD));
-    turning.setOutputLimits(-.5, .5);
+    turning.setOutputLimits(-.25, .25);
     idleSpeed = Util.getAndSetDouble("Docking Speed", Constants.BACKUP_DOCKING_SPEED);
     turning.setSetpoint(0);
 
