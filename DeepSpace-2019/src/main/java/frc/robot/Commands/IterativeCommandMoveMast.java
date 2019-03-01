@@ -61,18 +61,18 @@ public class IterativeCommandMoveMast extends Command {
     switch(position) {
       case SOMEWHERE:
       case HATCH_1:
-        innerStageHeight = 0;
-        outerStageHeight = 0;
+        innerStageHeight = Constants.NOT_QUITE_ZERO;
+        outerStageHeight = Constants.NOT_QUITE_ZERO;
         break;
 
       case CARGO_1:
         innerStageHeight = Constants.CARGO_1_HEIGHT;
-        outerStageHeight = 0;
+        outerStageHeight = Constants.NOT_QUITE_ZERO;
         break;
 
       case HATCH_2:
         innerStageHeight = Constants.HATCH_2_HEIGHT;
-        outerStageHeight = 0;
+        outerStageHeight = Constants.NOT_QUITE_ZERO;
         break;
 
       case CARGO_2:

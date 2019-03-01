@@ -61,6 +61,7 @@ public class Constants {
      */
     public static final double
         MAST_ALLOWABLE_ERROR = .5, // error in inches
+        NOT_QUITE_ZERO = .5,
         CARGO_1_HEIGHT = 10.5,
         HATCH_2_HEIGHT = 28,
         CARGO_2_HEIGHT = 7.5,

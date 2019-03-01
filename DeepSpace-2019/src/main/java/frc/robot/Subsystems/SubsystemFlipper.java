@@ -30,7 +30,7 @@ public class SubsystemFlipper extends Subsystem {
 
   public SubsystemFlipper() {
     flipper = new TalonSRX(Constants.FLIPPER_ID);
-      initConfig(25, 1000, 0, true);
+      initConfig(60, 1000, 0, true);
 
     atFront = true;
   }

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Commands.ButtonCommandBackFeed;
 import frc.robot.Commands.ButtonCommandChangeMastPosition;
 import frc.robot.Commands.ButtonCommandEat;
 import frc.robot.Commands.ButtonCommandFlipCamera;
@@ -92,8 +93,8 @@ public class OI {
             Button spit = new JoystickButton(OPERATOR, Xbox.A);
                 spit.whileHeld(new ButtonCommandSpit());
 
-            Button flipArm = new JoystickButton(OPERATOR, Xbox.Y);
-                flipArm.toggleWhenPressed(new CyborgCommandFlip());
+            Button backFeed = new JoystickButton(OPERATOR, Xbox.Y);
+                backFeed.whileHeld(new ButtonCommandBackFeed());
 
             Button toggleClamp = new JoystickButton(OPERATOR, Xbox.B);
                 toggleClamp.toggleWhenPressed(new ButtonCommandToggleClamp());

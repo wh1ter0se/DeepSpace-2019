@@ -166,6 +166,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    Robot.SUB_DRIVE.setBraking(true);
   }
 
   /**
