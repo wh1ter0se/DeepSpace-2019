@@ -29,7 +29,7 @@ public class Constants {
      * Docking Values
      */
     public static final double
-        DOCKING_TARGET_LOCK_RANGE = 20; // in inches
+        DOCKING_TARGET_LOCK_RANGE = 50; // in inches
 
     /**
      * Drive values
@@ -103,7 +103,7 @@ public class Constants {
      */
     public static final int
         DANGER_AMPERAGE        = 55,
-        PUSHING_AMPERAGE       = 55,
+        PUSHING_AMPERAGE       = 30,
         FLIPPER_STALL_AMPERAGE = 25;
         
     /**

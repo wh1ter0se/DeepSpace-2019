@@ -38,8 +38,8 @@ public class CyborgCommandDock extends Command {
     turning = new MiniPID(Util.getAndSetDouble("Docking kP", Constants.BACKUP_DOCKING_kP),
                           Util.getAndSetDouble("Docking kI", Constants.BACKUP_DOCKING_kI),
                           Util.getAndSetDouble("Docking kD", Constants.BACKUP_DOCKING_kD));
-    turning.setOutputLimits(-.25, .25);
     idleSpeed = Util.getAndSetDouble("Docking Speed", Constants.BACKUP_DOCKING_SPEED);
+    turning.setOutputLimits(-1 * idleSpeed, idleSpeed);
     turning.setSetpoint(0);
 
     // isFinished = Robot.SUB_RECEIVER.getLastKnownData()[3] == -1;
@@ -59,10 +59,10 @@ public class CyborgCommandDock extends Command {
     SmartDashboard.putBoolean("canSee", canSee);
 
     if (canSee) {
-      // Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed - loopOutput, idleSpeed + loopOutput);
-      Robot.SUB_DRIVE.driveByPercentOutputs(-1 * loopOutput, loopOutput);
-    // } else if (!canSee && inRange) {
-    //   Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, idleSpeed);
+      Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed - loopOutput, idleSpeed + loopOutput);
+      // Robot.SUB_DRIVE.driveByPercentOutputs(-1 * loopOutput, loopOutput);
+    } else if (!canSee && inRange) {
+      Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, idleSpeed);
       DriverStation.reportError("I AM DRIVING: " + idleSpeed + "," + loopOutput, false);
     } else {
       if (lastAngle > 0) {

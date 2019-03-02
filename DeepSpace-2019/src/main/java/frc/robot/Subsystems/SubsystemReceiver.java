@@ -38,7 +38,7 @@ public class SubsystemReceiver extends Subsystem {
   }
 
   public SubsystemReceiver() {
-    latestSegment = "NO DATA YET";
+    latestSegment = "-1,-1,-1,-1";
     latestTime    = System.currentTimeMillis();
 
     SmartDashboard.putString("RPi Data", latestSegment);
@@ -111,7 +111,6 @@ public class SubsystemReceiver extends Subsystem {
         DriverStation.reportError("indices[0] = " + indices[0], false); 
         DriverStation.reportError("indices[1] = " + indices[1], false); 
         DriverStation.reportError("indices[2] = " + indices[2], false); 
-        DriverStation.reportError("indices[3] = " + indices[3], false); 
       }
 
       return data;

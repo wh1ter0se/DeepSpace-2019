@@ -165,6 +165,9 @@ public class SubsystemDrive extends Subsystem {
     return output;
   }
 
+  public double[] getAmps() {
+    return new double[]{leftMaster.getOutputCurrent(), rightMaster.getOutputCurrent()};
+  }
   /**
    * Returns the highest recorded RPM of each motor controller
    * @return [0] = Highest absolute RPM from left side

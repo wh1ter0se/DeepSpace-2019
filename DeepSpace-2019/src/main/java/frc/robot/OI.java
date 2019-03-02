@@ -23,6 +23,7 @@ import frc.robot.Commands.ButtonCommandToggleShift;
 import frc.robot.Commands.CyborgCommandAutoShift;
 import frc.robot.Commands.CyborgCommandDock;
 import frc.robot.Commands.CyborgCommandFlip;
+import frc.robot.Commands.CyborgCommandGroupDock;
 import frc.robot.Commands.InstantCommandCalibrateCamera;
 import frc.robot.Commands.InstantCommandZeroMastEncoders;
 import frc.robot.Commands.IterativeCommandMoveMast;
@@ -30,6 +31,7 @@ import frc.robot.Commands.ManualCommandTestFlipper;
 import frc.robot.Commands.ManualCommandTestMast;
 import frc.robot.Commands.ManualCommandTestMastPID;
 import frc.robot.Commands.SubmanualCommandAscend;
+import frc.robot.Commands.SubmanualCommandEmergencyMastControl;
 import frc.robot.Commands.ToggleCommandKillCompressor;
 import frc.robot.Util.Util;
 import frc.robot.Util.Xbox;
@@ -77,6 +79,9 @@ public class OI {
 
             Button toggleAutoShifting = new JoystickButton(DRIVER, Xbox.START);
                 toggleAutoShifting.toggleWhenPressed(new CyborgCommandAutoShift());
+                
+            Button dock = new JoystickButton(DRIVER, Xbox.LB);
+                dock.toggleWhenPressed(new CyborgCommandGroupDock());
 
         /**
          * Operator
@@ -104,5 +109,8 @@ public class OI {
 
             Button mastDown = new JoystickButton(OPERATOR, Xbox.BACK);
                 mastDown.toggleWhenPressed(new ButtonCommandChangeMastPosition(-1));
+
+            Button panicSwitch = new JoystickButton(OPERATOR, Xbox.RSTICK);
+                panicSwitch.whenPressed(new SubmanualCommandEmergencyMastControl());
     }
 }

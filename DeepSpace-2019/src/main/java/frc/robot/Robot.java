@@ -100,8 +100,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getMotorValues()[0]);
-    SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getMotorValues()[1]);
+    SmartDashboard.putNumber("Left Motor", 100 * Robot.SUB_DRIVE.getMotorValues()[0]);
+    SmartDashboard.putNumber("Right Motor", 100 * Robot.SUB_DRIVE.getMotorValues()[2]);
+    SmartDashboard.putNumber("Left Amps", Robot.SUB_DRIVE.getAmps()[0]);
+    SmartDashboard.putNumber("Right Amps", Robot.SUB_DRIVE.getAmps()[1]);
 
     // SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
     // SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
@@ -127,6 +129,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Second Stage Amps", Robot.SUB_MAST.getAmperage()[1]);
 
     SmartDashboard.putBoolean("Caleb is Illiterate", true);
+
+    SmartDashboard.putBoolean("Target Spotted", Robot.SUB_RECEIVER.getLastKnownData()[2] != -1);
 
     SmartDashboard.putNumber("Inner Mast Position", Robot.SUB_MAST.getEncoderValues()[0]);
     SmartDashboard.putNumber("Outer Mast Position", Robot.SUB_MAST.getEncoderValues()[1]);

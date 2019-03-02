@@ -216,12 +216,12 @@ public class SubsystemMast extends Subsystem {
   }
 
   public void publishInnerStagePIDData() {
-    SmartDashboard.putNumber("Inner %", innerStage.getMotorOutputPercent());
-    SmartDashboard.putNumber("Inner Error", innerStage.getClosedLoopError());
+    SmartDashboard.putNumber("Inner %", 100 * innerStage.getMotorOutputPercent());
+    // SmartDashboard.putNumber("Inner Error", innerStage.getClosedLoopError());
   }
 
   public void publishOuterStagePIDData() {
-    SmartDashboard.putNumber("Outer %", outerStage.getMotorOutputPercent());
-    SmartDashboard.putNumber("Outer Error", outerStage.getClosedLoopError());
+    SmartDashboard.putNumber("Outer %", 100 * outerStage.getMotorOutputPercent());
+    // SmartDashboard.putNumber("Outer Error", outerStage.getClosedLoopError());
   }
 }
