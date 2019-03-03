@@ -50,8 +50,8 @@ public class Constants {
         RIGHT_DRIVE_INVERT         = true,
         INNER_STAGE_INVERT         = false,
         INNER_STAGE_ENCODER_INVERT = false,
-        OUTER_STAGE_INVERT         = false,
-        OUTER_STAGE_ENCODER_INVERT = false,
+        OUTER_STAGE_INVERT         = true, //TODO TODO TODO THIS SHOULD BE FALSE ON COMP BOT
+        OUTER_STAGE_ENCODER_INVERT = true,
         LAUNCHER_INVERT            = true,
         INTAKE_INVERT              = false,
         FLIPPER_INVERT             = false;
@@ -103,7 +103,7 @@ public class Constants {
      */
     public static final int
         DANGER_AMPERAGE        = 55,
-        PUSHING_AMPERAGE       = 30,
+        PUSHING_AMPERAGE       = 35,
         FLIPPER_STALL_AMPERAGE = 25;
         
     /**
@@ -116,6 +116,12 @@ public class Constants {
         UPSHIFT_ID     = 6,
         EXTEND_ID      = 2,
         RETRACT_ID     = 3;
+
+    /**
+     * Pneumatic Variables
+     */
+    public static final double 
+        SOLENOID_PULSE_SECONDS = .5;
         
     /**
      * Spark IDs

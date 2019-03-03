@@ -40,4 +40,12 @@ public class SubsystemLauncher extends Subsystem {
     launcher.setInverted(Constants.LAUNCHER_INVERT);
   }
 
+  public double getAmps() {
+    return launcher.getOutputCurrent();
+  }
+
+  public double getPercentOutput() {
+    return launcher.getMotorOutputPercent();
+  }
+
 }

@@ -190,6 +190,10 @@ public class SubsystemDrive extends Subsystem {
     return leftMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE && rightMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE;
   }
 
+  public Boolean isStopped() {
+    return Math.abs(getVelocities()[0]) < 750 && Math.abs(getVelocities()[1]) < 750;
+  }
+
   public void updateBrownoutRummble(Joystick joy) {
     if (DriverStation.getInstance().isBrownedOut()) {
       joy.setRumble(RumbleType.kRightRumble, 1); }

@@ -33,7 +33,9 @@ public class SubsystemPreloader extends Subsystem {
     intake = new TalonSRX(Constants.INTAKE_ID);
       intake.configOpenloopRamp(0); //TODO remove when not needed
     extend = new Solenoid(Constants.EXTEND_ID);
+      extend.setPulseDuration(Constants.SOLENOID_PULSE_SECONDS);
     retract = new Solenoid(Constants.RETRACT_ID);
+      retract.setPulseDuration(Constants.SOLENOID_PULSE_SECONDS);
   }
 
   public void eat(double speed) {
@@ -52,12 +54,14 @@ public class SubsystemPreloader extends Subsystem {
     extended = true;
     extend.set(true);
     retract.set(false);
+    pulseSolenoids();
   }
 
   public void retract() {
     extended = false;
     extend.set(false);
     retract.set(true);
+    pulseSolenoids();
   }
 
   public void toggleExtender() {
@@ -66,5 +70,18 @@ public class SubsystemPreloader extends Subsystem {
     } else {
       extend();
     }
+  }
+
+  public void pulseSolenoids() {
+    extend.startPulse();
+    retract.startPulse();
+  }
+
+  public double getAmps() {
+    return intake.getOutputCurrent();
+  }
+
+  public double getPercentOutput() {
+    return intake.getMotorOutputPercent();
   }
 }

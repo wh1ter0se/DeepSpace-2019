@@ -71,6 +71,10 @@ public class SubsystemFlipper extends Subsystem {
     return flipper.getOutputCurrent();
   }
 
+  public double getPercentOutput() {
+    return flipper.getMotorOutputPercent();
+  }
+
   public void initConfig(int ampLimit, int ampLimitMs, double ramp, Boolean braking) {
     flipper.setInverted(Constants.FLIPPER_INVERT);
       flipper.configOpenloopRamp(ramp);

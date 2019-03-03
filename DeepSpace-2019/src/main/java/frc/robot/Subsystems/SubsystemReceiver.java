@@ -89,15 +89,15 @@ public class SubsystemReceiver extends Subsystem {
    */
   public double[] getLastKnownData() {
       double[] data = new double[]{-1,-1,-1,-1};
-      int[] indices = IntStream.range(0, latestSegment.length() - 1)
-                               .filter(i -> latestSegment.charAt(i) == ',')
-                               .toArray();
+      int[] indices = new int[3];
       try {
+        indices = IntStream.range(0, latestSegment.length() - 1)
+                  .filter(i -> latestSegment.charAt(i) == ',')
+                  .toArray();
         data[0] = Integer.parseInt(latestSegment.substring(0, latestSegment.indexOf(",", indices[0])));
         data[1] = Integer.parseInt(latestSegment.substring(latestSegment.indexOf(",", indices[0]) + 1, latestSegment.indexOf(",", indices[1])));
         data[2] = Integer.parseInt(latestSegment.substring(latestSegment.indexOf(",", indices[1]) + 1, latestSegment.indexOf(",", indices[2])));
         data[3] = Integer.parseInt(latestSegment.substring(latestSegment.indexOf(",", indices[2]) + 1));
-        updateTargetLock(data);
       } catch (NumberFormatException e) {
         DriverStation.reportError("NUMBER FORMAT EXCEPTION", true); 
         DriverStation.reportError("latestSegment = " + latestSegment, false);
@@ -112,7 +112,7 @@ public class SubsystemReceiver extends Subsystem {
         DriverStation.reportError("indices[1] = " + indices[1], false); 
         DriverStation.reportError("indices[2] = " + indices[2], false); 
       }
-
+      updateTargetLock(data);
       return data;
   }
 

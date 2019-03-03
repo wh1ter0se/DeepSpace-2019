@@ -104,6 +104,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Right Motor", 100 * Robot.SUB_DRIVE.getMotorValues()[2]);
     SmartDashboard.putNumber("Left Amps", Robot.SUB_DRIVE.getAmps()[0]);
     SmartDashboard.putNumber("Right Amps", Robot.SUB_DRIVE.getAmps()[1]);
+    SmartDashboard.putNumber("Left Velocity", Robot.SUB_DRIVE.getVelocities()[0]);
+    SmartDashboard.putNumber("Right Velocity", Robot.SUB_DRIVE.getVelocities()[1]);
 
     // SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
     // SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
@@ -124,6 +126,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
 
     SmartDashboard.putNumber("Flipper Amps", Robot.SUB_FLIPPER.getAmps());
+    SmartDashboard.putNumber("Flipper Motor", Robot.SUB_FLIPPER.getPercentOutput());
+
+    SmartDashboard.putNumber("Hood Amps", Robot.SUB_LAUNCHER.getAmps());
+    SmartDashboard.putNumber("Ball Hood", Robot.SUB_LAUNCHER.getPercentOutput());
+
+    SmartDashboard.putNumber("Intake Amps", Robot.SUB_PRELOADER.getAmps());
+    SmartDashboard.putNumber("Ball Intake", Robot.SUB_PRELOADER.getPercentOutput());
 
     SmartDashboard.putNumber("First Stage Amps", Robot.SUB_MAST.getAmperage()[0]);
     SmartDashboard.putNumber("Second Stage Amps", Robot.SUB_MAST.getAmperage()[1]);
