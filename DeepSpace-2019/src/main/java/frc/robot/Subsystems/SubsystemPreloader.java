@@ -10,7 +10,9 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
 
@@ -24,6 +26,8 @@ public class SubsystemPreloader extends Subsystem {
   private Solenoid extend;
   private Solenoid retract;
 
+  private DoubleSolenoid intakeSolenoid;
+
   private Boolean extended;
 
   @Override
@@ -31,11 +35,12 @@ public class SubsystemPreloader extends Subsystem {
 
   public SubsystemPreloader() {
     intake = new TalonSRX(Constants.INTAKE_ID);
+      setInvert();
       intake.configOpenloopRamp(0); //TODO remove when not needed
     extend = new Solenoid(Constants.EXTEND_ID);
-      extend.setPulseDuration(Constants.SOLENOID_PULSE_SECONDS);
+      // extend.setPulseDuration(Constants.SOLENOID_PULSE_SECONDS);
     retract = new Solenoid(Constants.RETRACT_ID);
-      retract.setPulseDuration(Constants.SOLENOID_PULSE_SECONDS);
+      // retract.setPulseDuration(Constants.SOLENOID_PULSE_SECONDS);
   }
 
   public void eat(double speed) {
@@ -46,7 +51,7 @@ public class SubsystemPreloader extends Subsystem {
     intake.set(ControlMode.PercentOutput, 0);
   }
 
-  private void setInverts() {
+  private void setInvert() {
     intake.setInverted(Constants.INTAKE_INVERT);
   }
 
@@ -54,14 +59,14 @@ public class SubsystemPreloader extends Subsystem {
     extended = true;
     extend.set(true);
     retract.set(false);
-    pulseSolenoids();
+    // pulseSolenoids();
   }
 
   public void retract() {
     extended = false;
     extend.set(false);
     retract.set(true);
-    pulseSolenoids();
+    // pulseSolenoids();
   }
 
   public void toggleExtender() {

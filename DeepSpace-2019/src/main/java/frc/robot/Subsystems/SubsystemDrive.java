@@ -32,6 +32,8 @@ public class SubsystemDrive extends Subsystem {
 
   private static double[] highestRPM;
 
+  private double driveInhibitor;
+
   @Override
   public void initDefaultCommand() {
     setDefaultCommand(new ManualCommandDrive());
@@ -53,7 +55,7 @@ public class SubsystemDrive extends Subsystem {
    * Left and right triggers accelerate linearly and left stick rotates
    * @param joy the joystick to be used
    */
-  public void driveRLTank(Joystick joy, double ramp, double inhibitor) {
+  public void driveRLTank(Joystick joy, double ramp, double staticInhibitor) {
     setInverts();
     setBraking(true);
     setRamps(ramp);
@@ -65,8 +67,8 @@ public class SubsystemDrive extends Subsystem {
     left = (left > 1.0 ? 1.0 : (left < -1.0 ? -1.0 : left));
     right = (right > 1.0 ? 1.0 : (right < -1.0 ? -1.0 : right));
     
-    left *= inhibitor;
-    right *= inhibitor;
+    left *= staticInhibitor * driveInhibitor;
+    right *= staticInhibitor * driveInhibitor;
     
     leftMaster.set(left);
       leftSlave.set(left);
@@ -201,6 +203,10 @@ public class SubsystemDrive extends Subsystem {
       joy.setRumble(RumbleType.kRightRumble, 0);
     }
   } 
+
+  public void setDriveInhibitor(double driveInhibitor) {
+    this.driveInhibitor = driveInhibitor;
+  }
 
   
 }

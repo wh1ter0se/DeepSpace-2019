@@ -201,11 +201,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     //TODO Move these to autoInit before comp
-    Robot.SUB_DRIVE.setBraking(true);
-      Robot.SUB_CLAMP.closeClamp();
-      Robot.SUB_SHIFTER.downShift();
-      Robot.SUB_PRELOADER.retract();
-      // Robot.SUB_MAST.zeroEncoders();
+    initChecklist();
   }
 
   /**
@@ -218,5 +214,16 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     Robot.SUB_DRIVE.setBraking(false);
     Robot.SUB_SHIFTER.upShift();
+  }
+
+  public void initChecklist() {
+    Robot.SUB_DRIVE.setDriveInhibitor(1);
+      SmartDashboard.putBoolean("Low Speed", false);
+      SmartDashboard.putBoolean("High Speed", true);
+      Robot.SUB_DRIVE.setBraking(true);
+    Robot.SUB_CLAMP.closeClamp();
+    Robot.SUB_SHIFTER.downShift();
+    Robot.SUB_PRELOADER.retract();
+    Robot.SUB_MAST.zeroEncoders();
   }
 }

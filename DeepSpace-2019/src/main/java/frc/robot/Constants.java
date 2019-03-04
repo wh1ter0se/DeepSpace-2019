@@ -48,10 +48,10 @@ public class Constants {
     public static final Boolean
         LEFT_DRIVE_INVERT          = false,
         RIGHT_DRIVE_INVERT         = true,
-        INNER_STAGE_INVERT         = false,
-        INNER_STAGE_ENCODER_INVERT = false,
-        OUTER_STAGE_INVERT         = true, //TODO TODO TODO THIS SHOULD BE FALSE ON COMP BOT
-        OUTER_STAGE_ENCODER_INVERT = true,
+        INNER_STAGE_INVERT         = false, //FALSE ON PRAC, FALSE ON COMP
+        INNER_STAGE_ENCODER_INVERT = true, //TRUE ON PRAC, TRUE ON COMP
+        OUTER_STAGE_INVERT         = false, //FALSE ON PRAC, FALSE ON COMP
+        OUTER_STAGE_ENCODER_INVERT = false, //FALSE ON PRAC, FALSE ON COMP 
         LAUNCHER_INVERT            = true,
         INTAKE_INVERT              = false,
         FLIPPER_INVERT             = false;

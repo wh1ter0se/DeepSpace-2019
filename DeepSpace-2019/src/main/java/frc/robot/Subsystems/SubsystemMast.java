@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Commands.IterativeCommandMoveMast;
 import frc.robot.Enumeration.MastPosition;
 import frc.robot.Util.Xbox;
 
@@ -32,7 +33,7 @@ public class SubsystemMast extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    // setDefaultCommand(new IterativeCommandMoveMast());
+    setDefaultCommand(new IterativeCommandMoveMast());
   }
 
   public SubsystemMast() {

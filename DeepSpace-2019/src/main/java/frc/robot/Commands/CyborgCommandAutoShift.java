@@ -54,10 +54,10 @@ public class CyborgCommandAutoShift extends Command {
 
     // throttles, upshift RPMs, downshift RPMs
     shiftingPoints = new double[][]{
-      {.25, Util.getAndSetDouble(".25 Upshift RPM", Constants.QUARTER_UPSHIFT_RPM), Util.getAndSetDouble(".25 Downshift RPM", Constants.QUARTER_DOWNSHIFT_RPM)},
-      { .5, Util.getAndSetDouble(".5 Upshift RPM", Constants.HALF_UPSHIFT_RPM), Util.getAndSetDouble(".5 Downshift RPM", Constants.HALF_DOWNSHIFT_RPM)},
-      {.75, Util.getAndSetDouble(".75 Upshift RPM", Constants.THREE_QUARTERS_UPSHIFT_RPM), Util.getAndSetDouble(".75 Downshift RPM", Constants.THREE_QUARTERS_DOWNSHIFT_RPM)},
-      {1.0, Util.getAndSetDouble("1.0 Upshift RPM", Constants.FULL_UPSHIFT_RPM), Util.getAndSetDouble("1.0 Downshift RPM", Constants.FULL_DOWNSHIFT_RPM)}};
+      {.25, Util.getAndSetDouble("25 Upshift RPM", Constants.QUARTER_UPSHIFT_RPM), Util.getAndSetDouble("25 Downshift RPM", Constants.QUARTER_DOWNSHIFT_RPM)},
+      { .5, Util.getAndSetDouble("50 Upshift RPM", Constants.HALF_UPSHIFT_RPM), Util.getAndSetDouble("50 Downshift RPM", Constants.HALF_DOWNSHIFT_RPM)},
+      {.75, Util.getAndSetDouble("75 Upshift RPM", Constants.THREE_QUARTERS_UPSHIFT_RPM), Util.getAndSetDouble("75 Downshift RPM", Constants.THREE_QUARTERS_DOWNSHIFT_RPM)},
+      {1.0, Util.getAndSetDouble("100 Upshift RPM", Constants.FULL_UPSHIFT_RPM), Util.getAndSetDouble("100 Downshift RPM", Constants.FULL_DOWNSHIFT_RPM)}};
 
     throttle = Math.abs(Xbox.RT(OI.DRIVER) - Xbox.LT(OI.DRIVER));
 
@@ -82,8 +82,8 @@ public class CyborgCommandAutoShift extends Command {
       upshift();
     } else if (!Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.getVelocities()[0] <= downshiftRPM && Robot.SUB_DRIVE.getVelocities()[1] <= downshiftRPM) {
       downshift();
-    } else if (!Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.isPushing()) {
-      downshift();
+    // } else if (!Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.isPushing()) {
+    //   downshift();
     }
 
     }
@@ -105,6 +105,7 @@ public class CyborgCommandAutoShift extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.SUB_SHIFTER.setAutoShifting(false);
   }
 
   private void upshift() {
