@@ -32,6 +32,8 @@ public class SubsystemDrive extends Subsystem {
 
   private static double[] highestRPM;
 
+  private double driveInhibitor;
+
   @Override
   public void initDefaultCommand() {
     setDefaultCommand(new ManualCommandDrive());
@@ -53,7 +55,7 @@ public class SubsystemDrive extends Subsystem {
    * Left and right triggers accelerate linearly and left stick rotates
    * @param joy the joystick to be used
    */
-  public void driveRLTank(Joystick joy, double ramp) {
+  public void driveRLTank(Joystick joy, double ramp, double staticInhibitor) {
     setInverts();
     setBraking(true);
     setRamps(ramp);
@@ -64,6 +66,9 @@ public class SubsystemDrive extends Subsystem {
     double right = adder - (Xbox.LEFT_X(joy) / 1.333333);
     left = (left > 1.0 ? 1.0 : (left < -1.0 ? -1.0 : left));
     right = (right > 1.0 ? 1.0 : (right < -1.0 ? -1.0 : right));
+    
+    left *= staticInhibitor * driveInhibitor;
+    right *= staticInhibitor * driveInhibitor;
     
     leftMaster.set(left);
       leftSlave.set(left);
@@ -162,6 +167,9 @@ public class SubsystemDrive extends Subsystem {
     return output;
   }
 
+  public double[] getAmps() {
+    return new double[]{leftMaster.getOutputCurrent(), rightMaster.getOutputCurrent()};
+  }
   /**
    * Returns the highest recorded RPM of each motor controller
    * @return [0] = Highest absolute RPM from left side
@@ -184,9 +192,20 @@ public class SubsystemDrive extends Subsystem {
     return leftMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE && rightMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE;
   }
 
+  public Boolean isStopped() {
+    return Math.abs(getVelocities()[0]) < 750 && Math.abs(getVelocities()[1]) < 750;
+  }
+
   public void updateBrownoutRummble(Joystick joy) {
     if (DriverStation.getInstance().isBrownedOut()) {
       joy.setRumble(RumbleType.kRightRumble, 1); }
+    else {
+      joy.setRumble(RumbleType.kRightRumble, 0);
+    }
+  } 
+
+  public void setDriveInhibitor(double driveInhibitor) {
+    this.driveInhibitor = driveInhibitor;
   }
 
   

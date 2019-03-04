@@ -29,7 +29,7 @@ public class Constants {
      * Docking Values
      */
     public static final double
-        DOCKING_TARGET_LOCK_RANGE = 20; // in inches
+        DOCKING_TARGET_LOCK_RANGE = 50; // in inches
 
     /**
      * Drive values
@@ -48,10 +48,10 @@ public class Constants {
     public static final Boolean
         LEFT_DRIVE_INVERT          = false,
         RIGHT_DRIVE_INVERT         = true,
-        INNER_STAGE_INVERT         = false,
-        INNER_STAGE_ENCODER_INVERT = false,
-        OUTER_STAGE_INVERT         = false,
-        OUTER_STAGE_ENCODER_INVERT = false,
+        INNER_STAGE_INVERT         = false, //FALSE ON PRAC, FALSE ON COMP
+        INNER_STAGE_ENCODER_INVERT = true, //TRUE ON PRAC, TRUE ON COMP
+        OUTER_STAGE_INVERT         = false, //FALSE ON PRAC, FALSE ON COMP
+        OUTER_STAGE_ENCODER_INVERT = false, //FALSE ON PRAC, FALSE ON COMP 
         LAUNCHER_INVERT            = true,
         INTAKE_INVERT              = false,
         FLIPPER_INVERT             = false;
@@ -61,12 +61,13 @@ public class Constants {
      */
     public static final double
         MAST_ALLOWABLE_ERROR = .5, // error in inches
-        CARGO_1_HEIGHT = 8.5,
+        NOT_QUITE_ZERO = .5,
+        CARGO_1_HEIGHT = 10.5,
         HATCH_2_HEIGHT = 28,
-        CARGO_2_HEIGHT = 5.5,
+        CARGO_2_HEIGHT = 7.5,
         HATCH_3_HEIGHT = 25, // TODO these need to be calibrated
-        CARGO_3_HEIGHT = 31,
-        TOP_TIER_INNER_HEIGHT = 29;
+        CARGO_3_HEIGHT = 35.5,
+        TOP_TIER_INNER_HEIGHT = 31;
         // CARGO 3 HEIGHT = 33.5 on stage 2 (if limit doesn't work)
 
     /**
@@ -82,8 +83,8 @@ public class Constants {
     public static final double
         CTRE_ENCODER_TICKS_PER_ROTATION = 4096,
         REV_ENCODER_TICKS_PER_ROTATION = 42,
-        INNER_MAST_TICKS_PER_INCH = 39530,
-        OUTER_MAST_TICKS_PER_INCH = 39990,
+        INNER_MAST_TICKS_PER_INCH = 39560,//was39530
+        OUTER_MAST_TICKS_PER_INCH = 39740,//was39990
         ROTATIONS_PER_INCH = 1 / (4.67 * 6 *  Math.PI); // calculated with a cimple box and 42 TPR
 
     /**
@@ -102,7 +103,7 @@ public class Constants {
      */
     public static final int
         DANGER_AMPERAGE        = 55,
-        PUSHING_AMPERAGE       = 55,
+        PUSHING_AMPERAGE       = 35,
         FLIPPER_STALL_AMPERAGE = 25;
         
     /**
@@ -115,6 +116,12 @@ public class Constants {
         UPSHIFT_ID     = 6,
         EXTEND_ID      = 2,
         RETRACT_ID     = 3;
+
+    /**
+     * Pneumatic Variables
+     */
+    public static final double 
+        SOLENOID_PULSE_SECONDS = .5;
         
     /**
      * Spark IDs

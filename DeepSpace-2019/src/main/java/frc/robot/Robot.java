@@ -100,8 +100,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Left Motor", Robot.SUB_DRIVE.getMotorValues()[0]);
-    SmartDashboard.putNumber("Right Motor", Robot.SUB_DRIVE.getMotorValues()[1]);
+    SmartDashboard.putNumber("Left Motor", 100 * Robot.SUB_DRIVE.getMotorValues()[0]);
+    SmartDashboard.putNumber("Right Motor", 100 * Robot.SUB_DRIVE.getMotorValues()[2]);
+    SmartDashboard.putNumber("Left Amps", Robot.SUB_DRIVE.getAmps()[0]);
+    SmartDashboard.putNumber("Right Amps", Robot.SUB_DRIVE.getAmps()[1]);
+    SmartDashboard.putNumber("Left Velocity", Robot.SUB_DRIVE.getVelocities()[0]);
+    SmartDashboard.putNumber("Right Velocity", Robot.SUB_DRIVE.getVelocities()[1]);
 
     // SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
     // SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
@@ -122,11 +126,20 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
 
     SmartDashboard.putNumber("Flipper Amps", Robot.SUB_FLIPPER.getAmps());
+    SmartDashboard.putNumber("Flipper Motor", Robot.SUB_FLIPPER.getPercentOutput());
+
+    SmartDashboard.putNumber("Hood Amps", Robot.SUB_LAUNCHER.getAmps());
+    SmartDashboard.putNumber("Ball Hood", Robot.SUB_LAUNCHER.getPercentOutput());
+
+    SmartDashboard.putNumber("Intake Amps", Robot.SUB_PRELOADER.getAmps());
+    SmartDashboard.putNumber("Ball Intake", Robot.SUB_PRELOADER.getPercentOutput());
 
     SmartDashboard.putNumber("First Stage Amps", Robot.SUB_MAST.getAmperage()[0]);
     SmartDashboard.putNumber("Second Stage Amps", Robot.SUB_MAST.getAmperage()[1]);
 
     SmartDashboard.putBoolean("Caleb is Illiterate", true);
+
+    SmartDashboard.putBoolean("Target Spotted", Robot.SUB_RECEIVER.getLastKnownData()[2] != -1);
 
     SmartDashboard.putNumber("Inner Mast Position", Robot.SUB_MAST.getEncoderValues()[0]);
     SmartDashboard.putNumber("Outer Mast Position", Robot.SUB_MAST.getEncoderValues()[1]);
@@ -166,6 +179,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    Robot.SUB_DRIVE.setBraking(true);
   }
 
   /**
@@ -187,11 +201,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     //TODO Move these to autoInit before comp
-    Robot.SUB_DRIVE.setBraking(true);
-      Robot.SUB_CLAMP.closeClamp();
-      Robot.SUB_SHIFTER.downShift();
-      Robot.SUB_PRELOADER.retract();
-      // Robot.SUB_MAST.zeroEncoders();
+    initChecklist();
   }
 
   /**
@@ -204,5 +214,16 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     Robot.SUB_DRIVE.setBraking(false);
     Robot.SUB_SHIFTER.upShift();
+  }
+
+  public void initChecklist() {
+    Robot.SUB_DRIVE.setDriveInhibitor(1);
+      SmartDashboard.putBoolean("Low Speed", false);
+      SmartDashboard.putBoolean("High Speed", true);
+      Robot.SUB_DRIVE.setBraking(true);
+    Robot.SUB_CLAMP.closeClamp();
+    Robot.SUB_SHIFTER.downShift();
+    Robot.SUB_PRELOADER.retract();
+    Robot.SUB_MAST.zeroEncoders();
   }
 }

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Commands.IterativeCommandMoveMast;
 import frc.robot.Enumeration.MastPosition;
 import frc.robot.Util.Xbox;
 
@@ -32,7 +33,7 @@ public class SubsystemMast extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    // setDefaultCommand(new IterativeCommandMoveMast());
+    setDefaultCommand(new IterativeCommandMoveMast());
   }
 
   public SubsystemMast() {
@@ -43,7 +44,7 @@ public class SubsystemMast extends Subsystem {
 
     loopRunning = false;
 
-    initConfig(50, .25, 0, true);
+    initConfig(50, 0, 1, 0, true);
   }
 
   public void setStoredPosition(MastPosition position) {
@@ -53,10 +54,6 @@ public class SubsystemMast extends Subsystem {
 
   public MastPosition getStoredPosition() {
     return storedPosition;
-  }
-
-  public Boolean getLoopRunning() {
-    return loopRunning;
   }
 
   /**
@@ -70,11 +67,10 @@ public class SubsystemMast extends Subsystem {
   /**
    * Moves the inner stage to a set position
    * @param inches the target height in inches
-   * @param allowableError the amount of inches it can be withhin
    */
-  public void moveInnerStageByPosition(double inches, double allowableError) {
+  public void moveInnerStageByPosition(double inches) {
     innerStage.set(ControlMode.Position, -1 * inches * Constants.INNER_MAST_TICKS_PER_INCH);
-    innerStage.configAllowableClosedloopError(0, (int) (allowableError * Constants.INNER_MAST_TICKS_PER_INCH));
+    innerStage.configAllowableClosedloopError(0,0);
   }
 
   /**
@@ -82,10 +78,10 @@ public class SubsystemMast extends Subsystem {
    * @param inches the target height of the current loop
    * @return       whether the position is within the allowable error from the target or not
    */
-  public Boolean innerStageWithinRange(double inches) {
-    double position = innerStage.getSensorCollection().getQuadraturePosition();
-    double target   = inches * Constants.INNER_MAST_TICKS_PER_INCH;
-    return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
+  public Boolean innerStageWithinRange(double inches, double allowableError) {
+    double position = Math.abs(innerStage.getSensorCollection().getQuadraturePosition());
+    double target   = Math.abs(inches * Constants.INNER_MAST_TICKS_PER_INCH);
+    return Math.abs(position - target) < allowableError * Constants.INNER_MAST_TICKS_PER_INCH;
   }
 
   /**
@@ -99,11 +95,10 @@ public class SubsystemMast extends Subsystem {
   /**
    * Moves the outer stage to a set position
    * @param inches the target height in inches
-   * @param allowableError the amount of inches it can be withhin
    */
-  public void moveOuterStageByPosition(double inches, double allowableError) {
+  public void moveOuterStageByPosition(double inches) {
     outerStage.set(ControlMode.Position, -1 * inches * Constants.OUTER_MAST_TICKS_PER_INCH);
-    outerStage.configAllowableClosedloopError(0, (int) (allowableError * Constants.INNER_MAST_TICKS_PER_INCH));
+    outerStage.configAllowableClosedloopError(0,0);
   }
 
   /**
@@ -111,10 +106,10 @@ public class SubsystemMast extends Subsystem {
    * @param inches the target height of the current loop
    * @return       whether the position is within the allowable error from the target or not
    */
-  public Boolean outerStageWithinRange(double inches) {
-    double position = outerStage.getSensorCollection().getQuadraturePosition();
-    double target = inches * Constants.OUTER_MAST_TICKS_PER_INCH;
-    return Math.abs(position - target) < Constants.MAST_ALLOWABLE_ERROR;
+  public Boolean outerStageWithinRange(double inches, double allowableError) {
+    double position = Math.abs(outerStage.getSensorCollection().getQuadraturePosition());
+    double target   = Math.abs(inches * Constants.OUTER_MAST_TICKS_PER_INCH);
+    return Math.abs(position - target) < allowableError * Constants.OUTER_MAST_TICKS_PER_INCH;
   }
 
   /**
@@ -161,11 +156,13 @@ public class SubsystemMast extends Subsystem {
    * @param ramp          motor ramprate
    * @param braking       true for braking, false for coasting
    */
-  public void initConfig(int ampLimit, double nominalOutput, double ramp, Boolean braking) {
+  public void initConfig(int ampLimit, double nominalOutput, double maximumOutput, double ramp, Boolean braking) {
     innerStage.setInverted(Constants.INNER_STAGE_INVERT);
     innerStage.setSensorPhase(Constants.INNER_STAGE_ENCODER_INVERT);
       innerStage.configNominalOutputForward(nominalOutput);
       innerStage.configNominalOutputReverse(-1 * nominalOutput);
+      innerStage.configPeakOutputForward(maximumOutput);
+      innerStage.configPeakOutputReverse(-1 * maximumOutput);
       innerStage.configOpenloopRamp(ramp);
       innerStage.configContinuousCurrentLimit(ampLimit);
       innerStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
@@ -173,6 +170,8 @@ public class SubsystemMast extends Subsystem {
     outerStage.setSensorPhase(Constants.OUTER_STAGE_ENCODER_INVERT);
       outerStage.configNominalOutputForward(nominalOutput);
       outerStage.configNominalOutputReverse(-1 * nominalOutput);
+      outerStage.configPeakOutputForward(maximumOutput);
+      outerStage.configPeakOutputReverse(-1 * maximumOutput);
       outerStage.configOpenloopRamp(ramp);
       outerStage.configContinuousCurrentLimit(ampLimit);
       outerStage.setNeutralMode(braking ? NeutralMode.Brake : NeutralMode.Coast);;
@@ -218,12 +217,12 @@ public class SubsystemMast extends Subsystem {
   }
 
   public void publishInnerStagePIDData() {
-    SmartDashboard.putNumber("Inner %", innerStage.getMotorOutputPercent());
-    SmartDashboard.putNumber("Inner Error", innerStage.getClosedLoopError());
+    SmartDashboard.putNumber("Inner %", 100 * innerStage.getMotorOutputPercent());
+    // SmartDashboard.putNumber("Inner Error", innerStage.getClosedLoopError());
   }
 
   public void publishOuterStagePIDData() {
-    SmartDashboard.putNumber("Outer %", outerStage.getMotorOutputPercent());
-    SmartDashboard.putNumber("Outer Error", outerStage.getClosedLoopError());
+    SmartDashboard.putNumber("Outer %", 100 * outerStage.getMotorOutputPercent());
+    // SmartDashboard.putNumber("Outer Error", outerStage.getClosedLoopError());
   }
 }

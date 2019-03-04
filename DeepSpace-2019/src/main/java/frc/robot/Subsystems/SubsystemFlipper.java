@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
+import frc.robot.Commands.ManualCommandTestFlipper;
 import frc.robot.Util.Xbox;
 
 /**
@@ -26,11 +27,13 @@ public class SubsystemFlipper extends Subsystem {
   private static Boolean atFront;
 
   @Override
-  public void initDefaultCommand() {}
+  public void initDefaultCommand() {
+    setDefaultCommand(new ManualCommandTestFlipper());
+  }
 
   public SubsystemFlipper() {
     flipper = new TalonSRX(Constants.FLIPPER_ID);
-      initConfig(25, 1000, 0, true);
+      initConfig(60, 1000, 0, true);
 
     atFront = true;
   }
@@ -69,6 +72,10 @@ public class SubsystemFlipper extends Subsystem {
 
   public double getAmps() {
     return flipper.getOutputCurrent();
+  }
+
+  public double getPercentOutput() {
+    return flipper.getMotorOutputPercent();
   }
 
   public void initConfig(int ampLimit, int ampLimitMs, double ramp, Boolean braking) {

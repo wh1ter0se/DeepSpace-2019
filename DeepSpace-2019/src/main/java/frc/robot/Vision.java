@@ -110,16 +110,16 @@ public class Vision extends TimedRobot {
 
     public void updateExposure(int exposure) {
         ACam.setExposureManual(exposure);
-        // BCam.setExposureManual(exposure);
+        BCam.setExposureManual(exposure);
     }
 
     public void updateFPS(int FPS) {
         ACam.setFPS(FPS);
-        // BCam.setFPS(FPS);
+        BCam.setFPS(FPS);
     }
 
     public void updateWhiteBalance(int WB) {
         ACam.setWhiteBalanceManual(WB);
-        // BCam.setWhiteBalanceManual(WB);
+        BCam.setWhiteBalanceManual(WB);
     }
 }
