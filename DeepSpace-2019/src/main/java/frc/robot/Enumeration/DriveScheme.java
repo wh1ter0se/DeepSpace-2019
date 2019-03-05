@@ -5,17 +5,22 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Commands;
+package frc.robot.Enumeration;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+/**
+ * Positions that the two-stage mast can be in
+ */
+public enum DriveScheme {
+	RL_GENUINE("RL Genuine"),
+	RL_HILO("RL Hi-Lo");
 
-public class CyborgCommandGroupDock extends CommandGroup {
-  /**
-   * Add your docs here.
-   */
-  public CyborgCommandGroupDock() {
-    addSequential(new ButtonCommandSetGear(1, false));
-    addSequential(new CyborgCommandDock());
-    addSequential(new ButtonCommandToggleClamp());
-  }
+	private final String name;
+    
+	DriveScheme(String name) {
+		this.name = name;
+	}
+
+	public String toString() {
+		return name;
+	}
 }

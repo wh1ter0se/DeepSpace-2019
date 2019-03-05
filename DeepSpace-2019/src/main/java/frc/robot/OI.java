@@ -73,11 +73,11 @@ public class OI {
             Button toggleShift = new JoystickButton(DRIVER, Xbox.X);
                 toggleShift.whenPressed(new ButtonCommandToggleShift());
 
-            // Button downShift = new JoystickButton(DRIVER, Xbox.A);
-            //     downShift.whenPressed(new ButtonCommandSetGear(1));
+            Button downShift = new JoystickButton(DRIVER, Xbox.A);
+                downShift.whenPressed(new ButtonCommandSetGear(1, true));
 
-            // Button upShift = new JoystickButton(DRIVER, Xbox.B);
-            //     upShift.whenPressed(new ButtonCommandSetGear(2));
+            Button upShift = new JoystickButton(DRIVER, Xbox.B);
+                upShift.whenPressed(new ButtonCommandSetGear(2, true));
 
             Button lowerInhibitor = new JoystickButton(DRIVER, Xbox.A);
                 lowerInhibitor.whenPressed(new ButtonCommandSetDriveSpeed(DriveSpeed.LOW));

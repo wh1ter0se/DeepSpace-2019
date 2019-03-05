@@ -10,6 +10,7 @@ package frc.robot.Subsystems;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 /**
@@ -37,6 +38,7 @@ public class SubsystemClamp extends Subsystem {
    */
   public void closeClamp() {
     DriverStation.reportWarning("closing", false);
+    SmartDashboard.putBoolean("Open Clamp", false);
     isOpen = false;
     close.set(true);
     open.set(false);
@@ -47,6 +49,7 @@ public class SubsystemClamp extends Subsystem {
    */
   public void openClamp() {
     DriverStation.reportWarning("opening", false);
+    SmartDashboard.putBoolean("Open Clamp", true);
     isOpen = true;
     close.set(false);
     open.set(true);

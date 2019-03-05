@@ -10,8 +10,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.SubsystemPreloader;
+import frc.robot.Enumeration.DriveScheme;
+import frc.robot.Enumeration.DriveSpeed;
 import frc.robot.Enumeration.MastPosition;
 import frc.robot.Subsystems.SubsystemCaleb;
 import frc.robot.Subsystems.SubsystemClamp;
@@ -58,6 +61,16 @@ public class Robot extends TimedRobot {
   public static OI                  OI;
   public static Vision              VISION;
 
+
+  /**
+   * Initialize Choosers
+   */
+  SendableChooser<DriveScheme> schemeChooser;
+  public static DriveScheme    controlScheme;
+
+
+
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -85,6 +98,13 @@ public class Robot extends TimedRobot {
     OI             = new OI();
     VISION         = new Vision();
 
+    /**
+     * Instantiate Control Scheme Chooser
+     */
+    schemeChooser = new SendableChooser<>();
+      schemeChooser.setDefaultOption(DriveScheme.RL_GENUINE.toString(), DriveScheme.RL_GENUINE);
+      schemeChooser.addOption(DriveScheme.RL_HILO.toString(), DriveScheme.RL_HILO);
+      SmartDashboard.putData("Drive Scheme", schemeChooser);
 
 
     DriverStation.reportWarning("ROBOT INIT COMPLETE", false);
@@ -126,13 +146,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
 
     SmartDashboard.putNumber("Flipper Amps", Robot.SUB_FLIPPER.getAmps());
-    SmartDashboard.putNumber("Flipper Motor", Robot.SUB_FLIPPER.getPercentOutput());
+    SmartDashboard.putNumber("Flipper Motor", Robot.SUB_FLIPPER.getPercentOutput() * 100);
 
     SmartDashboard.putNumber("Hood Amps", Robot.SUB_LAUNCHER.getAmps());
-    SmartDashboard.putNumber("Ball Hood", Robot.SUB_LAUNCHER.getPercentOutput());
+    SmartDashboard.putNumber("Ball Hood", Robot.SUB_LAUNCHER.getPercentOutput() * 100);
 
     SmartDashboard.putNumber("Intake Amps", Robot.SUB_PRELOADER.getAmps());
-    SmartDashboard.putNumber("Ball Intake", Robot.SUB_PRELOADER.getPercentOutput());
+    SmartDashboard.putNumber("Ball Intake", Robot.SUB_PRELOADER.getPercentOutput() * 100);
 
     SmartDashboard.putNumber("First Stage Amps", Robot.SUB_MAST.getAmperage()[0]);
     SmartDashboard.putNumber("Second Stage Amps", Robot.SUB_MAST.getAmperage()[1]);
@@ -196,6 +216,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+    if (schemeChooser.getSelected() != null){
+      controlScheme = schemeChooser.getSelected();
+    }
   }
 
   @Override
@@ -217,7 +240,7 @@ public class Robot extends TimedRobot {
   }
 
   public void initChecklist() {
-    Robot.SUB_DRIVE.setDriveInhibitor(1);
+    Robot.SUB_DRIVE.setDriveSpeed(DriveSpeed.HIGH);
       SmartDashboard.putBoolean("Low Speed", false);
       SmartDashboard.putBoolean("High Speed", true);
       Robot.SUB_DRIVE.setBraking(true);

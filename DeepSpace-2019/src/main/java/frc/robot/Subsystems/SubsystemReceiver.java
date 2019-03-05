@@ -111,6 +111,12 @@ public class SubsystemReceiver extends Subsystem {
         DriverStation.reportError("indices[0] = " + indices[0], false); 
         DriverStation.reportError("indices[1] = " + indices[1], false); 
         DriverStation.reportError("indices[2] = " + indices[2], false); 
+      } catch (ArrayIndexOutOfBoundsException e) {
+        DriverStation.reportError("ARRAY INDEX OUT OF BOUNDS EXCEPTION", true);
+        DriverStation.reportError("latestSegment = " + latestSegment, false);
+        DriverStation.reportError("indices[0] = " + indices[0], false); 
+        DriverStation.reportError("indices[1] = " + indices[1], false); 
+        DriverStation.reportError("indices[2] = " + indices[2], false); 
       }
       updateTargetLock(data);
       return data;
