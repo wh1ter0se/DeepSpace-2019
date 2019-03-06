@@ -60,6 +60,7 @@ class Util {
     static bool IsElgible(cv::RotatedRect rect); //tests rotated rect to see if it is good for the target
     static bool IsPair(cv::RotatedRect rect1, cv::RotatedRect rect2);
     static double returnTrueDistanceScalar(cv::RotatedRect rectangle);
+    static int distance(cv::Point point1, cv::Point point2);
     static int WhichIsBigger(int num1, int num2);
     static cv::Point computeOffsets(int x, int y, double pixelsToInches);
 };
@@ -74,10 +75,32 @@ class PairData {
     cv::Point center();
     int area();
     int height();
+    int distanceFromCenter();
+    double distance();
+    double angle(double distance);
 
     private:
     cv::RotatedRect rect1;
     cv::RotatedRect rect2;
+};
+
+/**
+ * Represents the right rectangle of a target. Used only when we can only see that right rect.
+ */
+ 
+class RightRect {
+    public:
+    RightRect() {};
+    RightRect(cv::RotatedRect rect);
+    
+    bool isElgible();
+    cv::Point center();
+    cv::Point target_center();
+    int distance();
+    double angle();
+    
+    private:
+    cv::RotatedRect rect;
 };
 
 

@@ -48,10 +48,12 @@ UDP::UDP(string dest_ip, int port) {
 void UDP::Send(string msg) {
     const char *buffer = msg.c_str();
     
-    cout << "sending " << buffer << endl;
+    //cout << "sending " << buffer << endl;
     int send_result = send(this->sock, buffer, strlen(buffer), 0); //the big send
     if(send_result < 0)
-        err("SEND FAILED");
+        //err("SEND FAILED");
+        cout << "SEND FAILED!";
+        cout.flush();
 }
 
 /**
