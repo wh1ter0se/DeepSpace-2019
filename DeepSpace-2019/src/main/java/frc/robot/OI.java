@@ -21,6 +21,7 @@ import frc.robot.Commands.ButtonCommandSpit;
 import frc.robot.Commands.ButtonCommandToggleClamp;
 import frc.robot.Commands.ButtonCommandToggleIntake;
 import frc.robot.Commands.ButtonCommandToggleShift;
+import frc.robot.Commands.CyborgCommandAlign;
 import frc.robot.Commands.CyborgCommandAutoShift;
 import frc.robot.Commands.CyborgCommandDock;
 import frc.robot.Commands.CyborgCommandFlip;
@@ -90,6 +91,9 @@ public class OI {
                 
             Button dock = new JoystickButton(DRIVER, Xbox.LB);
                 dock.toggleWhenPressed(new CyborgCommandGroupDock());
+
+            Button align = new JoystickButton(DRIVER, Xbox.RB);
+                align.toggleWhenPressed(new CyborgCommandAlign());
 
         /**
          * Operator

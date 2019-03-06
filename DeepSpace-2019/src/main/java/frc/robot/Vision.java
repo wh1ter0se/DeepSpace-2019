@@ -50,11 +50,11 @@ public class Vision extends TimedRobot {
     public Vision(){
         new Thread(() -> {
             ACam = CameraServer.getInstance().startAutomaticCapture();
-                ACam.setResolution(160, 100);
+                ACam.setResolution(80, 50);
                 ACam.setFPS(30);
                 ACam.setExposureManual(45);
             BCam = CameraServer.getInstance().startAutomaticCapture();
-                BCam.setResolution(160, 100);
+                BCam.setResolution(80, 50);
                 BCam.setFPS(30);
                 BCam.setExposureManual(45);
 

@@ -11,9 +11,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.Util.MiniPID;
 import frc.robot.Util.Util;
+import frc.robot.Util.Xbox;
 
 public class CyborgCommandAlign extends Command {
 
@@ -57,27 +59,24 @@ public class CyborgCommandAlign extends Command {
     canSee = Robot.SUB_RECEIVER.getLastKnownData()[2] != -1;
     SmartDashboard.putBoolean("canSee", canSee);
     SmartDashboard.putBoolean("inRange", inRange);
+    SmartDashboard.putBoolean("Aligning", true);
 
+    double feedForward = Xbox.RT(OI.DRIVER) - Xbox.LT(OI.DRIVER);
     if (canSee) {
-      Robot.SUB_DRIVE.driveByPercentOutputs(-1 * loopOutput, loopOutput);
-    } else {
-      if (lastAngle > 0) {
-        Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, -1 * idleSpeed);
-      } else {
-        Robot.SUB_DRIVE.driveByPercentOutputs(-1 * idleSpeed, idleSpeed);
-      }
+      Robot.SUB_DRIVE.driveByPercentOutputs(-1 * loopOutput + feedForward, loopOutput + feedForward);
     }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isFinished || Robot.SUB_DRIVE.isPushing();
+    return isFinished;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    SmartDashboard.putBoolean("Aligning", false);
     Robot.SUB_DRIVE.stopMotors();
   }
 
@@ -85,6 +84,7 @@ public class CyborgCommandAlign extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    SmartDashboard.putBoolean("Aligning", false);
     Robot.SUB_DRIVE.stopMotors();
   }
 }
