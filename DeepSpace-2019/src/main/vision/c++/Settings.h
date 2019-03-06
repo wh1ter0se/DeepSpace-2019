@@ -6,7 +6,6 @@ class Settings {
     static const bool 
         DEBUG = true,
         USE_IMAGE = true,
-        SEND_DISTANCE_WHEN_NOT_FOUND = false,
         DOCK_USING_CLOSEST_TO_CENTER = true;
                       
     //camera resolution (essential to pull the right image off the JeVois)
@@ -54,9 +53,7 @@ class Settings {
     static const int 
         MULTIPLE_CONTOUR_IGNORE_THRESHOLD = 150,
         MULTIPLE_CONTOUR_TARGET_LOCK = 42,
-        LOCK_FRAME_SKIP = 10,
-        CONSECUTIVE_FRAME_UNLOCK = 5,
-        MAX_DISTANCE = 90;
+        CONSECUTIVE_FRAME_UNLOCK = 5;
 
 
     static double Aspect_Ratio_Max();

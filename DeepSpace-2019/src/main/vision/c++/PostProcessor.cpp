@@ -86,7 +86,6 @@ void PostProcessor::Loop() {
                                     targetFound = true;
                                 }
                             }
-                            
                         }
                     }
                     
@@ -137,37 +136,40 @@ void PostProcessor::Loop() {
                 if(use_last_target) {
                     //find the x, y, distance and angle of the right target
                     bool targetFound = false;
-                    for(int i=0; i<unpairedRects.size(); i++) {
-                        RightRect target = RightRect(unpairedRects[i]);
-                        if(target.isElgible()) {
-                            cv::Point target_center = target.center();
-                            target_x = target_center.x;
-                            target_y = target_center.y;
-                            target_dist = target.distance();
-                            target_angle = 0;
+                    //only use right rects if there is a right rect 
+                    if(unpairedRects.size() > pairedRects.size() * 2) {
+                        for(int i=0; i<unpairedRects.size(); i++) {
+                            RightRect target = RightRect(unpairedRects[i]);
+                            if(target.isElgible()) {
+                                cv::Point target_center = target.center();
+                                target_x = target_center.x;
+                                target_y = target_center.y;
+                                target_dist = target.distance();
+                                target_angle = 0;
                             
-                            last_dist = target_dist;
+                                last_dist = target_dist;
                             
-                            targetFound = true;
-                            lastRightRect = target;
+                                targetFound = true;
+                                lastRightRect = target;
                             
-                            if(target.distance() < Settings::MULTIPLE_CONTOUR_TARGET_LOCK) {
-                                target_x = -1;
-                                target_y = -1;
-                                target_dist = -1;
-                                target_angle = 180; //lock for colton to just drive
-                                locked = true;
+                                if(target.distance() < Settings::MULTIPLE_CONTOUR_TARGET_LOCK) {
+                                    target_x = -1;
+                                    target_y = -1;
+                                    target_dist = -1;
+                                    target_angle = 180; //lock for colton to just drive
+                                    locked = true;
                                 
-                                //cout << "LOCKING. last distance: " << last_dist << endl;
-                                //cout.flush();
+                                    //cout << "LOCKING. last distance: " << last_dist << endl;
+                                    //cout.flush();
                                 
+                                }
+                            
+                                if(Settings::DEBUG)
+                                    //draw a circle in the center of the contour we are using
+                                    cv::circle(out, cv::Point(target_x, target_y), 3, cv::Scalar(255,255,0), 5);
+                                
+                                break; //we found a good rectangle, we don't need anything else, so break the loop
                             }
-                            
-                            if(Settings::DEBUG)
-                                //draw a circle in the center of the contour we are using
-                                cv::circle(out, cv::Point(target_x, target_y), 3, cv::Scalar(255,255,0), 5);
-                                
-                            break; //we found a good rectangle, we don't need anything else, so break the loop
                         }
                     }
                 }              
