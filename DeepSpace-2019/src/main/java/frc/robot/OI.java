@@ -92,8 +92,8 @@ public class OI {
             Button dock = new JoystickButton(DRIVER, Xbox.LB);
                 dock.toggleWhenPressed(new CyborgCommandGroupDock());
 
-            Button align = new JoystickButton(DRIVER, Xbox.RB);
-                align.toggleWhenPressed(new CyborgCommandAlign());
+            // Button align = new JoystickButton(DRIVER, Xbox.RB);
+            //     align.toggleWhenPressed(new CyborgCommandAlign());
 
         /**
          * Operator
