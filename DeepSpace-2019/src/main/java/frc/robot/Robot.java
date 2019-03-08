@@ -200,6 +200,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Robot.SUB_DRIVE.setBraking(true);
+    initChecklist();
   }
 
   /**
@@ -208,6 +209,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
+    if (schemeChooser.getSelected() != null){
+      controlScheme = schemeChooser.getSelected();
+    }
   }
 
   /**
@@ -223,8 +227,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //TODO Move these to autoInit before comp
-    initChecklist();
   }
 
   /**
@@ -235,8 +237,8 @@ public class Robot extends TimedRobot {
   }
   
   public void disabledInit() {
-    Robot.SUB_DRIVE.setBraking(false);
-    Robot.SUB_SHIFTER.upShift();
+    Robot.SUB_DRIVE.setBraking(true);
+    Robot.SUB_SHIFTER.downShift();
   }
 
   public void initChecklist() {
