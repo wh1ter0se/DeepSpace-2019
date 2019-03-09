@@ -26,6 +26,7 @@ import frc.robot.Subsystems.SubsystemLauncher;
 import frc.robot.Subsystems.SubsystemMast;
 import frc.robot.Subsystems.SubsystemReceiver;
 import frc.robot.Subsystems.SubsystemShifter;
+import frc.robot.Util.Util;
 
 //        _____   _____   ____     ______
 //       |__  /  / ___/  / __ \   / ____/
@@ -167,6 +168,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Inner Mast Inches", Robot.SUB_MAST.getEncoderValues()[0] / Constants.INNER_MAST_TICKS_PER_INCH);
     SmartDashboard.putNumber("Outer Mast Inches", Robot.SUB_MAST.getEncoderValues()[1] / Constants.OUTER_MAST_TICKS_PER_INCH);
 
+    SmartDashboard.putBoolean("Climb Time", DriverStation.getInstance().getMatchTime() < Util.getAndSetDouble("Climb Period", 40));
     Robot.SUB_MAST.publishInnerStagePIDData();
     Robot.SUB_MAST.publishOuterStagePIDData();
 
