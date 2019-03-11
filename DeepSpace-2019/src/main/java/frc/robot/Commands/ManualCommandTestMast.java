@@ -8,36 +8,31 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Constants;
+import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.Util.Util;
 
-public class ButtonCommandCalibrateCamera extends Command {
-
-  Boolean isFinished;
-
-  public ButtonCommandCalibrateCamera() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+public class ManualCommandTestMast extends Command {
+  public ManualCommandTestMast() {
+    requires(Robot.SUB_FLIPPER);
+    requires(Robot.SUB_MAST);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    isFinished = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.VISION.updateExposure((int) (Util.getAndSetDouble("Cam Exposure", Constants.BACKUP_EXPOSURE)));
-    isFinished = true;
+    Robot.SUB_MAST.moveWithJoystick(OI.OPERATOR, Util.getAndSetDouble("First Stage Inhibitor", 1), Util.getAndSetDouble("Second Stage Inhibitor", 1));
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isFinished;
+    return false;
   }
 
   // Called once after isFinished returns true

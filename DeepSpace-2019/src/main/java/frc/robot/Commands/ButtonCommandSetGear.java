@@ -8,31 +8,41 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.OI;
 import frc.robot.Robot;
+import frc.robot.Enumeration.DriveScheme;
 
 public class ButtonCommandSetGear extends Command {
 
   private Boolean isFinished;
+  private Boolean schemeDependent;
   private int gear;
 
-  public ButtonCommandSetGear(int gear) {
+  private CyborgCommandQuickRumble rumble;
+
+  public ButtonCommandSetGear(int gear, Boolean schemeDependent) {
     requires(Robot.SUB_SHIFTER);
     this.gear = gear;
+    this.schemeDependent = schemeDependent;
+    rumble = new CyborgCommandQuickRumble(OI.DRIVER, 2, 1, 200);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    // rumble.start();
     isFinished = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (gear == 1) {
-      Robot.SUB_SHIFTER.downShift(); } 
-    else if (gear == 2) {
-      Robot.SUB_SHIFTER.upShift(); }
+    if ((Robot.controlScheme == DriveScheme.RL_GENUINE && schemeDependent) || !schemeDependent) {
+      if (gear == 1) {
+        Robot.SUB_SHIFTER.downShift(); } 
+      else if (gear == 2) {
+        Robot.SUB_SHIFTER.upShift(); }
+    }
     isFinished = true;
   }
 

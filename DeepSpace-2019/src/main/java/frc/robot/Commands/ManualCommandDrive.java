@@ -25,7 +25,18 @@ public class ManualCommandDrive extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.SUB_DRIVE.driveRLTank(OI.DRIVER, Util.getAndSetDouble("RL Ramp", Constants.BACKUP_RAMP));;
+    switch(Robot.controlScheme) {
+      case RL_GENUINE:
+        Robot.SUB_DRIVE.driveRLGenuine(OI.DRIVER, Util.getAndSetDouble("RL Ramp", Constants.BACKUP_RAMP), 
+                                                  Util.getAndSetDouble("Caleb Inhibitor", 1));;
+        break;
+      case RL_HILO:
+        Robot.SUB_DRIVE.driveRlHiLo(OI.DRIVER, Util.getAndSetDouble("RL Ramp", Constants.BACKUP_RAMP),
+                                               Util.getAndSetDouble("Lower Drive Inhibitor", .4),
+                                               Util.getAndSetDouble("Upper Drive Inhibitor", 1));
+        break;
+    }
+    
   }
 
   // Make this return true when this Command no longer needs to run execute()

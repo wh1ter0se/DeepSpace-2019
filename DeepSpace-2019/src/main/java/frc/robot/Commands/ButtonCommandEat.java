@@ -8,11 +8,12 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
+import frc.robot.Util.Util;
 
 public class ButtonCommandEat extends Command {
   public ButtonCommandEat() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    requires(Robot.SUB_PRELOADER);
   }
 
   // Called just before this Command runs the first time
@@ -23,6 +24,7 @@ public class ButtonCommandEat extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.SUB_PRELOADER.eat(Util.getAndSetDouble("Eat Speed", 1));
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -40,5 +42,6 @@ public class ButtonCommandEat extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.SUB_PRELOADER.stopMotor();
   }
 }

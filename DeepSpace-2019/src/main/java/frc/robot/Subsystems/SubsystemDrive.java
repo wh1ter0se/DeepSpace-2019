@@ -14,9 +14,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.Commands.ManualCommandDrive;
+import frc.robot.Enumeration.DriveSpeed;
 import frc.robot.Util.Xbox;
 
 /**
@@ -30,6 +32,10 @@ public class SubsystemDrive extends Subsystem {
   private static CANSparkMax rightSlave;
 
   private static double[] highestRPM;
+
+  private double driveInhibitor;
+
+  private DriveSpeed hiLoSpeed;
 
   @Override
   public void initDefaultCommand() {
@@ -52,10 +58,11 @@ public class SubsystemDrive extends Subsystem {
    * Left and right triggers accelerate linearly and left stick rotates
    * @param joy the joystick to be used
    */
-  public void driveRLTank(Joystick joy, double ramp) {
+  public void driveRLGenuine(Joystick joy, double ramp, double calebInhibitor) {
     setInverts();
     setBraking(true);
     setRamps(ramp);
+    updateBrownoutRummble(joy);
 
     double adder = Xbox.RT(joy) - Xbox.LT(joy);
     double left = adder + (Xbox.LEFT_X(joy) / 1.333333);
@@ -63,44 +70,48 @@ public class SubsystemDrive extends Subsystem {
     left = (left > 1.0 ? 1.0 : (left < -1.0 ? -1.0 : left));
     right = (right > 1.0 ? 1.0 : (right < -1.0 ? -1.0 : right));
     
+    left *= calebInhibitor;
+    right *= calebInhibitor;
+    
     leftMaster.set(left);
       leftSlave.set(left);
     rightMaster.set(right);
       rightSlave.set(right);
   }
 
-  public void driveByPosition(double inches, double[] PID) {
-    double rotations = Constants.ROTATIONS_PER_INCH * inches;
+  public void driveRlHiLo(Joystick joy, double ramp, double lowInhibitor, double highInhibitor) {
+    setInverts();
+    setBraking(true);
+    setRamps(ramp);
+    updateBrownoutRummble(joy);
 
-    leftMaster.getPIDController().setP(PID[0], 0);
-      leftMaster.getPIDController().setI(PID[1], 0);
-      leftMaster.getPIDController().setD(PID[2], 0);
-      leftMaster.burnFlash();
-    rightMaster.getPIDController().setP(PID[0], 1);
-      rightMaster.getPIDController().setI(PID[1], 1);
-      rightMaster.getPIDController().setD(PID[2], 1);
-      rightMaster.burnFlash();
-
-    leftMaster.setMotorType(MotorType.kBrushless);
-    rightMaster.setMotorType(MotorType.kBrushless);
-
-    leftMaster.getPIDController().setOutputRange(-100, 100);
-    rightMaster.getPIDController().setOutputRange(-100, 100);
-
-    leftMaster.getPIDController().setReference(rotations * Constants.ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 0);
-    rightMaster.getPIDController().setReference(rotations * Constants.ENCODER_TICKS_PER_ROTATION, ControlType.kPosition, 1);
+    double adder = Xbox.RT(joy) - Xbox.LT(joy);
+    double left = adder + (Xbox.LEFT_X(joy) / 1.333333);
+    double right = adder - (Xbox.LEFT_X(joy) / 1.333333);
+    left = (left > 1.0 ? 1.0 : (left < -1.0 ? -1.0 : left));
+    right = (right > 1.0 ? 1.0 : (right < -1.0 ? -1.0 : right));
+    
+    double inhibitor = (hiLoSpeed == DriveSpeed.LOW) ? lowInhibitor : highInhibitor;
+    left *= inhibitor;
+    right *= inhibitor;
+    
+    leftMaster.set(left);
+      leftSlave.set(left);
+    rightMaster.set(right);
+      rightSlave.set(right);
   }
 
-  public double[] getError(double[] initEncoderPositions, double inches) {
-    double ticks = inches * Constants.ENCODER_TICKS_PER_ROTATION * Constants.ROTATIONS_PER_INCH;
-    double[] output = new double[2];
-    output[0] = initEncoderPositions[0] 
-                + (ticks *= leftMaster.getInverted() ? -1 : 1) 
-                - leftMaster.getEncoder().getPosition();
-    output[1] = initEncoderPositions[1] 
-                + (ticks *= rightMaster.getInverted() ? -1 : 1) 
-                - rightMaster.getEncoder().getPosition();
-    return output;
+  /**
+   * Directly sends a percent output value to each side
+   * @param leftOutput  percent output of left side
+   * @param rightOutput percent output of right side
+   */
+  public void driveByPercentOutputs(double leftOutput, double rightOutput) {
+    leftMaster.set(leftOutput);
+      leftSlave.set(leftOutput);
+    rightMaster.set(rightOutput);
+      rightSlave.set(rightOutput);
+      DriverStation.reportError("DRIVE COMMAND IS RUNNING", false);
   }
 
   public double[] getEncoderPositions() {
@@ -114,10 +125,10 @@ public class SubsystemDrive extends Subsystem {
    * Sets all motor controller values to zero
    */
   public void stopMotors() {
-    leftMaster.stopMotor();
-      // leftSlave.stopMotor();
-    rightMaster.stopMotor();
-      // rightSlave.stopMotor();
+    leftMaster.set(0);
+      leftSlave.set(0);
+    rightMaster.set(0);
+      rightSlave.set(0);
   }
 
   /**
@@ -146,10 +157,10 @@ public class SubsystemDrive extends Subsystem {
    * @param ramp ramp rate in seconds
    */
   private void setRamps(double ramp) {
-    leftMaster.setRampRate(ramp);
-      // leftSlave.setRampRate(ramp);
-    rightMaster.setRampRate(ramp);
-      // rightSlave.setRampRate(ramp);
+    leftMaster.setOpenLoopRampRate(ramp);
+      leftSlave.setOpenLoopRampRate(ramp);
+    rightMaster.setOpenLoopRampRate(ramp);
+      rightSlave.setOpenLoopRampRate(ramp);
   }
 
   /**
@@ -181,6 +192,9 @@ public class SubsystemDrive extends Subsystem {
     return output;
   }
 
+  public double[] getAmps() {
+    return new double[]{leftMaster.getOutputCurrent(), rightMaster.getOutputCurrent()};
+  }
   /**
    * Returns the highest recorded RPM of each motor controller
    * @return [0] = Highest absolute RPM from left side
@@ -195,11 +209,28 @@ public class SubsystemDrive extends Subsystem {
   }
 
   /**
-   * Checks if the robot is pushing by checking if both sides are pulling high amperage
-   * @return left and right motor are both pulling over 55A
+   * Checks if the robot is pushing by checking if both sides 
+   * are pulling high amperage
+   * @return left and right motor are both pulling over the threshold amperage
    */
   public Boolean isPushing() {
     return leftMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE && rightMaster.getOutputCurrent() >= Constants.PUSHING_AMPERAGE;
+  }
+
+  public Boolean isStopped() {
+    return Math.abs(getVelocities()[0]) < 750 && Math.abs(getVelocities()[1]) < 750;
+  }
+
+  public void updateBrownoutRummble(Joystick joy) {
+    if (DriverStation.getInstance().isBrownedOut()) {
+      joy.setRumble(RumbleType.kRightRumble, 1); }
+    else {
+      joy.setRumble(RumbleType.kRightRumble, 0);
+    }
+  } 
+
+  public void setDriveSpeed(DriveSpeed speed) {
+    hiLoSpeed = speed;
   }
 
   

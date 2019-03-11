@@ -16,6 +16,7 @@ import java.util.stream.IntStream;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.Util.Util;
 
 /**
@@ -24,6 +25,8 @@ import frc.robot.Util.Util;
 public class SubsystemReceiver extends Subsystem {
 
   private static String latestSegment;
+
+  private static Boolean inRange;
 
   private static DatagramSocket serverSocket;
   private static byte[]         receiveData;
@@ -35,10 +38,12 @@ public class SubsystemReceiver extends Subsystem {
   }
 
   public SubsystemReceiver() {
-    latestSegment = "NO DATA YET";
+    latestSegment = "-1,-1,-1,-1";
     latestTime    = System.currentTimeMillis();
 
     SmartDashboard.putString("RPi Data", latestSegment);
+
+    inRange = false;
 
     try {
       serverSocket = new DatagramSocket(3695);
@@ -48,17 +53,18 @@ public class SubsystemReceiver extends Subsystem {
     }
 
     // EXPECTED FORMAT OF INPUT STRING:
-    // :X,Y,H,D;
+    // :X,Y,H,D,A;
       // X = X-coordinate
       // Y = Y-coordinate
-      // H = Height
       // D = Distance from target
+      // A = Angle from center (positive = CW)
 
     Thread listener = new Thread(() -> {
       while(!Thread.interrupted()) {
         try {
           DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length); //create a new packet for the receiving data 
           serverSocket.receive(receivePacket); //receive the packet from the Socket
+          // DriverStation.reportError("I GOT PI DATA", false);
           String segment = new String(receivePacket.getData()).replaceAll("\\s+",""); //remove whitespace and place data in 'segment'
           latestSegment = segment.substring(segment.indexOf(":") + 1, segment.indexOf(";")); // store segment without borders
           latestTime = System.currentTimeMillis(); // add timestamp for stored segment
@@ -77,16 +83,17 @@ public class SubsystemReceiver extends Subsystem {
    * Retrieves the last known pixel coordinates of the target
    * @return [0] = X-coordinate (in pixels from left)
    *         [1] = Y-coordinate (in pixels from bottom)
-   *         [2] = Height (in pixels)
-   *         [3] = Distance (in inches)
+   *         [2] = Distance (in inches)
+   *         [3] = Angle from center (in degrees; positive = CW)
    *         {-1,-1,-1,-1} for no known location
    */
-  public int[] getLastKnownLData() {
-      int[] data = new int[4];
-      int[] indices = IntStream.range(0, latestSegment.length())
-                               .filter(i -> latestSegment.charAt(i) == ',')
-                               .toArray();
+  public double[] getLastKnownData() {
+      double[] data = new double[]{-1,-1,-1,-1};
+      int[] indices = new int[3];
       try {
+        indices = IntStream.range(0, latestSegment.length() - 1)
+                  .filter(i -> latestSegment.charAt(i) == ',')
+                  .toArray();
         data[0] = Integer.parseInt(latestSegment.substring(0, latestSegment.indexOf(",", indices[0])));
         data[1] = Integer.parseInt(latestSegment.substring(latestSegment.indexOf(",", indices[0]) + 1, latestSegment.indexOf(",", indices[1])));
         data[2] = Integer.parseInt(latestSegment.substring(latestSegment.indexOf(",", indices[1]) + 1, latestSegment.indexOf(",", indices[2])));
@@ -97,16 +104,21 @@ public class SubsystemReceiver extends Subsystem {
         DriverStation.reportError("data[0] = " + data[0], false); 
         DriverStation.reportError("data[1] = " + data[1], false); 
         DriverStation.reportError("data[2] = " + data[2], false); 
-        DriverStation.reportError("data[3] = " + data[3], false); 
+        DriverStation.reportError("data[3] = " + data[3], false);
       } catch (StringIndexOutOfBoundsException e) {
         DriverStation.reportError("STRING INDEX OUT OF BOUNDS EXCEPTION", true);
         DriverStation.reportError("latestSegment = " + latestSegment, false);
         DriverStation.reportError("indices[0] = " + indices[0], false); 
         DriverStation.reportError("indices[1] = " + indices[1], false); 
         DriverStation.reportError("indices[2] = " + indices[2], false); 
-        DriverStation.reportError("indices[3] = " + indices[3], false); 
+      } catch (ArrayIndexOutOfBoundsException e) {
+        DriverStation.reportError("ARRAY INDEX OUT OF BOUNDS EXCEPTION", true);
+        DriverStation.reportError("latestSegment = " + latestSegment, false);
+        DriverStation.reportError("indices[0] = " + indices[0], false); 
+        DriverStation.reportError("indices[1] = " + indices[1], false); 
+        DriverStation.reportError("indices[2] = " + indices[2], false); 
       }
-
+      updateTargetLock(data);
       return data;
   }
 
@@ -119,10 +131,20 @@ public class SubsystemReceiver extends Subsystem {
   }
 
   /**
-   * 
-   * @return
+   * If data is being received, records whether or not its in "target lock" range
+   * If dats is not being received, the last known state is kept
    */
-  public double getAngle() {
-    return 0;
+  public void updateTargetLock( double[] data) {
+    if (data[2] != -1) {
+      inRange = data[2] < Constants.DOCKING_TARGET_LOCK_RANGE;
+    }
+  }
+
+  /**
+   * Gets the state of target lock
+   * @return true if within range, false if out of range
+   */
+  public Boolean getWithinRange() {
+    return inRange;
   }
 }

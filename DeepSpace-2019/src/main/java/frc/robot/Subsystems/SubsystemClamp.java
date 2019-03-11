@@ -10,10 +10,11 @@ package frc.robot.Subsystems;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 /**
- * Add your docs here.
+ * Hatch Cover clamp on the swinging manipulator
  */
 public class SubsystemClamp extends Subsystem {
 
@@ -32,20 +33,31 @@ public class SubsystemClamp extends Subsystem {
     open = new Solenoid(Constants.OPEN_CLAMP_ID);
   }
 
+  /**
+   * Closes the clamp
+   */
   public void closeClamp() {
     DriverStation.reportWarning("closing", false);
+    SmartDashboard.putBoolean("Open Clamp", false);
     isOpen = false;
     close.set(true);
     open.set(false);
   }
   
+  /**
+   * Opens the clamp
+   */
   public void openClamp() {
     DriverStation.reportWarning("opening", false);
+    SmartDashboard.putBoolean("Open Clamp", true);
     isOpen = true;
     close.set(false);
     open.set(true);
   }
 
+  /**
+   * Checks the state of the clmap and sets it to the opposite
+   */
   public void toggleClamp() {
     if (isOpen) {
       closeClamp();

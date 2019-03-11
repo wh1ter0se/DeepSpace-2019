@@ -16,11 +16,19 @@ import frc.robot.Util.Xbox;
 
 public class CyborgCommandAutoShift extends Command {
 
+  private CyborgCommandDisengage disengage;
+
+  double disengagementTime;
+
   double downshiftRPM;
   double throttle;
   double upshiftRPM;
 
   double[][] shiftingPoints;
+
+  long shiftTime;
+
+  Boolean disengaged;
 
   public CyborgCommandAutoShift() {
     requires(Robot.SUB_SHIFTER);
@@ -30,18 +38,26 @@ public class CyborgCommandAutoShift extends Command {
   @Override
   protected void initialize() {
     Robot.SUB_SHIFTER.setAutoShifting(true);
+    disengaged = false;
+    shiftTime= 0;
+    disengagementTime = 0;
+    disengage = new CyborgCommandDisengage();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
 
+    disengagementTime = Util.getAndSetDouble("Shifter Lockout", 2000);
+
+    if (!disengaged || System.currentTimeMillis() > shiftTime + disengagementTime) {
+
     // throttles, upshift RPMs, downshift RPMs
     shiftingPoints = new double[][]{
-      {.25, Util.getAndSetDouble(".25 Upshift RPM", Constants.QUARTER_UPSHIFT_RPM), Util.getAndSetDouble(".25 Downshift RPM", Constants.QUARTER_DOWNSHIFT_RPM)},
-      { .5, Util.getAndSetDouble(".5 Upshift RPM", Constants.HALF_UPSHIFT_RPM), Util.getAndSetDouble(".5 Downshift RPM", Constants.HALF_DOWNSHIFT_RPM)},
-      {.75, Util.getAndSetDouble(".75 Upshift RPM", Constants.THREE_QUARTERS_UPSHIFT_RPM), Util.getAndSetDouble(".75 Downshift RPM", Constants.THREE_QUARTERS_DOWNSHIFT_RPM)},
-      {1.0, Util.getAndSetDouble("1.0 Upshift RPM", Constants.FULL_UPSHIFT_RPM), Util.getAndSetDouble("1.0 Downshift RPM", Constants.FULL_DOWNSHIFT_RPM)}};
+      {.25, Util.getAndSetDouble("25 Upshift RPM", Constants.QUARTER_UPSHIFT_RPM), Util.getAndSetDouble("25 Downshift RPM", Constants.QUARTER_DOWNSHIFT_RPM)},
+      { .5, Util.getAndSetDouble("50 Upshift RPM", Constants.HALF_UPSHIFT_RPM), Util.getAndSetDouble("50 Downshift RPM", Constants.HALF_DOWNSHIFT_RPM)},
+      {.75, Util.getAndSetDouble("75 Upshift RPM", Constants.THREE_QUARTERS_UPSHIFT_RPM), Util.getAndSetDouble("75 Downshift RPM", Constants.THREE_QUARTERS_DOWNSHIFT_RPM)},
+      {1.0, Util.getAndSetDouble("100 Upshift RPM", Constants.FULL_UPSHIFT_RPM), Util.getAndSetDouble("100 Downshift RPM", Constants.FULL_DOWNSHIFT_RPM)}};
 
     throttle = Math.abs(Xbox.RT(OI.DRIVER) - Xbox.LT(OI.DRIVER));
 
@@ -63,14 +79,14 @@ public class CyborgCommandAutoShift extends Command {
       // double downshiftRPM = Util.getAndSetDouble("Downshift RPM", Constants.DOWNSHIFT_RPM);
 
     if (Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.getVelocities()[0] >= upshiftRPM && Robot.SUB_DRIVE.getVelocities()[1] >= upshiftRPM && !Robot.SUB_DRIVE.isPushing()) {
-      Robot.SUB_SHIFTER.upShift();
+      upshift();
     } else if (!Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.getVelocities()[0] <= downshiftRPM && Robot.SUB_DRIVE.getVelocities()[1] <= downshiftRPM) {
-      Robot.SUB_SHIFTER.downShift();
-    } else if (!Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.isPushing()) {
-      Robot.SUB_SHIFTER.downShift();
+      downshift();
+    // } else if (!Robot.SUB_SHIFTER.isFirstGear() && Robot.SUB_DRIVE.isPushing()) {
+    //   downshift();
     }
 
-
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -89,5 +105,20 @@ public class CyborgCommandAutoShift extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.SUB_SHIFTER.setAutoShifting(false);
+  }
+
+  private void upshift() {
+    Robot.SUB_SHIFTER.upShift();
+    shiftTime = System.currentTimeMillis();
+    disengaged = true;
+    disengage.start();
+  }
+
+  private void downshift() {
+    Robot.SUB_SHIFTER.downShift();
+    shiftTime = System.currentTimeMillis();
+    disengaged = true;
+    disengage.start();
   }
 }
