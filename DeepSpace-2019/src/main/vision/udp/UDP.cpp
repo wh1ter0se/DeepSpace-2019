@@ -1,10 +1,9 @@
-#include "Vision.h"
+#include "UDP.h"
 
 using namespace std;
 
 /**
  * source file for UDP class
- * Written By: Brach Knutson
  */
 
 
@@ -14,9 +13,7 @@ void err(const char *msg) {
 }
 
 /**
- * Construct a new UDP object connecting to dest_ip on port
- * @param dest_ip a string containing the ip of the server in standard dot notation
- * @param port the port to connect on
+ * Set up a new UDP object, open the sock, connect to the ip
  */
 UDP::UDP(string dest_ip, int port) {
 
@@ -43,31 +40,24 @@ UDP::UDP(string dest_ip, int port) {
 
 /**
  * Sends the given message to the destination
- * @param msg a string containing the message to send
  */
 void UDP::Send(string msg) {
     const char *buffer = msg.c_str();
     
-    //cout << "sending " << buffer << endl;
+    cout << "sending " << buffer << endl;
     int send_result = send(this->sock, buffer, strlen(buffer), 0); //the big send
     if(send_result < 0)
-        //err("SEND FAILED");
-        cout << "SEND FAILED!";
-        cout.flush();
+        err("SEND FAILED");
 }
 
 /**
  * Reads the buffer and returns whats there
- * @return a string containing the contents of the buffer
  */
 string UDP::Recieve() {
     char buffer[1024] = {0};
     int read_result = read(this->sock, buffer, 2047);
 }
 
-/**
- * closes the UDP socket
- */
 void UDP::Close() {
     close(this->sock);
 }
