@@ -12,7 +12,7 @@ using namespace std;
  * Constructs a new postprocessor.
  */
 PostProcessor::PostProcessor() { 
-    this->sender = UDP("10.36.95.18", 3695); //init our UDP sender so we can talk to the RIO.
+    this->sender = UDP("192.168.0.1", 3695); //init our UDP sender so we can talk to the RIO.
 
     this->cap = cv::VideoCapture(0); //creates a new video streaming utility
     cap.set(cv::CAP_PROP_FRAME_WIDTH, Settings::CAMERA_RESOLUTION_X);
@@ -152,17 +152,17 @@ void PostProcessor::Loop() {
                                 targetFound = true;
                                 lastRightRect = target;
                             
-                                if(target.distance() < Settings::MULTIPLE_CONTOUR_TARGET_LOCK) {
-                                    target_x = -1;
-                                    target_y = -1;
-                                    target_dist = -1;
-                                    target_angle = 180; //lock for colton to just drive
-                                    locked = true;
+                                //if(target.distance() < Settings::MULTIPLE_CONTOUR_TARGET_LOCK) {
+                                    //target_x = -1;
+                                    //target_y = -1;
+                                    //target_dist = -1;
+                                    //target_angle = 180; //lock for colton to just drive
+                                    //locked = true;
                                 
-                                    //cout << "LOCKING. last distance: " << last_dist << endl;
-                                    //cout.flush();
+                                    ////cout << "LOCKING. last distance: " << last_dist << endl;
+                                    ////cout.flush();
                                 
-                                }
+                                //}
                             
                                 if(Settings::DEBUG)
                                     //draw a circle in the center of the contour we are using
@@ -184,7 +184,7 @@ void PostProcessor::Loop() {
                 
                 //cout << "LOCKED!" << endl; 
                 
-                if(target_x > -1 && target_dist > Settings::MULTIPLE_CONTOUR_TARGET_LOCK) { //there is indeed a target in view
+                if(target_x > -1) { //there is indeed a target in view
                     lock_frames++;
                     //cout << "GOOD FRAME: " << lock_frames << endl;
                     if(lock_frames >= Settings::CONSECUTIVE_FRAME_UNLOCK) {
