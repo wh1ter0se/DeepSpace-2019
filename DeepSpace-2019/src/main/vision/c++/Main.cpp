@@ -8,5 +8,6 @@ int main(int argc, char *argv[]) {
     PostProcessor worker = PostProcessor();
     worker.Loop();
     worker.CleanUp();
+    cout << "goodbye!" << endl;
     return 0;
 }

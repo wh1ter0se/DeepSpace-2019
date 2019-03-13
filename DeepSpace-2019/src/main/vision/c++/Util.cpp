@@ -6,7 +6,7 @@
  */
 
 
-/** Tests a rotated rectangle to see if it could be part of a 2019 target.
+/** Tests a rotated rectangle to see if it could be part of a 2019 target. 
  * @return true if yes, false if no.
  */
 using namespace std;
@@ -24,7 +24,7 @@ bool Util::IsElgible(cv::RotatedRect rect) {
     if(width > height) {
         aspect_ratio = height/width;
     } else {
-        aspect_ratio = width/height; //make sure aspect ratio is consistent so we don't have to have two different settings
+        aspect_ratio = width/height; //make sure aspect ratio is consistent so we don't have to have two different settings 
     }
     double ARMax = Settings::Aspect_Ratio_Max();
     double ARMin = Settings::Aspect_Ratio_Min();
@@ -65,12 +65,12 @@ bool Util::IsPair(cv::RotatedRect rect1, cv::RotatedRect rect2) {
     //make sure that the contours are in the right places (i.e. Right on the right, left on left.)
     if(Opposite_Angles) {
         bool angles_are_correct = false; //will be true if the contours are on the correct sides of each other
-        int distance_between_rects = rect1.center.x - rect2.center.x; //will be positive if rect1 is rightmost, negative if rect2 is rightmost
+        int distance_between_rects = rect1.center.x - rect2.center.x; //will be positive if rect1 is leftmost, negative if rect2 is leftmost
 
-        if(distance_between_rects > 0) //positive, rect1 is the rightmost rect
-            angles_are_correct = Settings::Closest_Angle(rect2.angle) == Settings::RIGHT_ANGLE;
+        if(distance_between_rects > 0) //positive, rect1 is the leftmost rect
+            angles_are_correct = Settings::Closest_Angle(rect2.angle) == Settings::LEFT_ANGLE;
         else
-            angles_are_correct = Settings::Closest_Angle(rect1.angle) == Settings::RIGHT_ANGLE;
+            angles_are_correct = Settings::Closest_Angle(rect1.angle) == Settings::LEFT_ANGLE;
 
         //now we can move on to the distance testing
         if(angles_are_correct) {
@@ -103,9 +103,36 @@ double Util::returnTrueDistanceScalar(cv::RotatedRect rectangle) {
         return 5.5 / rectangle.size.width;
 }
 
+/**
+ * Computes the distance between two points
+ */
+int Util::distance(cv::Point point1, cv::Point point2) {
+    int distance = 0;
+    int x = 0;
+    int y = 0;
+    
+    x = point1.x - point2.x;
+    y = point1.y - point2.y;
+    distance = sqrt(x + y);
+    return distance;
+}
+
 int Util::WhichIsBigger(int num1, int num2) {
     if(num1 > num2)
         return num1;
         
     return num2;
+}
+
+cv::Point Util::computeOffsets(int x, int y, double pixelsToInches) {
+    int offsetX = Settings::CAMERA_OFFSET_X / pixelsToInches; //get number of pixels to offset the center 
+    int offsetY = Settings::CAMERA_OFFSET_Y * pixelsToInches; //y pixels to offset the thing by
+    
+    //cout << "update";
+
+    int new_x = x - offsetX;
+    int new_y = y - offsetY;
+    
+    new_x += 15;
+    return cv::Point(new_x, new_y);
 }
