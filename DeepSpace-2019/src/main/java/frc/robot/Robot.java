@@ -25,6 +25,7 @@ import frc.robot.Subsystems.SubsystemFlipper;
 import frc.robot.Subsystems.SubsystemLauncher;
 import frc.robot.Subsystems.SubsystemMast;
 import frc.robot.Subsystems.SubsystemReceiver;
+import frc.robot.Subsystems.SubsystemSender;
 import frc.robot.Subsystems.SubsystemShifter;
 import frc.robot.Util.Util;
 
@@ -58,6 +59,7 @@ public class Robot extends TimedRobot {
   public static SubsystemMast       SUB_MAST;
   public static SubsystemPreloader  SUB_PRELOADER;
   public static SubsystemReceiver   SUB_RECEIVER;
+  public static SubsystemSender     SUB_SENDER;
   public static SubsystemShifter    SUB_SHIFTER;
   public static OI                  OI;
   public static Vision              VISION;
@@ -95,6 +97,7 @@ public class Robot extends TimedRobot {
     SUB_MAST       = new SubsystemMast();
     SUB_PRELOADER  = new SubsystemPreloader();
     SUB_RECEIVER   = new SubsystemReceiver();
+    SUB_SENDER     = new SubsystemSender();
     SUB_SHIFTER    = new SubsystemShifter();
     OI             = new OI();
     VISION         = new Vision();
@@ -184,6 +187,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Sub_Mast", SUB_MAST);
     SmartDashboard.putData("Sub_Preloader", SUB_PRELOADER);
     SmartDashboard.putData("Sub_Receiver", SUB_RECEIVER);
+    SmartDashboard.putData("Sub_Sender", SUB_SENDER);
     SmartDashboard.putData("Sub_Shifter", SUB_SHIFTER);
     // SmartDashboard.putNumber("Bandwidth", Robot.VISION.getTotalBandwidth());
   }

@@ -42,6 +42,8 @@ public class CyborgCommandDock extends Command {
     turning.setOutputLimits(-1 * idleSpeed, idleSpeed);
     turning.setSetpoint(0);
 
+    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ONE});
+
     // isFinished = Robot.SUB_RECEIVER.getLastKnownData()[3] == -1;
     isFinished = false;
   }
@@ -81,6 +83,7 @@ public class CyborgCommandDock extends Command {
   @Override
   protected void end() {
     Robot.SUB_DRIVE.stopMotors();
+    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ZERO});
   }
 
   // Called when another command which requires one or more of the same
@@ -88,5 +91,6 @@ public class CyborgCommandDock extends Command {
   @Override
   protected void interrupted() {
     Robot.SUB_DRIVE.stopMotors();
+    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ZERO});
   }
 }
