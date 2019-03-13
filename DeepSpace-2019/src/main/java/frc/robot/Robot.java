@@ -148,6 +148,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Cargo 3", Robot.SUB_MAST.getStoredPosition() == MastPosition.CARGO_3);
 
     SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
+    SmartDashboard.putNumber("Climber Amps", Robot.SUB_CLIMB.getAmperage());
+    SmartDashboard.putNumber("Climber Motor", Robot.SUB_CLIMB.getOutput());
 
     SmartDashboard.putNumber("Flipper Amps", Robot.SUB_FLIPPER.getAmps());
     SmartDashboard.putNumber("Flipper Motor", Robot.SUB_FLIPPER.getPercentOutput() * 100);

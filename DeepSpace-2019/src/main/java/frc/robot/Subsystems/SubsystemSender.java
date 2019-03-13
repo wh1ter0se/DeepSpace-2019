@@ -34,27 +34,29 @@ public class SubsystemSender extends Subsystem {
   }
 
   public SubsystemSender() {
-    buffer = new byte[]{Constants.ASCII_ZERO};
-    new Thread(() -> {
-      byte [] IP   = {10,36,95,10};
-      int     port = 3695;
-      while (!Thread.interrupted()) {
-        try {
-          InetAddress address = InetAddress.getByAddress(IP);
-          DatagramPacket packet = new DatagramPacket(
-            buffer, buffer.length, address, port
-            );
-          DatagramSocket datagramSocket = new DatagramSocket();
-          datagramSocket.send(packet);
-        } catch (UnknownHostException e) {
-          DriverStation.reportError(e.toString(), true);
-        } catch (SocketException e) {
-          DriverStation.reportError(e.toString(), true);
-        } catch (IOException e) {
-          DriverStation.reportError(e.toString(), true);
-        }
-      }
-    }).start();
+    // buffer = new byte[]{Constants.ASCII_ZERO};
+    // new Thread(() -> {
+    //   byte [] IP   = {10,36,95,16};
+    //   int     port = 3695;
+    //   while (!Thread.interrupted()) {
+    //     try {
+    //       InetAddress address = InetAddress.getByAddress(IP);
+    //       DatagramPacket packet = new DatagramPacket(
+    //         buffer, buffer.length, address, port
+    //         );
+    //       DriverStation.reportWarning("Packet:" + buffer.toString(), false);
+    //       DatagramSocket datagramSocket = new DatagramSocket();
+    //       datagramSocket.send(packet);
+    //       datagramSocket.close();
+    //     } catch (UnknownHostException e) {
+    //       DriverStation.reportError(e.toString(), true);
+    //     } catch (SocketException e) {
+    //       DriverStation.reportError(e.toString(), true);
+    //     } catch (IOException e) {
+    //       DriverStation.reportError(e.toString(), true);
+    //     }
+    //   }
+    // }).start();
   }
 
   public void setData(byte[] buffer)  {

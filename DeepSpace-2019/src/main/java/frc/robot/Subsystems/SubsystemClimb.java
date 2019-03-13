@@ -70,4 +70,12 @@ public class SubsystemClimb extends Subsystem {
   public Boolean getSafetyMode() {
     return safetyMode;
   }
+
+  public double getAmperage() {
+    return climber.getOutputCurrent();
+  }
+
+  public double getOutput() {
+    return climber.getMotorOutputPercent();
+  }
 }

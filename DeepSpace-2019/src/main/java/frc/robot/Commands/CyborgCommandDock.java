@@ -29,6 +29,8 @@ public class CyborgCommandDock extends Command {
 
   public CyborgCommandDock() {
     requires(Robot.SUB_DRIVE);
+    requires(Robot.SUB_RECEIVER);
+    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ONE});
   }
 
   // Called just before this Command runs the first time
