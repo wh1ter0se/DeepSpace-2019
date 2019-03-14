@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Commands.IterativeCommandUpdateRumble;
 import frc.robot.Util.Util;
 
 /**
@@ -35,6 +36,7 @@ public class SubsystemReceiver extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
+    setDefaultCommand(new IterativeCommandUpdateRumble());
   }
 
   public SubsystemReceiver() {
