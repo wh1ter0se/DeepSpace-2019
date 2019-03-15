@@ -62,8 +62,11 @@ public class CyborgCommandAlign extends Command {
     SmartDashboard.putBoolean("Aligning", true);
 
     double feedForward = Xbox.RT(OI.DRIVER) - Xbox.LT(OI.DRIVER);
+    feedForward *= Util.getAndSetDouble("Align Inhibitor", .5);
     if (canSee) {
       Robot.SUB_DRIVE.driveByPercentOutputs(-1 * loopOutput + feedForward, loopOutput + feedForward);
+    } else {
+      Robot.SUB_DRIVE.driveByPercentOutputs(feedForward, feedForward);
     }
   }
 

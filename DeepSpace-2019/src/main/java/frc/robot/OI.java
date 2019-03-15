@@ -92,14 +92,14 @@ public class OI {
             Button dock = new JoystickButton(DRIVER, Xbox.LB);
                 dock.toggleWhenPressed(new CyborgCommandGroupDock());
 
-            Button overrideSpit = new JoystickButton(DRIVER, Xbox.RB);
-                overrideSpit.whileHeld(new ButtonCommandSpit());
+            // Button overrideSpit = new JoystickButton(DRIVER, Xbox.RB);
+            //     overrideSpit.whileHeld(new ButtonCommandSpit());
 
             Button overrideClamp = new JoystickButton(DRIVER, Xbox.Y);
                 overrideClamp.toggleWhenPressed(new ButtonCommandToggleClamp());
 
-            // Button align = new JoystickButton(DRIVER, Xbox.RB);
-            //     align.toggleWhenPressed(new CyborgCommandAlign());
+            Button align = new JoystickButton(DRIVER, Xbox.BACK);
+                align.toggleWhenPressed(new CyborgCommandAlign());
 
         /**
          * Operator

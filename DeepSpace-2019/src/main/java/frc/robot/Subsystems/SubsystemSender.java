@@ -46,8 +46,9 @@ public class SubsystemSender extends Subsystem {
     //         );
     //       DriverStation.reportWarning("Packet:" + buffer.toString(), false);
     //       DatagramSocket datagramSocket = new DatagramSocket();
+    //       // datagramSocket.
+    //       DriverStation.reportWarning("Port:" + datagramSocket.getLocalPort(), false);
     //       datagramSocket.send(packet);
-    //       datagramSocket.close();
     //     } catch (UnknownHostException e) {
     //       DriverStation.reportError(e.toString(), true);
     //     } catch (SocketException e) {

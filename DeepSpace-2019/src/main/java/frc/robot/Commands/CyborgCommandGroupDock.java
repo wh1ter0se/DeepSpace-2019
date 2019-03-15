@@ -8,14 +8,17 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import frc.robot.Robot;
 
 public class CyborgCommandGroupDock extends CommandGroup {
   /**
    * Add your docs here.
    */
   public CyborgCommandGroupDock() {
-    addSequential(new ButtonCommandSetGear(1, false));
+    Boolean secondGear = !Robot.SUB_SHIFTER.isFirstGear();
+    if (secondGear) { addSequential(new ButtonCommandSetGear(1, false)); }
     addSequential(new CyborgCommandDock());
     addSequential(new ButtonCommandToggleClamp());
+    if (secondGear) { addSequential(new ButtonCommandSetGear(2, false)); }
   }
 }

@@ -110,7 +110,7 @@ public class Constants {
      */
     public static final int
         DANGER_AMPERAGE        = 55,
-        PUSHING_AMPERAGE       = 35,
+        PUSHING_AMPERAGE       = 25,
         FLIPPER_STALL_AMPERAGE = 25;
         
     /**
