@@ -34,7 +34,7 @@ public class SubsystemSender extends Subsystem {
   }
 
   public SubsystemSender() {
-    // buffer = new byte[]{Constants.ASCII_ZERO};
+    buffer = new byte[]{Constants.ASCII_ZERO};
     // new Thread(() -> {
     //   byte [] IP   = {10,36,95,16};
     //   int     port = 3695;
@@ -44,10 +44,10 @@ public class SubsystemSender extends Subsystem {
     //       DatagramPacket packet = new DatagramPacket(
     //         buffer, buffer.length, address, port
     //         );
-    //       DriverStation.reportWarning("Packet:" + buffer.toString(), false);
+    //       // DriverStation.reportWarning("Packet:" + buffer.toString(), false);
     //       DatagramSocket datagramSocket = new DatagramSocket();
     //       // datagramSocket.
-    //       DriverStation.reportWarning("Port:" + datagramSocket.getLocalPort(), false);
+    //       // DriverStation.reportWarning("Port:" + datagramSocket.getLocalPort(), false);
     //       datagramSocket.send(packet);
     //     } catch (UnknownHostException e) {
     //       DriverStation.reportError(e.toString(), true);

@@ -55,6 +55,7 @@ public class CyborgCommandAlign extends Command {
       lastAngle = Robot.SUB_RECEIVER.getLastKnownData()[3];
     }
     loopOutput = turning.getOutput(Robot.SUB_RECEIVER.getLastKnownData()[3]);
+      if (Math.abs(loopOutput) > 10 && Robot.SUB_RECEIVER.getLastKnownData()[4] < Constants.DOCKING_TARGET_LOCK_RANGE) { loopOutput = 0; }
     inRange = Robot.SUB_RECEIVER.getWithinRange();
     canSee = Robot.SUB_RECEIVER.getLastKnownData()[2] != -1;
     SmartDashboard.putBoolean("canSee", canSee);
