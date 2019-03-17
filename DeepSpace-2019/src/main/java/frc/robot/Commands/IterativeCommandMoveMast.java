@@ -91,12 +91,6 @@ public class IterativeCommandMoveMast extends Command {
         break;
     }
 
-    // innerStageHeight += allowableError * Constants.INNER_MAST_TICKS_PER_INCH;
-    // outerStageHeight += allowableError * Constants.OUTER_MAST_TICKS_PER_INCH;
-
-    // innerStageHeight *= -1;
-    // outerStageHeight *= -1;
-
     stable = Robot.SUB_MAST.innerStageWithinRange(innerStageHeight, allowableError) 
           && Robot.SUB_MAST.outerStageWithinRange(outerStageHeight, allowableError);
     SmartDashboard.putBoolean("Stable Mast", stable);

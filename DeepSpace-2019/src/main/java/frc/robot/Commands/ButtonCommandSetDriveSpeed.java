@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
+import frc.robot.Enumeration.DriveScheme;
 import frc.robot.Enumeration.DriveSpeed;
 import frc.robot.Util.Util;
 
@@ -25,17 +26,19 @@ public class ButtonCommandSetDriveSpeed extends InstantCommand {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    switch (speed) {
-      case LOW:
-        SmartDashboard.putBoolean("Low Speed", true);
-        SmartDashboard.putBoolean("High Speed", false);
-        Robot.SUB_DRIVE.setDriveInhibitor(Util.getAndSetDouble("Lower Drive Inhibitor", 1));
-        break;
-      case HIGH:
-        SmartDashboard.putBoolean("Low Speed", false);
-        SmartDashboard.putBoolean("High Speed", true);
-        Robot.SUB_DRIVE.setDriveInhibitor(Util.getAndSetDouble("Upper Drive Inhibitor", 1));
-        break;
+    if (Robot.controlScheme == DriveScheme.RL_HILO) {
+      switch (speed) {
+        case LOW:
+          SmartDashboard.putBoolean("Low Speed", true);
+          SmartDashboard.putBoolean("High Speed", false);
+          Robot.SUB_DRIVE.setDriveSpeed(DriveSpeed.LOW);
+          break;
+        case HIGH:
+          SmartDashboard.putBoolean("Low Speed", false);
+          SmartDashboard.putBoolean("High Speed", true);
+          Robot.SUB_DRIVE.setDriveSpeed(DriveSpeed.HIGH);
+          break;
+      }
     }
   }
 

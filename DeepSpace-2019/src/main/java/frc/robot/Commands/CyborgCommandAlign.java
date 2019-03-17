@@ -11,11 +11,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.Util.MiniPID;
 import frc.robot.Util.Util;
+import frc.robot.Util.Xbox;
 
-public class CyborgCommandDock extends Command {
+public class CyborgCommandAlign extends Command {
 
   private static MiniPID turning;
 
@@ -27,10 +29,8 @@ public class CyborgCommandDock extends Command {
   private static double lastAngle;
   private static double loopOutput;
 
-  public CyborgCommandDock() {
+  public CyborgCommandAlign() {
     requires(Robot.SUB_DRIVE);
-    requires(Robot.SUB_RECEIVER);
-    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ONE});
   }
 
   // Called just before this Command runs the first time
@@ -44,8 +44,6 @@ public class CyborgCommandDock extends Command {
     turning.setOutputLimits(-1 * idleSpeed, idleSpeed);
     turning.setSetpoint(0);
 
-    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ONE});
-
     // isFinished = Robot.SUB_RECEIVER.getLastKnownData()[3] == -1;
     isFinished = false;
   }
@@ -57,42 +55,40 @@ public class CyborgCommandDock extends Command {
       lastAngle = Robot.SUB_RECEIVER.getLastKnownData()[3];
     }
     loopOutput = turning.getOutput(Robot.SUB_RECEIVER.getLastKnownData()[3]);
+      if (Math.abs(loopOutput) > 10 && Robot.SUB_RECEIVER.getLastKnownData()[4] < Constants.DOCKING_TARGET_LOCK_RANGE) { loopOutput = 0; }
     inRange = Robot.SUB_RECEIVER.getWithinRange();
     canSee = Robot.SUB_RECEIVER.getLastKnownData()[2] != -1;
     SmartDashboard.putBoolean("canSee", canSee);
     SmartDashboard.putBoolean("inRange", inRange);
+    SmartDashboard.putBoolean("Aligning", true);
 
+    double feedForward = Xbox.RT(OI.DRIVER) - Xbox.LT(OI.DRIVER);
+    feedForward *= Util.getAndSetDouble("Align Inhibitor", .5);
     if (canSee) {
-      Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed - loopOutput, idleSpeed + loopOutput);
-    } else if (!canSee && inRange) {
-      Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, idleSpeed);
+      Robot.SUB_DRIVE.driveByPercentOutputs(-1 * loopOutput + feedForward, loopOutput + feedForward);
     } else {
-      if (lastAngle > 0) {
-        Robot.SUB_DRIVE.driveByPercentOutputs(idleSpeed, -1 * idleSpeed);
-      } else {
-        Robot.SUB_DRIVE.driveByPercentOutputs(-1 * idleSpeed, idleSpeed);
-      }
+      Robot.SUB_DRIVE.driveByPercentOutputs(feedForward, feedForward);
     }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isFinished || Robot.SUB_DRIVE.isPushing() && Robot.SUB_DRIVE.isStopped();
+    return isFinished;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    SmartDashboard.putBoolean("Aligning", false);
     Robot.SUB_DRIVE.stopMotors();
-    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ZERO});
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    SmartDashboard.putBoolean("Aligning", false);
     Robot.SUB_DRIVE.stopMotors();
-    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ZERO});
   }
 }

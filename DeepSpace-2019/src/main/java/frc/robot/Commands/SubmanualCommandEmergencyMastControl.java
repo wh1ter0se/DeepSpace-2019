@@ -25,11 +25,6 @@ public class SubmanualCommandEmergencyMastControl extends Command {
   @Override
   protected void initialize() {
     if (OI.OPERATOR.getRawButtonPressed(Xbox.LSTICK)) {
-      DriverStation.reportError("KENZIE WHAT DID YOU DO", false);
-      DriverStation.reportError("KENZIE WHAT DID YOU DO", false);
-      DriverStation.reportError("KENZIE WHAT DID YOU DO", false);
-      DriverStation.reportError("KENZIE WHAT DID YOU DO", false);
-      DriverStation.reportError("KENZIE WHAT DID YOU DO", false);
       falseAlarm = false;
     } else {
       falseAlarm = true;
@@ -40,6 +35,7 @@ public class SubmanualCommandEmergencyMastControl extends Command {
   @Override
   protected void execute() {
     Robot.SUB_MAST.moveInnerStageByPercent(Xbox.RIGHT_Y(OI.OPERATOR));
+    DriverStation.reportError("KENZIE WHAT DID YOU DO", false);
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -21,6 +21,7 @@ import frc.robot.Commands.ButtonCommandSpit;
 import frc.robot.Commands.ButtonCommandToggleClamp;
 import frc.robot.Commands.ButtonCommandToggleIntake;
 import frc.robot.Commands.ButtonCommandToggleShift;
+import frc.robot.Commands.CyborgCommandAlign;
 import frc.robot.Commands.CyborgCommandAutoShift;
 import frc.robot.Commands.CyborgCommandDock;
 import frc.robot.Commands.CyborgCommandFlip;
@@ -73,11 +74,11 @@ public class OI {
             Button toggleShift = new JoystickButton(DRIVER, Xbox.X);
                 toggleShift.whenPressed(new ButtonCommandToggleShift());
 
-            // Button downShift = new JoystickButton(DRIVER, Xbox.A);
-            //     downShift.whenPressed(new ButtonCommandSetGear(1));
+            Button downShift = new JoystickButton(DRIVER, Xbox.A);
+                downShift.whenPressed(new ButtonCommandSetGear(1, true));
 
-            // Button upShift = new JoystickButton(DRIVER, Xbox.B);
-            //     upShift.whenPressed(new ButtonCommandSetGear(2));
+            Button upShift = new JoystickButton(DRIVER, Xbox.B);
+                upShift.whenPressed(new ButtonCommandSetGear(2, true));
 
             Button lowerInhibitor = new JoystickButton(DRIVER, Xbox.A);
                 lowerInhibitor.whenPressed(new ButtonCommandSetDriveSpeed(DriveSpeed.LOW));
@@ -88,8 +89,17 @@ public class OI {
             Button toggleAutoShifting = new JoystickButton(DRIVER, Xbox.START);
                 toggleAutoShifting.toggleWhenPressed(new CyborgCommandAutoShift());
                 
-            Button dock = new JoystickButton(DRIVER, Xbox.LB);
-                dock.toggleWhenPressed(new CyborgCommandGroupDock());
+            // Button dock = new JoystickButton(DRIVER, Xbox.LB);
+            //     dock.toggleWhenPressed(new CyborgCommandGroupDock());
+
+            // Button overrideSpit = new JoystickButton(DRIVER, Xbox.RB);
+            //     overrideSpit.whileHeld(new ButtonCommandSpit());
+
+            Button overrideClamp = new JoystickButton(DRIVER, Xbox.Y);
+                overrideClamp.toggleWhenPressed(new ButtonCommandToggleClamp());
+
+            Button align = new JoystickButton(DRIVER, Xbox.LB);
+                align.toggleWhenPressed(new CyborgCommandAlign());
 
         /**
          * Operator

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.Commands.ManualCommandDrive;
+import frc.robot.Enumeration.DriveSpeed;
 import frc.robot.Util.Xbox;
 
 /**
@@ -33,6 +34,8 @@ public class SubsystemDrive extends Subsystem {
   private static double[] highestRPM;
 
   private double driveInhibitor;
+
+  private DriveSpeed hiLoSpeed;
 
   @Override
   public void initDefaultCommand() {
@@ -55,7 +58,7 @@ public class SubsystemDrive extends Subsystem {
    * Left and right triggers accelerate linearly and left stick rotates
    * @param joy the joystick to be used
    */
-  public void driveRLTank(Joystick joy, double ramp, double staticInhibitor) {
+  public void driveRLGenuine(Joystick joy, double ramp, double calebInhibitor) {
     setInverts();
     setBraking(true);
     setRamps(ramp);
@@ -67,8 +70,30 @@ public class SubsystemDrive extends Subsystem {
     left = (left > 1.0 ? 1.0 : (left < -1.0 ? -1.0 : left));
     right = (right > 1.0 ? 1.0 : (right < -1.0 ? -1.0 : right));
     
-    left *= staticInhibitor * driveInhibitor;
-    right *= staticInhibitor * driveInhibitor;
+    left *= calebInhibitor;
+    right *= calebInhibitor;
+    
+    leftMaster.set(left);
+      leftSlave.set(left);
+    rightMaster.set(right);
+      rightSlave.set(right);
+  }
+
+  public void driveRlHiLo(Joystick joy, double ramp, double lowInhibitor, double highInhibitor) {
+    setInverts();
+    setBraking(true);
+    setRamps(ramp);
+    updateBrownoutRummble(joy);
+
+    double adder = Xbox.RT(joy) - Xbox.LT(joy);
+    double left = adder + (Xbox.LEFT_X(joy) / 1.333333);
+    double right = adder - (Xbox.LEFT_X(joy) / 1.333333);
+    left = (left > 1.0 ? 1.0 : (left < -1.0 ? -1.0 : left));
+    right = (right > 1.0 ? 1.0 : (right < -1.0 ? -1.0 : right));
+    
+    double inhibitor = (hiLoSpeed == DriveSpeed.LOW) ? lowInhibitor : highInhibitor;
+    left *= inhibitor;
+    right *= inhibitor;
     
     leftMaster.set(left);
       leftSlave.set(left);
@@ -86,7 +111,7 @@ public class SubsystemDrive extends Subsystem {
       leftSlave.set(leftOutput);
     rightMaster.set(rightOutput);
       rightSlave.set(rightOutput);
-      DriverStation.reportError("DRIVE COMMAND IS RUNNING", false);
+      // DriverStation.reportError("DRIVE COMMAND IS RUNNING", false);
   }
 
   public double[] getEncoderPositions() {
@@ -193,7 +218,7 @@ public class SubsystemDrive extends Subsystem {
   }
 
   public Boolean isStopped() {
-    return Math.abs(getVelocities()[0]) < 750 && Math.abs(getVelocities()[1]) < 750;
+    return Math.abs(getVelocities()[0]) < 100 && Math.abs(getVelocities()[1]) < 100;
   }
 
   public void updateBrownoutRummble(Joystick joy) {
@@ -204,8 +229,8 @@ public class SubsystemDrive extends Subsystem {
     }
   } 
 
-  public void setDriveInhibitor(double driveInhibitor) {
-    this.driveInhibitor = driveInhibitor;
+  public void setDriveSpeed(DriveSpeed speed) {
+    hiLoSpeed = speed;
   }
 
   

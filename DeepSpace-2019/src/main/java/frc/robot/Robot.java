@@ -10,8 +10,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.SubsystemPreloader;
+import frc.robot.Enumeration.DriveScheme;
+import frc.robot.Enumeration.DriveSpeed;
 import frc.robot.Enumeration.MastPosition;
 import frc.robot.Subsystems.SubsystemCaleb;
 import frc.robot.Subsystems.SubsystemClamp;
@@ -22,7 +25,9 @@ import frc.robot.Subsystems.SubsystemFlipper;
 import frc.robot.Subsystems.SubsystemLauncher;
 import frc.robot.Subsystems.SubsystemMast;
 import frc.robot.Subsystems.SubsystemReceiver;
+import frc.robot.Subsystems.SubsystemSender;
 import frc.robot.Subsystems.SubsystemShifter;
+import frc.robot.Util.Util;
 
 //        _____   _____   ____     ______
 //       |__  /  / ___/  / __ \   / ____/
@@ -54,9 +59,20 @@ public class Robot extends TimedRobot {
   public static SubsystemMast       SUB_MAST;
   public static SubsystemPreloader  SUB_PRELOADER;
   public static SubsystemReceiver   SUB_RECEIVER;
+  public static SubsystemSender     SUB_SENDER;
   public static SubsystemShifter    SUB_SHIFTER;
   public static OI                  OI;
   public static Vision              VISION;
+
+
+  /**
+   * Initialize Choosers
+   */
+  SendableChooser<DriveScheme> schemeChooser;
+  public static DriveScheme    controlScheme;
+
+
+
 
   /**
    * This function is run when the robot is first started up and should be
@@ -81,10 +97,18 @@ public class Robot extends TimedRobot {
     SUB_MAST       = new SubsystemMast();
     SUB_PRELOADER  = new SubsystemPreloader();
     SUB_RECEIVER   = new SubsystemReceiver();
+    SUB_SENDER     = new SubsystemSender();
     SUB_SHIFTER    = new SubsystemShifter();
     OI             = new OI();
     VISION         = new Vision();
 
+    /**
+     * Instantiate Control Scheme Chooser
+     */
+    schemeChooser = new SendableChooser<>();
+      schemeChooser.setDefaultOption(DriveScheme.RL_GENUINE.toString(), DriveScheme.RL_GENUINE);
+      schemeChooser.addOption(DriveScheme.RL_HILO.toString(), DriveScheme.RL_HILO);
+      SmartDashboard.putData("Drive Scheme", schemeChooser);
 
 
     DriverStation.reportWarning("ROBOT INIT COMPLETE", false);
@@ -124,15 +148,17 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Cargo 3", Robot.SUB_MAST.getStoredPosition() == MastPosition.CARGO_3);
 
     SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
+    SmartDashboard.putNumber("Climber Amps", Robot.SUB_CLIMB.getAmperage());
+    SmartDashboard.putNumber("Climber Motor", Robot.SUB_CLIMB.getOutput());
 
     SmartDashboard.putNumber("Flipper Amps", Robot.SUB_FLIPPER.getAmps());
-    SmartDashboard.putNumber("Flipper Motor", Robot.SUB_FLIPPER.getPercentOutput());
+    SmartDashboard.putNumber("Flipper Motor", Robot.SUB_FLIPPER.getPercentOutput() * 100);
 
     SmartDashboard.putNumber("Hood Amps", Robot.SUB_LAUNCHER.getAmps());
-    SmartDashboard.putNumber("Ball Hood", Robot.SUB_LAUNCHER.getPercentOutput());
+    SmartDashboard.putNumber("Ball Hood", Robot.SUB_LAUNCHER.getPercentOutput() * 100);
 
     SmartDashboard.putNumber("Intake Amps", Robot.SUB_PRELOADER.getAmps());
-    SmartDashboard.putNumber("Ball Intake", Robot.SUB_PRELOADER.getPercentOutput());
+    SmartDashboard.putNumber("Ball Intake", Robot.SUB_PRELOADER.getPercentOutput() * 100);
 
     SmartDashboard.putNumber("First Stage Amps", Robot.SUB_MAST.getAmperage()[0]);
     SmartDashboard.putNumber("Second Stage Amps", Robot.SUB_MAST.getAmperage()[1]);
@@ -147,6 +173,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Inner Mast Inches", Robot.SUB_MAST.getEncoderValues()[0] / Constants.INNER_MAST_TICKS_PER_INCH);
     SmartDashboard.putNumber("Outer Mast Inches", Robot.SUB_MAST.getEncoderValues()[1] / Constants.OUTER_MAST_TICKS_PER_INCH);
 
+    SmartDashboard.putBoolean("Climb Time", DriverStation.getInstance().getMatchTime() < Util.getAndSetDouble("Climb Period", 40));
     Robot.SUB_MAST.publishInnerStagePIDData();
     Robot.SUB_MAST.publishOuterStagePIDData();
 
@@ -162,6 +189,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Sub_Mast", SUB_MAST);
     SmartDashboard.putData("Sub_Preloader", SUB_PRELOADER);
     SmartDashboard.putData("Sub_Receiver", SUB_RECEIVER);
+    SmartDashboard.putData("Sub_Sender", SUB_SENDER);
     SmartDashboard.putData("Sub_Shifter", SUB_SHIFTER);
     // SmartDashboard.putNumber("Bandwidth", Robot.VISION.getTotalBandwidth());
   }
@@ -180,6 +208,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Robot.SUB_DRIVE.setBraking(true);
+    initChecklist();
   }
 
   /**
@@ -188,6 +217,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
+    if (schemeChooser.getSelected() != null){
+      controlScheme = schemeChooser.getSelected();
+    }
   }
 
   /**
@@ -196,12 +228,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+    if (schemeChooser.getSelected() != null){
+      controlScheme = schemeChooser.getSelected();
+    }
   }
 
   @Override
   public void teleopInit() {
-    //TODO Move these to autoInit before comp
-    initChecklist();
   }
 
   /**
@@ -212,18 +245,19 @@ public class Robot extends TimedRobot {
   }
   
   public void disabledInit() {
-    Robot.SUB_DRIVE.setBraking(false);
-    Robot.SUB_SHIFTER.upShift();
+    Robot.SUB_DRIVE.setBraking(true);
+    Robot.SUB_SHIFTER.downShift();
   }
 
   public void initChecklist() {
-    Robot.SUB_DRIVE.setDriveInhibitor(1);
-      SmartDashboard.putBoolean("Low Speed", false);
-      SmartDashboard.putBoolean("High Speed", true);
+    Robot.SUB_DRIVE.setDriveSpeed(DriveSpeed.LOW);
+      SmartDashboard.putBoolean("Low Speed", true);
+      SmartDashboard.putBoolean("High Speed", false);
       Robot.SUB_DRIVE.setBraking(true);
     Robot.SUB_CLAMP.closeClamp();
-    Robot.SUB_SHIFTER.downShift();
+    Robot.SUB_SHIFTER.upShift();
     Robot.SUB_PRELOADER.retract();
     Robot.SUB_MAST.zeroEncoders();
+      Robot.SUB_MAST.setStoredPosition(MastPosition.HATCH_1);
   }
 }

@@ -50,11 +50,11 @@ public class Vision extends TimedRobot {
     public Vision(){
         new Thread(() -> {
             ACam = CameraServer.getInstance().startAutomaticCapture();
-                ACam.setResolution(160, 100);
+                ACam.setResolution(80, 50);
                 ACam.setFPS(30);
                 ACam.setExposureManual(45);
             BCam = CameraServer.getInstance().startAutomaticCapture();
-                BCam.setResolution(160, 100);
+                BCam.setResolution(80, 50);
                 BCam.setFPS(30);
                 BCam.setExposureManual(45);
 
@@ -62,19 +62,19 @@ public class Vision extends TimedRobot {
             BCam.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
 
             server = CameraServer.getInstance().getServer();
-            server.setSource(BCam);
+            // server.setSource(ACam);
 
-            CvSink cvSink = CameraServer.getInstance().getVideo();
-            CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 80, 50);
+            // CvSink cvSink = CameraServer.getInstance().getVideo();
+            // CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 80, 50);
             
-            Mat source = new Mat();
-            Mat output = new Mat();
+            // Mat source = new Mat();
+            // Mat output = new Mat();
             
-            while(!Thread.interrupted()) {
-                cvSink.grabFrame(source);
-                Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-                outputStream.putFrame(output);
-            }
+            // while(!Thread.interrupted()) {
+            //     cvSink.grabFrame(source);
+            //     Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+            //     outputStream.putFrame(output);
+            // }
         }).start();
 
         // updateAllSettings((int) (Util.getAndSetDouble("Cam Exposure", Constants.BACKUP_EXPOSURE)),
@@ -87,9 +87,9 @@ public class Vision extends TimedRobot {
      */
     public void setCamID(int ID) {
         if (ID == 0) {
-            server.setSource(ACam);
+            // server.setSource(ACam);
         } else if (ID == 1) {
-            server.setSource(BCam);
+            // server.setSource(BCam);
         } 
     }
 
