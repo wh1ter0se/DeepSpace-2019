@@ -89,11 +89,17 @@ public class OI {
             Button toggleAutoShifting = new JoystickButton(DRIVER, Xbox.START);
                 toggleAutoShifting.toggleWhenPressed(new CyborgCommandAutoShift());
                 
-            Button dock = new JoystickButton(DRIVER, Xbox.LB);
-                dock.toggleWhenPressed(new CyborgCommandGroupDock());
+            // Button dock = new JoystickButton(DRIVER, Xbox.LB);
+            //     dock.toggleWhenPressed(new CyborgCommandGroupDock());
 
-            // Button align = new JoystickButton(DRIVER, Xbox.RB);
-            //     align.toggleWhenPressed(new CyborgCommandAlign());
+            // Button overrideSpit = new JoystickButton(DRIVER, Xbox.RB);
+            //     overrideSpit.whileHeld(new ButtonCommandSpit());
+
+            Button overrideClamp = new JoystickButton(DRIVER, Xbox.Y);
+                overrideClamp.toggleWhenPressed(new ButtonCommandToggleClamp());
+
+            Button align = new JoystickButton(DRIVER, Xbox.LB);
+                align.toggleWhenPressed(new CyborgCommandAlign());
 
         /**
          * Operator

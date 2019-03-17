@@ -29,6 +29,8 @@ public class CyborgCommandDock extends Command {
 
   public CyborgCommandDock() {
     requires(Robot.SUB_DRIVE);
+    requires(Robot.SUB_RECEIVER);
+    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ONE});
   }
 
   // Called just before this Command runs the first time
@@ -41,6 +43,8 @@ public class CyborgCommandDock extends Command {
     idleSpeed = Util.getAndSetDouble("Docking Speed", Constants.BACKUP_DOCKING_SPEED);
     turning.setOutputLimits(-1 * idleSpeed, idleSpeed);
     turning.setSetpoint(0);
+
+    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ONE});
 
     // isFinished = Robot.SUB_RECEIVER.getLastKnownData()[3] == -1;
     isFinished = false;
@@ -74,13 +78,14 @@ public class CyborgCommandDock extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isFinished || Robot.SUB_DRIVE.isPushing();
+    return isFinished || Robot.SUB_DRIVE.isPushing() && Robot.SUB_DRIVE.isStopped();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
     Robot.SUB_DRIVE.stopMotors();
+    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ZERO});
   }
 
   // Called when another command which requires one or more of the same
@@ -88,5 +93,6 @@ public class CyborgCommandDock extends Command {
   @Override
   protected void interrupted() {
     Robot.SUB_DRIVE.stopMotors();
+    Robot.SUB_SENDER.setData(new byte[]{Constants.ASCII_ZERO});
   }
 }

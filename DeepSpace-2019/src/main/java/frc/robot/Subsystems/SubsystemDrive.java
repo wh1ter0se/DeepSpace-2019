@@ -111,7 +111,7 @@ public class SubsystemDrive extends Subsystem {
       leftSlave.set(leftOutput);
     rightMaster.set(rightOutput);
       rightSlave.set(rightOutput);
-      DriverStation.reportError("DRIVE COMMAND IS RUNNING", false);
+      // DriverStation.reportError("DRIVE COMMAND IS RUNNING", false);
   }
 
   public double[] getEncoderPositions() {
@@ -218,7 +218,7 @@ public class SubsystemDrive extends Subsystem {
   }
 
   public Boolean isStopped() {
-    return Math.abs(getVelocities()[0]) < 750 && Math.abs(getVelocities()[1]) < 750;
+    return Math.abs(getVelocities()[0]) < 100 && Math.abs(getVelocities()[1]) < 100;
   }
 
   public void updateBrownoutRummble(Joystick joy) {

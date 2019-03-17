@@ -63,6 +63,7 @@ class Util {
     static int distance(cv::Point point1, cv::Point point2);
     static int WhichIsBigger(int num1, int num2);
     static cv::Point computeOffsets(int x, int y, double pixelsToInches);
+    static cv::Point computeOffsets(int x, int y, double offsetX, double offsetY, double pixelsToInches);
 };
 
 /**
@@ -97,6 +98,7 @@ class RightRect {
     cv::Point center();
     cv::Point target_center();
     int distance();
+    int height();
     double angle();
     
     private:

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Commands.IterativeCommandUpdateRumble;
 import frc.robot.Util.Util;
 
 /**
@@ -35,6 +36,7 @@ public class SubsystemReceiver extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
+    setDefaultCommand(new IterativeCommandUpdateRumble());
   }
 
   public SubsystemReceiver() {
@@ -89,7 +91,7 @@ public class SubsystemReceiver extends Subsystem {
    */
   public double[] getLastKnownData() {
       double[] data = new double[]{-1,-1,-1,-1};
-      int[] indices = new int[3];
+      int[] indices = new int[]{2,5,8};
       try {
         indices = IntStream.range(0, latestSegment.length() - 1)
                   .filter(i -> latestSegment.charAt(i) == ',')
@@ -101,22 +103,22 @@ public class SubsystemReceiver extends Subsystem {
       } catch (NumberFormatException e) {
         DriverStation.reportError("NUMBER FORMAT EXCEPTION", true); 
         DriverStation.reportError("latestSegment = " + latestSegment, false);
-        DriverStation.reportError("data[0] = " + data[0], false); 
-        DriverStation.reportError("data[1] = " + data[1], false); 
-        DriverStation.reportError("data[2] = " + data[2], false); 
-        DriverStation.reportError("data[3] = " + data[3], false);
+        // DriverStation.reportError("data[0] = " + data[0], false); 
+        // DriverStation.reportError("data[1] = " + data[1], false); 
+        // DriverStation.reportError("data[2] = " + data[2], false); 
+        // DriverStation.reportError("data[3] = " + data[3], false);
       } catch (StringIndexOutOfBoundsException e) {
         DriverStation.reportError("STRING INDEX OUT OF BOUNDS EXCEPTION", true);
         DriverStation.reportError("latestSegment = " + latestSegment, false);
-        DriverStation.reportError("indices[0] = " + indices[0], false); 
-        DriverStation.reportError("indices[1] = " + indices[1], false); 
-        DriverStation.reportError("indices[2] = " + indices[2], false); 
+        // DriverStation.reportError("indices[0] = " + indices[0], false); 
+        // DriverStation.reportError("indices[1] = " + indices[1], false); 
+        // DriverStation.reportError("indices[2] = " + indices[2], false); 
       } catch (ArrayIndexOutOfBoundsException e) {
         DriverStation.reportError("ARRAY INDEX OUT OF BOUNDS EXCEPTION", true);
         DriverStation.reportError("latestSegment = " + latestSegment, false);
-        DriverStation.reportError("indices[0] = " + indices[0], false); 
-        DriverStation.reportError("indices[1] = " + indices[1], false); 
-        DriverStation.reportError("indices[2] = " + indices[2], false); 
+        // DriverStation.reportError("indices[0] = " + indices[0], false); 
+        // DriverStation.reportError("indices[1] = " + indices[1], false); 
+        // DriverStation.reportError("indices[2] = " + indices[2], false); 
       }
       updateTargetLock(data);
       return data;

@@ -9,6 +9,8 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -21,7 +23,8 @@ import frc.robot.Util.Xbox;
  */
 public class SubsystemClimb extends Subsystem {
 
-  private static TalonSRX climber;
+  // private static TalonSRX climber;
+  private static CANSparkMax climber;
 
   private boolean safetyMode;
 
@@ -31,7 +34,8 @@ public class SubsystemClimb extends Subsystem {
 
   public SubsystemClimb() {
     safetyMode = true;
-    climber = new TalonSRX(Constants.CLIMBER_ID);
+    // climber = new TalonSRX(Constants.CLIMBER_ID);
+    climber = new CANSparkMax(Constants.CLIMBER_ID, MotorType.kBrushless);
     setAmpLimit(60);
   }
 
@@ -43,8 +47,8 @@ public class SubsystemClimb extends Subsystem {
    */
   public double ascendByJoystick(Joystick joy) {
     double percentOutput = Xbox.RT(joy) - Xbox.LT(joy);
-    climber.set(ControlMode.PercentOutput, percentOutput);
-    DriverStation.reportWarning(percentOutput + "", false);
+    // climber.set(ControlMode.PercentOutput, percentOutput);
+    climber.set(percentOutput);
     return climber.getOutputCurrent();
   }
 
@@ -52,7 +56,8 @@ public class SubsystemClimb extends Subsystem {
    * Sets the maximum allowable amperage of the climb motor
    */
   public void setAmpLimit(int amps) {
-    climber.configContinuousCurrentLimit(amps);
+    // climber.configContinuousCurrentLimit(amps);
+    climber.setSmartCurrentLimit(amps);
   }
 
   /**
@@ -69,5 +74,14 @@ public class SubsystemClimb extends Subsystem {
    */
   public Boolean getSafetyMode() {
     return safetyMode;
+  }
+
+  public double getAmperage() {
+    return climber.getOutputCurrent();
+  }
+
+  public double getOutput() {
+    // return climber.getMotorOutputPercent();
+    return climber.getAppliedOutput();
   }
 }

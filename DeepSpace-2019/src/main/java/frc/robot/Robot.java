@@ -25,6 +25,7 @@ import frc.robot.Subsystems.SubsystemFlipper;
 import frc.robot.Subsystems.SubsystemLauncher;
 import frc.robot.Subsystems.SubsystemMast;
 import frc.robot.Subsystems.SubsystemReceiver;
+import frc.robot.Subsystems.SubsystemSender;
 import frc.robot.Subsystems.SubsystemShifter;
 import frc.robot.Util.Util;
 
@@ -58,6 +59,7 @@ public class Robot extends TimedRobot {
   public static SubsystemMast       SUB_MAST;
   public static SubsystemPreloader  SUB_PRELOADER;
   public static SubsystemReceiver   SUB_RECEIVER;
+  public static SubsystemSender     SUB_SENDER;
   public static SubsystemShifter    SUB_SHIFTER;
   public static OI                  OI;
   public static Vision              VISION;
@@ -95,6 +97,7 @@ public class Robot extends TimedRobot {
     SUB_MAST       = new SubsystemMast();
     SUB_PRELOADER  = new SubsystemPreloader();
     SUB_RECEIVER   = new SubsystemReceiver();
+    SUB_SENDER     = new SubsystemSender();
     SUB_SHIFTER    = new SubsystemShifter();
     OI             = new OI();
     VISION         = new Vision();
@@ -145,6 +148,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Cargo 3", Robot.SUB_MAST.getStoredPosition() == MastPosition.CARGO_3);
 
     SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
+    SmartDashboard.putNumber("Climber Amps", Robot.SUB_CLIMB.getAmperage());
+    SmartDashboard.putNumber("Climber Motor", Robot.SUB_CLIMB.getOutput());
 
     SmartDashboard.putNumber("Flipper Amps", Robot.SUB_FLIPPER.getAmps());
     SmartDashboard.putNumber("Flipper Motor", Robot.SUB_FLIPPER.getPercentOutput() * 100);
@@ -184,6 +189,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Sub_Mast", SUB_MAST);
     SmartDashboard.putData("Sub_Preloader", SUB_PRELOADER);
     SmartDashboard.putData("Sub_Receiver", SUB_RECEIVER);
+    SmartDashboard.putData("Sub_Sender", SUB_SENDER);
     SmartDashboard.putData("Sub_Shifter", SUB_SHIFTER);
     // SmartDashboard.putNumber("Bandwidth", Robot.VISION.getTotalBandwidth());
   }
@@ -244,12 +250,12 @@ public class Robot extends TimedRobot {
   }
 
   public void initChecklist() {
-    Robot.SUB_DRIVE.setDriveSpeed(DriveSpeed.HIGH);
-      SmartDashboard.putBoolean("Low Speed", false);
-      SmartDashboard.putBoolean("High Speed", true);
+    Robot.SUB_DRIVE.setDriveSpeed(DriveSpeed.LOW);
+      SmartDashboard.putBoolean("Low Speed", true);
+      SmartDashboard.putBoolean("High Speed", false);
       Robot.SUB_DRIVE.setBraking(true);
     Robot.SUB_CLAMP.closeClamp();
-    Robot.SUB_SHIFTER.downShift();
+    Robot.SUB_SHIFTER.upShift();
     Robot.SUB_PRELOADER.retract();
     Robot.SUB_MAST.zeroEncoders();
       Robot.SUB_MAST.setStoredPosition(MastPosition.HATCH_1);

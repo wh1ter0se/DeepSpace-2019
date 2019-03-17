@@ -25,6 +25,13 @@ public class Constants {
         FULL_UPSHIFT_RPM                 = 3000,
             FULL_DOWNSHIFT_RPM           = 1000;
 
+    /**
+     * ASCII Values
+     */
+    public static final byte
+        ASCII_ZERO = 30,
+        ASCII_ONE  = 31;
+
     /** 
      * Docking Values
      */
@@ -103,7 +110,7 @@ public class Constants {
      */
     public static final int
         DANGER_AMPERAGE        = 55,
-        PUSHING_AMPERAGE       = 35,
+        PUSHING_AMPERAGE       = 25,
         FLIPPER_STALL_AMPERAGE = 25;
         
     /**

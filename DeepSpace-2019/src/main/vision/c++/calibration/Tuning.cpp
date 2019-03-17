@@ -21,16 +21,16 @@ GtkWidget *tuning_slider_error_correction; //the slider where error correction i
 GtkWidget *tuning_exit_button; //the button that closes the window and disposes the object.
 
 static gboolean tuning_Update() {
-	int known_height = 0,
+	double known_height = 0,
 		focal_height = 0,
 		error_correct = 0,
 		known_distance = 0;
 	
 	//grab the values off the sliders
-	known_height = gtk_range_get_value(GTK_RANGE(tuning_slider_known_width));
-	focal_height = gtk_range_get_value(GTK_RANGE(tuning_slider_focal_distance));
-	error_correct = gtk_range_get_value(GTK_RANGE(tuning_slider_error_correction));
-	known_distance = gtk_range_get_value(GTK_RANGE(tuning_slider_known_distance));
+	known_height = (double) gtk_range_get_value(GTK_RANGE(tuning_slider_known_width));
+	focal_height = (double) gtk_range_get_value(GTK_RANGE(tuning_slider_focal_distance));
+	error_correct = (double) gtk_range_get_value(GTK_RANGE(tuning_slider_error_correction));
+	known_distance = (double) gtk_range_get_value(GTK_RANGE(tuning_slider_known_distance));
 
 	int dist = PostProcessor::Update(vidCap, known_height, focal_height, error_correct, known_distance);
 	string dist_str = std::to_string(dist); //converts our value into a string to put on label
