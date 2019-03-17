@@ -62,6 +62,13 @@ int RightRect::distance() {
 }
 
 /**
+ * Returns the height of the target in pixels
+ */
+int RightRect::height() {
+	return Util::WhichIsBigger(this->rect.size.width, this->rect.size.height);
+}
+
+/**
  * Returns the angle that the robot must turn to center itself with the Rect.
  */
 double RightRect::angle() {
@@ -69,8 +76,10 @@ double RightRect::angle() {
 	double pixels_to_inches = Settings::KNOWN_HEIGHT / Util::WhichIsBigger(this->rect.size.width, this->rect.size.height);
 	
 	//get the offsets for center and target
-	cv::Point target_offset = Util::computeOffsets(Settings::CAMERA_RESOLUTION_X / 2, Settings::CAMERA_RESOLUTION_Y / 2, pixels_to_inches);
 	
+	cv::Point target_offset = Util::computeOffsets(Settings::CAMERA_RESOLUTION_X / 2, Settings::CAMERA_RESOLUTION_Y / 2, pixels_to_inches);
+	target_offset           = Util::computeOffsets(target_offset.x, target_offset.y, -5.0, 0.0, pixels_to_inches);
+		
 	int x_offset = target_center().x - target_offset.x;
 	x_offset *= pixels_to_inches;
 	

@@ -15,31 +15,34 @@ class Settings {
         
     //offsets (inches)
     static const int 
-        CAMERA_OFFSET_X = 13,
+        CAMERA_OFFSET_X = 9,
         CAMERA_OFFSET_Y = 4;
+        
+    static constexpr double
+        CAMERA_OFFSET_RIGHTRECT_X = 0;
         
     //distance measurement settings
     static constexpr double 
         KNOWN_HEIGHT = 5.5,
-        FOCAL_HEIGHT = 319.0,
-        DIST_BETWEEN_RECTS = 12,
-        CALIBRATED_DISTANCE = 18,
-        ERROR_CORRECTION = -0.14;
+        FOCAL_HEIGHT = 191.0,
+        DIST_BETWEEN_RECTS = 12.0,
+        CALIBRATED_DISTANCE = 36.0,
+        ERROR_CORRECTION = 0.15;
         
     //size settings (inches)
     static constexpr double
-        ASPECT_RATIO = 0.34,
-        ASPECT_RATIO_ERROR = 0.2;
+        ASPECT_RATIO = 0.55,
+        ASPECT_RATIO_ERROR = 0.35;
 
     static const int 
-        MIN_AREA = 100,
+        MIN_AREA = 5,
         SINGLE_CONTOUR_MIN_AREA = 500; //minimum area for the right contour when we are using right to calculate data
     
     //angle settings (degrees)
     static const int
-        LEFT_ANGLE = -78,
+        LEFT_ANGLE = -76,
         RIGHT_ANGLE = -16,
-        ANGLE_ERROR = 9;
+        ANGLE_ERROR = 13;
         
     static constexpr double
         RIGHT_ANGLE_ONLY_DAMPER = 0.25;
@@ -53,7 +56,7 @@ class Settings {
     static const int 
         MULTIPLE_CONTOUR_IGNORE_THRESHOLD = 150,
         MULTIPLE_CONTOUR_TARGET_LOCK = 42,
-        CONSECUTIVE_FRAME_UNLOCK = 5;
+        CONSECUTIVE_FRAME_UNLOCK = 3;
 
 
     static double Aspect_Ratio_Max();

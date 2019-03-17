@@ -52,7 +52,7 @@ double PairData::distance() {
     double error = Settings::CALIBRATED_DISTANCE - target_dist;
     error *= (double) Settings::ERROR_CORRECTION;
     target_dist += error;
-    return (int) target_dist;
+    return target_dist;
 }
 
 double PairData::angle(double distance) {

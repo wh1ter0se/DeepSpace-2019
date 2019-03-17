@@ -48,6 +48,16 @@ bool Util::IsElgible(cv::RotatedRect rect) {
 
     angleTest = (angle < left_angle_max && angle > left_angle_min)
               || (angle < right_angle_max && angle > right_angle_min); //true is angle is cool, false if no.
+              
+    //if(angleTest) {
+        //cout << "ratio test: " << ratioTest << ", ratio value: " << aspect_ratio << ", area test: " << areaTest << endl;
+        //cout.flush();
+    //}
+    
+    //if(ratioTest && areaTest) {
+        //cout << "angle test: " << angleTest << ", angle value: " << angle << endl;
+        //cout.flush();
+    //}
     
     return ratioTest && areaTest && angleTest; //returns true if both tests are true, otherwise returns false
 }
@@ -107,14 +117,7 @@ double Util::returnTrueDistanceScalar(cv::RotatedRect rectangle) {
  * Computes the distance between two points
  */
 int Util::distance(cv::Point point1, cv::Point point2) {
-    int distance = 0;
-    int x = 0;
-    int y = 0;
-    
-    x = point1.x - point2.x;
-    y = point1.y - point2.y;
-    distance = sqrt(x + y);
-    return distance;
+    return abs(point1.x - point2.x);
 }
 
 int Util::WhichIsBigger(int num1, int num2) {
@@ -134,5 +137,18 @@ cv::Point Util::computeOffsets(int x, int y, double pixelsToInches) {
     int new_y = y - offsetY;
     
     new_x += 15;
+    return cv::Point(new_x, new_y);
+}
+
+cv::Point Util::computeOffsets(int x, int y, double offsetX, double offsetY, double pixelsToInches) {
+    double offX = offsetX / (double)pixelsToInches; //get number of pixels to offset the center 
+    double offY = offsetY * (double)pixelsToInches; //y pixels to offset the thing by
+    
+    //cout << "update";
+
+    int new_x = x - offX;
+    int new_y = y - offY;
+    
+    //new_x += 15;
     return cv::Point(new_x, new_y);
 }

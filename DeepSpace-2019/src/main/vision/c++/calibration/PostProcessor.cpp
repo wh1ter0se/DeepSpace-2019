@@ -28,7 +28,7 @@ int PostProcessor::Update(cv::VideoCapture cap, double known_height, double foca
         int rectArea = minRect.size.width * minRect.size.height;
         int rectAngle = minRect.angle;
 
-        if(abs(rectAngle) > 4 && rectArea > 1000) {
+        if(abs(rectAngle) > 4 && rectArea > 300) {
             cv::Rect box = cv::boundingRect(contour);
             cv::circle(out, minRect.center, 3, cv::Scalar(0,0,255), 4);
             cv::rectangle(out, box, cv::Scalar(255,0,0), 3);
@@ -49,17 +49,17 @@ int PostProcessor::Update(cv::VideoCapture cap, double known_height, double foca
 
 
         //calculate the distance between the target and the camera
-        int target_height = 0;
+        double target_height = 0;
         if(leftRect.size.height > leftRect.size.width) 
-            target_height = leftRect.size.height;
+            target_height = (double) leftRect.size.height;
         else
-            target_height = leftRect.size.width;
+            target_height = (double) leftRect.size.width;
 
-        distance = (double) ((known_height * focal_height) / (double) target_height);
+        distance = (double) ((known_height * focal_height) / target_height);
         
 
         double error = known_distance - distance;
-        error *= (double) error_correct;
+        error *= error_correct;
         distance += error;
         
         cout << "height: " << target_height << " " << "distance: " << distance << ", error: " << error << "\n";
