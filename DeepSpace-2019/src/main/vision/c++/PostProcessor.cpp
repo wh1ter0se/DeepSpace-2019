@@ -19,9 +19,9 @@ PostProcessor::PostProcessor() {
     cap.set(cv::CAP_PROP_FRAME_HEIGHT, Settings::CAMERA_RESOLUTION_Y);
 
     if(Settings::DEBUG)
-        cout << "Postprocessor starting in debugging mode.";
+        cout << "Postprocessor starting in debugging mode." << endl;
     else
-        cout << "Postprocessor starting in running mode.";
+        cout << "Postprocessor starting in running mode." << endl;
 }
 
 /**
@@ -37,6 +37,8 @@ void PostProcessor::Loop() {
     
     int lock_frames = 0;
     int last_dist = 0;
+    
+    string last_msg = "";
         
     while(!stop) {
         cv::Mat img; //image we will be processing
@@ -105,7 +107,7 @@ void PostProcessor::Loop() {
             ////look for paired and unpaired targets. If we can find a paired and right rect, we use the right rect
             bool use_paired_rects = true; //when false will use unpaired rects only
             //if(unpairedRects.size() % 2 == 1 && pairedRects.size() > 0) { //there is at least one unpaired rect and one target
-                ////loop through paired rects and see if they are past MULTIPLE_TARGET_THRESHOLD
+                //loop through paired rects and see if they are past MULTIPLE_TARGET_THRESHOLD
                 //cout << " possible ";
                 //cout.flush();
                 //for(int i=0; i<pairedRects.size(); i++) {
@@ -131,48 +133,53 @@ void PostProcessor::Loop() {
                 lastTarget = biggestTarget; //that way if we lose the left side we can still look at the right 
                 use_last_target = true;
                 
-            } else {
+            }
                 
-                if(use_last_target) {
-                    //find the x, y, distance and angle of the right target
-                    bool targetFound = false;
-                    //only use right rects if there is a right rect 
-                    if(unpairedRects.size() > pairedRects.size() * 2) {
-                        for(int i=0; i<unpairedRects.size(); i++) {
-                            RightRect target = RightRect(unpairedRects[i]);
-                            if(target.isElgible()) {
-                                cv::Point target_center = target.center();
-                                target_x = target_center.x;
-                                target_y = target_center.y;
-                                target_dist = target.distance();
-                                target_angle = 0;
+            if(pairedRects.size() == 0) {
+                //find the x, y, distance and angle of the right target
+                bool targetFound = false;
+                //only use right rects if there is a right rect 
+                //if(unpairedRects.size() > pairedRects.size() * 2) {
+                    for(int i=0; i<unpairedRects.size(); i++) {
+                        RightRect target = RightRect(unpairedRects[i]);
+                        if(target.isElgible()) {
+                            cv::Point target_center = target.center();
+                            //cout << "right rect" << endl;
+                            cout.flush();
+                            target_x = target_center.x;
+                            target_y = target_center.y;
+                            target_dist = target.distance();
+                            target_angle = target.angle();
+                        
+                            last_dist = target_dist;
+                        
+                            targetFound = true;
+                            lastRightRect = target;
+                        
+                            //if(target.distance() < Settings::MULTIPLE_CONTOUR_TARGET_LOCK) {
+                                //target_x = -1;
+                                //target_y = -1;
+                                //target_dist = -1;
+                                //target_angle = 180; //lock for colton to just drive
+                                //locked = true;
                             
-                                last_dist = target_dist;
+                                ////cout << "LOCKING. last distance: " << last_dist << endl;
+                                ////cout.flush(); 
                             
-                                targetFound = true;
-                                lastRightRect = target;
-                            
-                                if(target.distance() < Settings::MULTIPLE_CONTOUR_TARGET_LOCK) {
-                                    target_x = -1;
-                                    target_y = -1;
-                                    target_dist = -1;
-                                    target_angle = 180; //lock for colton to just drive
-                                    locked = true;
+                            //}
+                    
+                            if(Settings::DEBUG)
+                                //draw a circle in the center of the contour we are using
+                                cv::circle(out, cv::Point(target_x, target_y), 3, cv::Scalar(255,255,0), 5);
                                 
-                                    //cout << "LOCKING. last distance: " << last_dist << endl;
-                                    //cout.flush();
-                                
-                                }
+                                //cv::Point robot_center = Util::computeOffsets(Settings::CAMERA_RESOLUTION_X / 2, Settings::CAMERA_RESOLUTION_Y / 2, (Settings::KNOWN_HEIGHT / target.height()));
+                                //robot_center           = Util::computeOffsets(robot_center.x, robot_center.y, Settings::CAMERA_OFFSET_RIGHTRECT_X, 0, (Settings::KNOWN_HEIGHT / target.height()));
+                                //cv::circle(out, robot_center, 3, cv::Scalar(255, 0, 255), 5);
                             
-                                if(Settings::DEBUG)
-                                    //draw a circle in the center of the contour we are using
-                                    cv::circle(out, cv::Point(target_x, target_y), 3, cv::Scalar(255,255,0), 5);
-                                
-                                break; //we found a good rectangle, we don't need anything else, so break the loop
-                            }
+                            break; //we found a good rectangle, we don't need anything else, so break the loop
                         }
-                    }
-                }              
+                    //}
+                }
             }
             
             if(target_x < 0) {//lock up because we cannot see a target
@@ -184,7 +191,7 @@ void PostProcessor::Loop() {
                 
                 //cout << "LOCKED!" << endl; 
                 
-                if(target_x > -1 && target_dist > Settings::MULTIPLE_CONTOUR_TARGET_LOCK) { //there is indeed a target in view
+                if(target_x > -1) { //there is indeed a target in view
                     lock_frames++;
                     //cout << "GOOD FRAME: " << lock_frames << endl;
                     if(lock_frames >= Settings::CONSECUTIVE_FRAME_UNLOCK) {
@@ -204,6 +211,7 @@ void PostProcessor::Loop() {
                 
             }
             
+            
             //cout << " distance: " << last_dist << endl;
             //cout.flush();
             
@@ -214,12 +222,11 @@ void PostProcessor::Loop() {
             string a = std::to_string((int) target_angle);
             sendToRIO = ":" + x + "," + y + "," + d + "," + a + ";";
             
-            cout << sendToRIO << endl;
-            cout.flush(); 
+            //cout << sendToRIO << endl;
+            //cout.flush(); 
             
             //UDP send to RIO here 
             this->sender.Send(sendToRIO);
-            
 
             if(Settings::DEBUG) {
                 //puttext(img, text, point, font, scale, color)

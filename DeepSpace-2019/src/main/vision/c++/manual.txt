@@ -28,9 +28,11 @@ All settings for the program are located in "Settings.h".
 
  - CAMERA_OFFSET_X    : The horizontal offset of the camera from the center of the robot (inches)
  - CAMERA_OFFSET_Y    : The vertical offset of the camera from the center of the robot (inches)
+ - CAMERA_OFFSET_RIGHRECT_X : The horizontal offset of the right rectangle of the target from the robot center (inches)
 
  - KNOWN_HEIGHT       : The height of ONE of the rectangular pieces of the target in inches. In our case the height is 5.5 inches tall. This should not change.
  - FOCAL_HEIGHT       : The percieved focal height of the target from 24 inches. You should get this value from the calibrator.
+ - DIST_BETWEEN_RECTS : The horizontal distance in inches between the two rects of the target (inches)
  - CALIBRATED_DISTANCE: The distance from the target that the settings were calibrated at. usually somewhere between 18-24 inches
  - ERROR_CORRECTION   : The correction factor for the found distances.
 
@@ -58,11 +60,9 @@ II. Compiling
 -------------
 
 To compile the code, use the below command. Make sure you are in the vision/c++ directory. gcc can also be used in place of g++.
-g++ -o Main Main.cpp Vision.h PostProcessor.cpp Util.cpp PairData.cpp Settings.h Settings.cpp `pkg-config --cflags --libs opencv`
-run program with: ./Main
+make Vision
+run with: ./Vision
 
 To compile the calibration program, change into the vision/c++/calibration directory and use below command. 
-g++ -o Main Main.cpp Calibration.h Calibration.cpp `pkg-config --cflags --libs opencv gtk+-2.0`
-run program with: ./Main
-
-REMEMBER: "`" is a BACKTICK, not a SINGLE QUOTE!!! ("`" != "'")
+make Calibrate
+run program with: ./Calibrate
