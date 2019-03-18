@@ -134,6 +134,8 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
     // SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
 
+    SmartDashboard.putBoolean("Updated", Robot.SUB_RECEIVER.getSecondsSinceUpdate() < 1);
+
     SmartDashboard.putBoolean("Pushing", Robot.SUB_DRIVE.isPushing());
 
     SmartDashboard.putBoolean("First Gear", Robot.SUB_SHIFTER.isFirstGear());
