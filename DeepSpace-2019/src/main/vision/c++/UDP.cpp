@@ -62,7 +62,8 @@ void UDP::Send(string msg) {
  */
 string UDP::Recieve() {
     char buffer[1024] = {0};
-    int read_result = read(this->sock, buffer, 2047);
+    int read_result = read(this->sock, buffer, 1023);
+    //return std::to_string(buffer);
 }
 
 /**
