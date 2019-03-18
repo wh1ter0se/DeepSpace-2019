@@ -26,17 +26,16 @@ public class CyborgCommandAlign extends Command {
   private static Boolean isFinished;
 
   private static double idleSpeed;
-  private static double lastAngle;
   private static double loopOutput;
 
   public CyborgCommandAlign() {
     requires(Robot.SUB_DRIVE);
+    SmartDashboard.putBoolean("Aligning", false);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    lastAngle = 180;
     turning = new MiniPID(Util.getAndSetDouble("Docking kP", Constants.BACKUP_DOCKING_kP),
                           Util.getAndSetDouble("Docking kI", Constants.BACKUP_DOCKING_kI),
                           Util.getAndSetDouble("Docking kD", Constants.BACKUP_DOCKING_kD));
@@ -46,21 +45,18 @@ public class CyborgCommandAlign extends Command {
 
     // isFinished = Robot.SUB_RECEIVER.getLastKnownData()[3] == -1;
     isFinished = false;
+    SmartDashboard.putBoolean("Aligning", true);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (Robot.SUB_RECEIVER.getLastKnownData()[3] != 180) {
-      lastAngle = Robot.SUB_RECEIVER.getLastKnownData()[3];
-    }
     loopOutput = turning.getOutput(Robot.SUB_RECEIVER.getLastKnownData()[3]);
-      if (Math.abs(loopOutput) > 10 && Robot.SUB_RECEIVER.getLastKnownData()[4] < Constants.DOCKING_TARGET_LOCK_RANGE) { loopOutput = 0; }
+      if (Math.abs(Robot.SUB_RECEIVER.getLastKnownData()[3]) > 10 && Robot.SUB_RECEIVER.getLastKnownData()[2] < Constants.DOCKING_TARGET_LOCK_RANGE) { loopOutput = 0; }
     inRange = Robot.SUB_RECEIVER.getWithinRange();
     canSee = Robot.SUB_RECEIVER.getLastKnownData()[2] != -1;
     SmartDashboard.putBoolean("canSee", canSee);
     SmartDashboard.putBoolean("inRange", inRange);
-    SmartDashboard.putBoolean("Aligning", true);
 
     double feedForward = Xbox.RT(OI.DRIVER) - Xbox.LT(OI.DRIVER);
     feedForward *= Util.getAndSetDouble("Align Inhibitor", .5);

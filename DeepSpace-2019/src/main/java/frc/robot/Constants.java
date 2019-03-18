@@ -36,7 +36,7 @@ public class Constants {
      * Docking Values
      */
     public static final double
-        DOCKING_TARGET_LOCK_RANGE = 50; // in inches
+        DOCKING_TARGET_LOCK_RANGE = 40; // in inches
 
     /**
      * Drive values
