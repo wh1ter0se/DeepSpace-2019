@@ -28,14 +28,14 @@ void setup() {
 }
 
 void loop() {
-//rainbowCycle(0);
+rainbowCycle(0);
 //  opposingColors();
 //  getCapitalismed();
-redFire();
+//redFire();
 //  blueFire();
-    
 //  redNumbers();
 //  capitalistNumbers();
+//nice();
 }
 
 void redFire() {
@@ -194,6 +194,7 @@ void redNumbers() {
     pixels.setPixelColor(i, pixels.Color(0,0,0,0));
   }
   pixels.show();
+  delay(wait);
   for (int i=THREE;i<SIX;i++) {
     pixels.setPixelColor(i, pixels.Color(0,255,0,0));
   }
@@ -217,6 +218,48 @@ void redNumbers() {
   }
   pixels.show();
   delay(wait);
+}
+
+void blueNumbers() {
+  int wait = 500;
+  for (int i=0;i<NUMPIXELS;i++) {
+    pixels.setPixelColor(i, pixels.Color(0,0,0,0));
+  }
+  pixels.show();
+  delay(wait);
+  for (int i=THREE;i<SIX;i++) {
+    pixels.setPixelColor(i, pixels.Color(0,0,255,0));
+  }
+  pixels.show();
+  delay(wait);
+  pixels.show();
+  for (int i=SIX;i<NINE;i++) {
+    pixels.setPixelColor(i, pixels.Color(0,0,255,0));
+  }
+  pixels.show();
+  delay(wait);
+  pixels.show();
+  for (int i=NINE;i<FIVE;i++) {
+    pixels.setPixelColor(i, pixels.Color(0,0,255,0));
+  }
+  pixels.show();
+  delay(wait);
+  pixels.show();
+  for (int i=FIVE;i<LOOP;i++) {
+    pixels.setPixelColor(i, pixels.Color(0,0,255,0));
+  }
+  pixels.show();
+  delay(wait);
+}
+
+void nice() {
+  for(int i=0;i<NUMPIXELS;i++) {
+    pixels.setPixelColor(i, pixels.Color(0,0,0,0));
+  }
+  for (int i=SIX;i<FIVE;i++) {
+    pixels.setPixelColor(i, pixels.Color(0,255,0,0));
+  }
+  pixels.show();
 }
 
 void capitalistNumbers() {
