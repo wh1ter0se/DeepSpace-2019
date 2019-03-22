@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Commands.ManualCommandDrive;
 import frc.robot.Enumeration.DriveSpeed;
 import frc.robot.Util.Xbox;
@@ -37,6 +38,11 @@ public class SubsystemDrive extends Subsystem {
 
   private DriveSpeed hiLoSpeed;
 
+  private long   totalSpeeds;
+  private int    speedsCounted;
+  private double currentSpeed;
+  private double topSpeed;
+
   @Override
   public void initDefaultCommand() {
     setDefaultCommand(new ManualCommandDrive());
@@ -51,6 +57,11 @@ public class SubsystemDrive extends Subsystem {
     rightSlave  = new CANSparkMax(Constants.RIGHT_SLAVE_ID, MotorType.kBrushless);
 
     highestRPM = new double[]{0,0};
+
+    topSpeed = 0;
+    currentSpeed = 0;
+    totalSpeeds = 0;
+    speedsCounted = 0;
   }
 
   /**
@@ -233,5 +244,32 @@ public class SubsystemDrive extends Subsystem {
     hiLoSpeed = speed;
   }
 
+  public void updateSpeedData() {
+    if (leftMaster.getEncoder().getVelocity() == rightMaster.getEncoder().getVelocity()) {
+      currentSpeed = Math.abs(leftMaster.getEncoder().getVelocity());
+    } else if (leftMaster.getEncoder().getVelocity() * -1 == rightMaster.getEncoder().getVelocity()) {
+      currentSpeed = 0;
+    } else {
+      currentSpeed = (leftMaster.getEncoder().getVelocity() + rightMaster.getEncoder().getVelocity()) / 2;
+    }
+
+    currentSpeed *= Robot.SUB_SHIFTER.isFirstGear() ? Constants.RPM_TO_FIRST_GEAR_MPH : Constants.RPM_TO_SECOND_GEAR_MPH;
+
+    // totalSpeeds += currentSpeed;
+    // speedsCounted++;
+    topSpeed = currentSpeed > topSpeed ? currentSpeed : topSpeed;
+  }
+
+  public double getCurrentSpeed() {
+    return currentSpeed;
+  }
+
+  public double getAverageSpeed() {
+    return totalSpeeds / speedsCounted;
+  }
+
+  public double getTopSpeed() {
+    return topSpeed;
+  }
   
 }

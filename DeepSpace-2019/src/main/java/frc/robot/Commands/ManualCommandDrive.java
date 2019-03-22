@@ -36,6 +36,7 @@ public class ManualCommandDrive extends Command {
                                                Util.getAndSetDouble("Upper Drive Inhibitor", 1));
         break;
     }
+    Robot.SUB_DRIVE.updateSpeedData();
     
   }
 

@@ -63,7 +63,7 @@ public class CyborgCommandAlign extends Command {
     if (canSee) {
       Robot.SUB_DRIVE.driveByPercentOutputs(-1 * loopOutput + feedForward, loopOutput + feedForward);
     } else {
-      Robot.SUB_DRIVE.driveByPercentOutputs(feedForward, feedForward);
+      Robot.SUB_DRIVE.driveByPercentOutputs(feedForward + Xbox.LEFT_X(OI.DRIVER), feedForward - Xbox.LEFT_X(OI.DRIVER));
     }
   }
 
