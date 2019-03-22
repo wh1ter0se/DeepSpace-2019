@@ -42,12 +42,15 @@ public class Constants {
      * Drive values
      */
     public static final double
-        BACKUP_RAMP          = 0,
-        BACKUP_DOCKING_SPEED = .25,
-        MAX_ALLOWABLE_AO     = .2, // percent output
-        MAX_ALLOWABLE_ERROR  = .25, // inches
-        DOWNSHIFT_RPM        = 900,
-        UPSHIFT_RPM          = 1000;
+        BACKUP_RAMP            = 0,
+        BACKUP_DOCKING_SPEED   = .25,
+        WHEEL_DIAMETER         = 6,
+        RPM_TO_FIRST_GEAR_MPH  = 22.1 * Math.PI * WHEEL_DIAMETER * 0.00094697,
+        RPM_TO_SECOND_GEAR_MPH = 7.2 * Math.PI * WHEEL_DIAMETER * 0.00094697,
+        MAX_ALLOWABLE_AO       = .2, // percent output
+        MAX_ALLOWABLE_ERROR    = .25, // inches
+        DOWNSHIFT_RPM          = 900,
+        UPSHIFT_RPM            = 1000;
 
     /**
      * Inverts
@@ -69,10 +72,10 @@ public class Constants {
     public static final double
         MAST_ALLOWABLE_ERROR = .5, // error in inches
         NOT_QUITE_ZERO = 0, // I became the one thing I swore to defend against
-        CARGO_1_HEIGHT = 10.5,
-        HATCH_2_HEIGHT = 28,
-        CARGO_2_HEIGHT = 7.5,
-        HATCH_3_HEIGHT = 25, // TODO these need to be calibrated
+        CARGO_1_HEIGHT = 9.5,
+        HATCH_2_HEIGHT = 28.5,
+        CARGO_2_HEIGHT = 6.5,
+        HATCH_3_HEIGHT = 25.75, // TODO these need to be calibrated
         CARGO_3_HEIGHT = 35.5,
         TOP_TIER_INNER_HEIGHT = 31;
         // CARGO 3 HEIGHT = 33.5 on stage 2 (if limit doesn't work)

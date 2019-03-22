@@ -7,7 +7,6 @@
 
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -139,15 +138,5 @@ public class IterativeCommandMoveMast extends Command {
   @Override
   protected void interrupted() {
     Robot.SUB_MAST.stopMotors();
-  }
-
-  private Boolean innerStageInSafeRange() {
-    // return Robot.SUB_MAST.getInnerStageInches() < Constants.INNER_STAGE_MAX_HEIGHT;
-    // TODO finish
-    return true;
-  }
-
-  private Boolean outerStageInSafeRange() {
-    return true;
   }
 }
