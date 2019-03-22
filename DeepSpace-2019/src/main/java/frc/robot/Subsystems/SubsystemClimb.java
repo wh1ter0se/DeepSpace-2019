@@ -36,7 +36,7 @@ public class SubsystemClimb extends Subsystem {
     safetyMode = true;
     // climber = new TalonSRX(Constants.CLIMBER_ID);
     climber = new CANSparkMax(Constants.CLIMBER_ID, MotorType.kBrushless);
-    setAmpLimit(60);
+    setAmpLimit(90);
   }
 
   /**
@@ -78,6 +78,10 @@ public class SubsystemClimb extends Subsystem {
 
   public double getAmperage() {
     return climber.getOutputCurrent();
+  }
+
+  public double getTemperature() {
+    return (climber.getMotorTemperature() - 32) * (5/9);
   }
 
   public double getOutput() {

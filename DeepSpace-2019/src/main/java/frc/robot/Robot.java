@@ -128,15 +128,17 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Right Motor", 100 * Robot.SUB_DRIVE.getMotorValues()[2]);
     SmartDashboard.putNumber("Left Amps", Robot.SUB_DRIVE.getAmps()[0]);
     SmartDashboard.putNumber("Right Amps", Robot.SUB_DRIVE.getAmps()[1]);
-    SmartDashboard.putNumber("Left Velocity", Robot.SUB_DRIVE.getVelocities()[0]);
-    SmartDashboard.putNumber("Right Velocity", Robot.SUB_DRIVE.getVelocities()[1]);
+    // SmartDashboard.putNumber("Left Velocity", Robot.SUB_DRIVE.getVelocities()[0]);
+    // SmartDashboard.putNumber("Right Velocity", Robot.SUB_DRIVE.getVelocities()[1]);
 
     // SmartDashboard.putNumber("Current Left RPM", Robot.SUB_DRIVE.getVelocities()[0]);
     // SmartDashboard.putNumber("Current Right RPM", Robot.SUB_DRIVE.getVelocities()[1]);
 
     SmartDashboard.putBoolean("Updated", Robot.SUB_RECEIVER.getSecondsSinceUpdate() < 1);
 
-    SmartDashboard.putBoolean("Pushing", Robot.SUB_DRIVE.isPushing());
+    // SmartDashboard.putBoolean("Pushing", Robot.SUB_DRIVE.isPushing());
+    SmartDashboard.putNumber("Top Speed", Robot.SUB_DRIVE.getTopSpeed());
+    SmartDashboard.putNumber("Current Speed", Robot.SUB_DRIVE.getCurrentSpeed());
 
     SmartDashboard.putBoolean("First Gear", Robot.SUB_SHIFTER.isFirstGear());
     SmartDashboard.putBoolean("Second Gear", !Robot.SUB_SHIFTER.isFirstGear());
@@ -152,6 +154,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Climber Engaged", !Robot.SUB_CLIMB.getSafetyMode());
     SmartDashboard.putNumber("Climber Amps", Robot.SUB_CLIMB.getAmperage());
     SmartDashboard.putNumber("Climber Motor", Robot.SUB_CLIMB.getOutput());
+    SmartDashboard.putNumber("Climber Temp", Robot.SUB_CLIMB.getTemperature());
 
     SmartDashboard.putNumber("Flipper Amps", Robot.SUB_FLIPPER.getAmps());
     SmartDashboard.putNumber("Flipper Motor", Robot.SUB_FLIPPER.getPercentOutput() * 100);
@@ -169,8 +172,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putBoolean("Target Spotted", Robot.SUB_RECEIVER.getLastKnownData()[2] != -1);
 
-    SmartDashboard.putNumber("Inner Mast Position", Robot.SUB_MAST.getEncoderValues()[0]);
-    SmartDashboard.putNumber("Outer Mast Position", Robot.SUB_MAST.getEncoderValues()[1]);
+    // SmartDashboard.putNumber("Inner Mast Position", Robot.SUB_MAST.getEncoderValues()[0]);
+    // SmartDashboard.putNumber("Outer Mast Position", Robot.SUB_MAST.getEncoderValues()[1]);
 
     SmartDashboard.putNumber("Inner Mast Inches", Robot.SUB_MAST.getEncoderValues()[0] / Constants.INNER_MAST_TICKS_PER_INCH);
     SmartDashboard.putNumber("Outer Mast Inches", Robot.SUB_MAST.getEncoderValues()[1] / Constants.OUTER_MAST_TICKS_PER_INCH);
