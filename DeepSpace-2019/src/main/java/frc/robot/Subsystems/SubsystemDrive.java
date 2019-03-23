@@ -62,6 +62,8 @@ public class SubsystemDrive extends Subsystem {
     currentSpeed = 0;
     totalSpeeds = 0;
     speedsCounted = 0;
+
+    hiLoSpeed = DriveSpeed.HIGH;
   }
 
   /**
@@ -90,7 +92,7 @@ public class SubsystemDrive extends Subsystem {
       rightSlave.set(right);
   }
 
-  public void driveRlHiLo(Joystick joy, double ramp, double lowInhibitor, double highInhibitor) {
+  public void driveRlHiLo(Joystick joy, double ramp, double disengageInhibitor, double lowInhibitor, double highInhibitor, double murderInhibitor) {
     setInverts();
     setBraking(true);
     setRamps(ramp);
@@ -102,7 +104,24 @@ public class SubsystemDrive extends Subsystem {
     left = (left > 1.0 ? 1.0 : (left < -1.0 ? -1.0 : left));
     right = (right > 1.0 ? 1.0 : (right < -1.0 ? -1.0 : right));
     
-    double inhibitor = (hiLoSpeed == DriveSpeed.LOW) ? lowInhibitor : highInhibitor;
+    double inhibitor;
+    switch (hiLoSpeed) {
+      case DISENGAGE:
+        inhibitor = disengageInhibitor;
+        break;
+      case LOW:
+        inhibitor = lowInhibitor;
+        break;
+      case HIGH:
+        inhibitor = highInhibitor;
+        break;
+      case MURDER:
+        inhibitor = murderInhibitor;
+        break;
+      default:
+        inhibitor = highInhibitor;
+        break;
+    }
     left *= inhibitor;
     right *= inhibitor;
     
@@ -242,6 +261,10 @@ public class SubsystemDrive extends Subsystem {
 
   public void setDriveSpeed(DriveSpeed speed) {
     hiLoSpeed = speed;
+  }
+
+  public DriveSpeed getDriveSpeed() {
+    return hiLoSpeed;
   }
 
   public void updateSpeedData() {

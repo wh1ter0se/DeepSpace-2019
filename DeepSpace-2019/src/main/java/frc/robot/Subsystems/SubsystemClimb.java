@@ -36,7 +36,7 @@ public class SubsystemClimb extends Subsystem {
     safetyMode = true;
     // climber = new TalonSRX(Constants.CLIMBER_ID);
     climber = new CANSparkMax(Constants.CLIMBER_ID, MotorType.kBrushless);
-    setAmpLimit(90);
+    setAmpLimit(70);
   }
 
   /**
