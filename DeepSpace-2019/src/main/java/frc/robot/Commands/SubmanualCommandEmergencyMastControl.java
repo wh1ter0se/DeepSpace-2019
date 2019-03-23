@@ -19,6 +19,7 @@ public class SubmanualCommandEmergencyMastControl extends Command {
 
   public SubmanualCommandEmergencyMastControl() {
     requires(Robot.SUB_MAST);
+    requires(Robot.SUB_CLIMB);
   }
 
   // Called just before this Command runs the first time
@@ -35,6 +36,7 @@ public class SubmanualCommandEmergencyMastControl extends Command {
   @Override
   protected void execute() {
     Robot.SUB_MAST.moveInnerStageByPercent(Xbox.RIGHT_Y(OI.OPERATOR));
+    Robot.SUB_MAST.moveOuterStageByPercent(Xbox.RT(OI.OPERATOR)-Xbox.LT(OI.OPERATOR));
     DriverStation.reportError("KENZIE WHAT DID YOU DO", false);
   }
 
