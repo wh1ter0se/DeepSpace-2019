@@ -28,11 +28,11 @@ void setup() {
 }
 
 void loop() {
-rainbowCycle(0);
+//rainbowCycle(0);
 //  opposingColors();
 //  getCapitalismed();
 //redFire();
-//  blueFire();
+  blueFire();
 //  redNumbers();
 //  capitalistNumbers();
 //nice();
@@ -289,3 +289,4 @@ void capitalistNumbers() {
   pixels.show();
   delay(200);
 }
+
