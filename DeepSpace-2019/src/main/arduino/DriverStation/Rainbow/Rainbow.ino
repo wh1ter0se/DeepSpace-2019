@@ -18,7 +18,7 @@ void setup() {
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  rainbowCycle(25);
+  rainbowCycle(1);
 }
 
 // Slightly different, this makes the rainbow equally distributed throughout

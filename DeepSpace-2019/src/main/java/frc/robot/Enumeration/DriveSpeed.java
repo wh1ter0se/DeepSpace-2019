@@ -11,8 +11,10 @@ package frc.robot.Enumeration;
  * Positions that the two-stage mast can be in
  */
 public enum DriveSpeed {
+	DISENGAGE("Disengage"),
 	LOW("Low"),
-	HIGH("High");
+	HIGH("High"),
+	MURDER("Murder");
 
 	private final String name;
     

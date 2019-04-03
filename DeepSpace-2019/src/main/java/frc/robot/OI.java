@@ -35,6 +35,7 @@ import frc.robot.Commands.ManualCommandTestMastPID;
 import frc.robot.Commands.SubmanualCommandAscend;
 import frc.robot.Commands.SubmanualCommandEmergencyMastControl;
 import frc.robot.Commands.ToggleCommandKillCompressor;
+import frc.robot.Commands.ToggleCommandMurder;
 import frc.robot.Enumeration.DriveSpeed;
 import frc.robot.Util.Util;
 import frc.robot.Util.Xbox;
@@ -100,6 +101,9 @@ public class OI {
 
             Button align = new JoystickButton(DRIVER, Xbox.LB);
                 align.toggleWhenPressed(new CyborgCommandAlign());
+
+            Button murder = new JoystickButton(DRIVER, Xbox.RB);
+                murder.toggleWhenPressed(new ToggleCommandMurder());
 
         /**
          * Operator

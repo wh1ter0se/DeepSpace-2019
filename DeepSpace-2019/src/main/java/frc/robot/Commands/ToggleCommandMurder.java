@@ -11,35 +11,36 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Constants;
 import frc.robot.OI;
 import frc.robot.Robot;
+import frc.robot.Enumeration.DriveSpeed;
 import frc.robot.Util.Util;
 
-public class ManualCommandDrive extends Command {
-  public ManualCommandDrive() {
+public class ToggleCommandMurder extends Command {
+
+  private Boolean initFirstGear;
+  private DriveSpeed initSpeed;
+
+  public ToggleCommandMurder() {
     requires(Robot.SUB_DRIVE);
+    requires(Robot.SUB_SHIFTER);
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {}
+  protected void initialize() {
+    initFirstGear = Robot.SUB_SHIFTER.isFirstGear();
+    initSpeed = Robot.SUB_DRIVE.getDriveSpeed();
+    Robot.SUB_SHIFTER.downShift();
+    Robot.SUB_DRIVE.setDriveSpeed(DriveSpeed.MURDER);
+  }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    switch(Robot.controlScheme) {
-      case RL_GENUINE:
-        Robot.SUB_DRIVE.driveRLGenuine(OI.DRIVER, Util.getAndSetDouble("RL Ramp", Constants.BACKUP_RAMP), 
-                                                  Util.getAndSetDouble("Caleb Inhibitor", 1));;
-        break;
-      case RL_HILO:
-        Robot.SUB_DRIVE.driveRlHiLo(OI.DRIVER, Util.getAndSetDouble("RL Ramp", Constants.BACKUP_RAMP),
+    Robot.SUB_DRIVE.driveRlHiLo(OI.DRIVER, Util.getAndSetDouble("RL Ramp", Constants.BACKUP_RAMP),
                                                Util.getAndSetDouble("Disengage Inhibitor", .2),
-                                               Util.getAndSetDouble("Lower Drive Inhibitor", .4),
-                                               Util.getAndSetDouble("Upper Drive Inhibitor", .8),
+                                               Util.getAndSetDouble("Lower Drive Inhibitor", .3),
+                                               Util.getAndSetDouble("Upper Drive Inhibitor", 8),
                                                Util.getAndSetDouble("Murder Inhibitor", 1));
-        break;
-    }
-    Robot.SUB_DRIVE.updateSpeedData();
-    
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -51,11 +52,23 @@ public class ManualCommandDrive extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.SUB_DRIVE.setDriveSpeed(initSpeed);
+    if (initFirstGear) {
+      Robot.SUB_SHIFTER.downShift();
+    } else {
+      Robot.SUB_SHIFTER.upShift();
+    }
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.SUB_DRIVE.setDriveSpeed(initSpeed);
+    if (initFirstGear) {
+      Robot.SUB_SHIFTER.downShift();
+    } else {
+      Robot.SUB_SHIFTER.upShift();
+    }
   }
 }
