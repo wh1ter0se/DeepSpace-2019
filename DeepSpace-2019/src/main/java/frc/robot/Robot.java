@@ -260,7 +260,8 @@ public class Robot extends TimedRobot {
       SmartDashboard.putBoolean("High Speed", false);
       Robot.SUB_DRIVE.setBraking(true);
     Robot.SUB_CLAMP.closeClamp();
-    Robot.SUB_SHIFTER.upShift();
+    // Robot.SUB_SHIFTER.upShift();
+    Robot.SUB_SHIFTER.downShift();
     Robot.SUB_PRELOADER.retract();
     Robot.SUB_MAST.zeroEncoders();
       Robot.SUB_MAST.setStoredPosition(MastPosition.HATCH_1);
