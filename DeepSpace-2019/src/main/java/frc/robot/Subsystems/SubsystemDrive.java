@@ -144,6 +144,20 @@ public class SubsystemDrive extends Subsystem {
       // DriverStation.reportError("DRIVE COMMAND IS RUNNING", false);
   }
 
+  /**
+   * Control
+   * @param leftSetpoint
+   * @param rightSetpoint
+   */
+  public void driveByPositions(int leftSetpoint, int rightSetpoint, double maxValue) {
+    leftMaster.getPIDController().setReference(leftSetpoint, ControlType.kPosition);
+    leftMaster.getPIDController().setOutputRange(-maxValue, maxValue);
+      leftSlave.follow(leftMaster);
+    rightMaster.getPIDController().setReference(rightSetpoint, ControlType.kPosition);
+    rightMaster.getPIDController().setOutputRange(-maxValue, maxValue);
+      rightSlave.follow(rightMaster);
+  }
+
   public double[] getEncoderPositions() {
     double[] output = new double[2];
     output[0] = leftMaster.getEncoder().getPosition();
@@ -294,5 +308,21 @@ public class SubsystemDrive extends Subsystem {
   public double getTopSpeed() {
     return topSpeed;
   }
+
+  public void resetEncoders() {
+    leftMaster.setEncPosition(0);
+    rightMaster.setEncPosition(0);
+  }
+
+public void setPIDF(double kP, int kI, int kD, int kF) {
+  leftMaster.getPIDController().setP(kP);
+    leftMaster.getPIDController().setI(kI);
+    leftMaster.getPIDController().setD(kD);
+    leftMaster.getPIDController().setFF(kF);
+  rightMaster.getPIDController().setP(kP);
+    rightMaster.getPIDController().setI(kI);
+    rightMaster.getPIDController().setD(kD);
+    rightMaster.getPIDController().setFF(kF);
+}
   
 }
